@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon:hover {
+  transform: translateX(6px); /* Adjust the distance as needed */
+}
+
+.bell-icon {
+  transition: transform 0.3s ease;
+}
+
+.bell-icon:hover {
+  transform: scale(1.2); /* Adjust the scale factor as needed */
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.bounce {
+  animation: bounce 0.5s;
+}
+
+.sidebar-item-content {
+  transition: max-height 0.3s ease;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(to right, #4fd1c5, #3b82f6);
+}
+
+.chart-container {
+  flex: 1;
+}
