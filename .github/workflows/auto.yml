@@ -32,3 +32,23 @@ jobs:
             Please review the PR and provide feedback.
           get_diff: false
           allow_no_diff: true
+
+      - name: Display changes
+        run: |
+          git log --pretty=format:"%h - %an, %ar : %s" -5 > changes.log
+          cat changes.log
+
+      - name: Get Repository Name
+        run: |
+          REPO_NAME=$(basename `git rev-parse --show-toplevel`)
+          echo "Repository Name: $REPO_NAME" >> changes.log
+
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          AUTHOR=$(git log -1 --pretty=format:"%an")
+          COMMIT_CONTENT=$(git log -1 --pretty=format:"%s")
+          ACTOR=${{ github.event.actor }}
+          PAYLOAD='{"content": "Changes have been pushed to the repository '$REPO_NAME' by '$AUTHOR'. Here is the latest commit: '$COMMIT_CONTENT', triggered by '$ACTOR'", "embeds": [{"title": "Recent Commits", "description": "'$(cat changes.log)'"}]}'
+          curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" $DISCORD_WEBHOOK
