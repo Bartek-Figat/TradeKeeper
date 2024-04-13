@@ -16,8 +16,8 @@ jobs:
           fetch-depth: 0
 
       - name: Github Data
-        run: |
-          echo " - ${{ github.event.release.target_commitish }}"
+        run: echo " - ${{ github.event.release.target_commitish }}"
+
       - name: Expose git commit data
         uses: rlespinasse/git-commit-data-action@v1
 
@@ -29,6 +29,12 @@ jobs:
           title: ${{ github.event.commits[0].message }}
           label: enhancement
           body: |
-            Please read the PR and leave a comment.
+            Please review the PR and provide feedback.
           get_diff: false
           allow_no_diff: true
+
+      - name: Notify Discord
+        uses: Ilshidur/action-discord@v2
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: "Changes have been pushed to the repository. Please review."
