@@ -30,4 +30,6 @@ jobs:
         run: |
           AUTHOR=$(git log -1 --pretty=format:"%an")
           COMMIT_CONTENT=$(git log -1 --pretty=format:"%s")
-          curl -H "Content-Type: application/json" -X POST -d '{"content": "Changes have been pushed to the repository $REPO_NAME by $AUTHOR. Here is the latest commit: $COMMIT_CONTENT", "embeds": [{"title": "Recent Commits", "description": "$(cat changes.log)"}]}' $DISCORD_WEBHOOK
+          ACTOR=${{ github.event.actor }}
+          PAYLOAD='{"content": "Changes have been pushed to the repository '$REPO_NAME' by '$AUTHOR'. Here is the latest commit: '$COMMIT_CONTENT', triggered by '$ACTOR'", "embeds": [{"title": "Recent Commits", "description": "'$(cat changes.log)'"}]}'
+          curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" $DISCORD_WEBHOOK
