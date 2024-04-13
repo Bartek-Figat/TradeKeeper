@@ -65,5 +65,3 @@ The command will start the front-end and back-end
 ```bash
   git merge hotfix/FE#1
 ```
-
-###
