@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches-ignore: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Display changes
+        run: |
+          git log --pretty=format:"%h - %an, %ar : %s" -5 > changes.log
+          cat changes.log
+
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" -X POST -d '{"content": "Changes have been pushed to the repository. Here are the recent commits:", "embeds": [{"title": "Recent Commits", "description": "$(cat changes.log)"}]}' $DISCORD_WEBHOOK
