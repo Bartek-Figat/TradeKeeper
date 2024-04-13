@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches-ignore: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Github Data
+        run: echo " - ${{ github.event.release.target_commitish }}"
+
+      - name: Expose git commit data
+        uses: rlespinasse/git-commit-data-action@v1
+
+      - name: Create pull request
+        id: create_pr
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GIT_HUB_TOKEN }}
+          target_branch: main
+          title: ${{ steps.get_last_pr_number.outputs.new_title }}
+          label: enhancement
+          body: |
+            Please review the PR and provide feedback.
+          get_diff: false
+          allow_no_diff: true
+
+      - name: Display changes
+        run: |
+          git log --pretty=format:"%h - %an, %ar : %s" -5 > changes.log
+          cat changes.log
+
+      - name: Get Repository Name
+        run: |
+          REPO_NAME=$(basename `git rev-parse --show-toplevel`)
+          echo "Repository Name: $REPO_NAME" >> changes.log
+
+      - name: Extract Last PR Number
+        id: get_last_pr_number
+        run: |
+          LAST_PR_TITLE=$(echo "${{ github.event.commits[0].message }}" | grep -oP '\d+$')
+          NEW_PR_NUMBER=$((LAST_PR_TITLE + 1))
+          echo "::set-output name=new_title::$(echo "${{ github.event.commits[0].message }}" | sed "s/\d+$/$NEW_PR_NUMBER/")"
