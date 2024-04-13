@@ -19,8 +19,15 @@ jobs:
           git log --pretty=format:"%h - %an, %ar : %s" -5 > changes.log
           cat changes.log
 
+      - name: Get Repository Name
+        run: |
+          REPO_NAME=$(basename `git rev-parse --show-toplevel`)
+          echo "Repository Name: $REPO_NAME" >> changes.log
+
       - name: Notify Discord
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          curl -H "Content-Type: application/json" -X POST -d '{"content": "Changes have been pushed to the repository. Here are the recent commits:", "embeds": [{"title": "Recent Commits", "description": "$(cat changes.log)"}]}' $DISCORD_WEBHOOK
+          AUTHOR=$(git log -1 --pretty=format:"%an")
+          COMMIT_CONTENT=$(git log -1 --pretty=format:"%s")
+          curl -H "Content-Type: application/json" -X POST -d '{"content": "Changes have been pushed to the repository $REPO_NAME by $AUTHOR. Here is the latest commit: $COMMIT_CONTENT", "embeds": [{"title": "Recent Commits", "description": "$(cat changes.log)"}]}' $DISCORD_WEBHOOK
