@@ -8,6 +8,7 @@ import ProjectPage from "./components/Project";
 import AnalyticsPage from "./components/AnalyticsPage";
 import Lightweigh from "./components/chart/Lightweigh";
 import CreateTrade from "./components/CreateTrade";
+import LandingPage from "./components/LandingPage";
 
 export const App = () => {
   const element = useRoutes([
@@ -32,6 +33,7 @@ export const App = () => {
     },
     { path: "/login", element: <h1>Login Page</h1> },
     { path: "/register", element: <h1>Register Page</h1> },
+    { path: "/landing", element: <LandingPage /> },
   ]);
   return element;
 };
