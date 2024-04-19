@@ -3,10 +3,12 @@ import { BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
+import { Provider } from "react-redux";
 import { App } from "./App.tsx";
 import "./css/index.css";
+import store from "./store/store.tsx";
 
-const store = createStore({
+const authStore = createStore({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
@@ -15,10 +17,12 @@ const store = createStore({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+    <AuthProvider store={authStore}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     </AuthProvider>
   </React.StrictMode>
 );
