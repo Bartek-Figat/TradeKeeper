@@ -1,7 +1,17 @@
+import ChartComponent from "../components/chart/chartContentPage";
+import { staticData } from "./chart/priceData";
+
 const Content = () => {
   const myStocks = [
     { name: "Apple Inc.", quantity: 10, currentValue: "$1,116.90" },
     { name: "Twitter Inc.", quantity: 15, currentValue: "$993.21" },
+    { name: "Netflix Inc.", quantity: 5, currentValue: "$161.72" },
+    { name: "BS (Boostrap, Inc.)", quantity: 5, currentValue: "$30,500.15" },
+    { name: "TTR (Twiter.com, Inc.)", quantity: 5, currentValue: "$15,526.01" },
+    { name: "Netflix Inc.", quantity: 5, currentValue: "$161.72" },
+    { name: "BS (Boostrap, Inc.)", quantity: 5, currentValue: "$30,500.15" },
+    { name: "TTR (Twiter.com, Inc.)", quantity: 5, currentValue: "$15,526.01" },
+    { name: "TTR (Twiter.com, Inc.)", quantity: 5, currentValue: "$15,526.01" },
     { name: "Netflix Inc.", quantity: 5, currentValue: "$161.72" },
     { name: "BS (Boostrap, Inc.)", quantity: 5, currentValue: "$30,500.15" },
     { name: "TTR (Twiter.com, Inc.)", quantity: 5, currentValue: "$15,526.01" },
@@ -88,19 +98,19 @@ const Content = () => {
         <div className="shadow p-4">Returns Rate</div>
       </div>
       {/* row 3 Chart - My Stocks*/}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-grow-[0.8] shadow p-4">Chart</div>
-        <div className="flex-grow-[0.2] shadow p-4 rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="col-span-8 p-4 rounded-lg">
+          <ChartComponent data={staticData} />
+        </div>
+        <div className="col-span-4 p-4 rounded-lg">
           <h3 className="text-lg font-semibold mb-4">My Stocks</h3>
           <div className="space-y-2">
             {myStocks.map((stock, index) => (
               <div key={index} className="flex justify-between">
                 <div>
-                  <h4 className="flex justify-start font-semibold">
-                    {stock.name}
-                  </h4>
+                  <h4 className="font-semibold">{stock.name}</h4>
                 </div>
-                <p className="flex justify-end text-sm">{stock.currentValue}</p>
+                <p className="text-sm">{stock.currentValue}</p>
               </div>
             ))}
           </div>
