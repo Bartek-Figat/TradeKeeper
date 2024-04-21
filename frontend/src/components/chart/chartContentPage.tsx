@@ -33,6 +33,14 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
     chartRef.current = chart;
 
     chart.applyOptions({
+      watermark: {
+        color: "rgb(145 149 157 / 30%)",
+        visible: true,
+        text: "TradeKeeper: Riding the Market Tide!",
+        fontSize: 40,
+        horzAlign: "center",
+        vertAlign: "bottom",
+      },
       leftPriceScale: {
         visible: true,
         borderColor: "transparent",

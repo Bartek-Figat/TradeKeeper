@@ -66,7 +66,11 @@ const Content = () => {
     <div className="flex flex-col gap-6">
       {/* row 1 Portfolio*/}
       <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">Portfolio</div>
+        <div className="flex-1 justify-center items-center">
+          <div className="flex w-52 justify-center items-center h-full bg-green-600 p-2 rounded-md text-white">
+            Portfolio $34,000.00
+          </div>
+        </div>
         <div className="flex flex-wrap justify-between gap-4">
           <div>
             <span className="block font-semibold">Total Value</span>
@@ -98,25 +102,27 @@ const Content = () => {
         <div className="shadow p-4">Returns Rate</div>
       </div>
       {/* row 3 Chart - My Stocks*/}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        <div className="col-span-8 p-4 rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-12 lg:gap-4 sm:gap-0">
+        <div className="lg:col-span-8 md:col-span-6 p-2 rounded-lg shadow-md">
           <ChartComponent data={staticData} />
         </div>
-        <div className="col-span-4 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">My Stocks</h3>
+        <div className="lg:col-span-4 md:col-span-6 p-2 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-2">My Stocks</h3>
           <div className="space-y-2">
             {myStocks.map((stock, index) => (
-              <div key={index} className="flex justify-between">
+              <div
+                key={index}
+                className="flex justify-between items-center p-2 rounded-md text-color-[#333]"
+              >
                 <div>
-                  <h4 className="font-semibold">{stock.name}</h4>
+                  <h4 className="font-semibold text-blue-600">{stock.name}</h4>
                 </div>
-                <p className="text-sm">{stock.currentValue}</p>
+                <p className="text-sm text-gray-600">{stock.currentValue}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
-
       {/* row 4 - Transaction History - Top Gainers */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-4">
         {Array.from({ length: 6 }).map((_, index) => (
