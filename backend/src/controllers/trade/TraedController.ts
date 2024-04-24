@@ -15,6 +15,11 @@ export class TradeController extends Controller {
     return this.tradeRepository.getTradeById(tradeId);
   }
 
+  @Get("/{symbol}")
+  public async getCompanyProfile(@Path() symbol: string): Promise<any> {
+    return this.tradeRepository.getCompanyProfile(symbol);
+  }
+
   @Post("/create-trade")
   public async createTrade(@Body() newTrade: any): Promise<any> {
     return this.tradeRepository.createTrade(newTrade);

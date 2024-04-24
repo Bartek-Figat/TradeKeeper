@@ -5,6 +5,8 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../src/controllers/user/UserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TradeJournalController } from './../src/controllers/tradeJournal/TradeJournalController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { TradeController } from './../src/controllers/trade/TraedController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../src/controllers/auth/authController';
@@ -154,6 +156,157 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getUserById.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/trades-journal',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.getAllTradesFromJournal)),
+
+            function TradeJournalController_getAllTradesFromJournal(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.getAllTradesFromJournal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/trades-journal/:tradeId',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.getTradeFromJournal)),
+
+            function TradeJournalController_getTradeFromJournal(request: any, response: any, next: any) {
+            const args = {
+                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.getTradeFromJournal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/trades-journal/create-journal-trade',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.createTradeInJournal)),
+
+            function TradeJournalController_createTradeInJournal(request: any, response: any, next: any) {
+            const args = {
+                    newTrade: {"in":"body","name":"newTrade","required":true,"dataType":"any"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.createTradeInJournal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/trades-journal/:tradeId',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.updateTradeInJournal)),
+
+            function TradeJournalController_updateTradeInJournal(request: any, response: any, next: any) {
+            const args = {
+                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+                    updatedTradeInJournal: {"in":"body","name":"updatedTradeInJournal","required":true,"dataType":"any"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.updateTradeInJournal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/trades-journal/:tradeId/media',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.uploadMediaToJournal)),
+
+            function TradeJournalController_uploadMediaToJournal(request: any, response: any, next: any) {
+            const args = {
+                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+                    media: {"in":"body","name":"media","required":true,"dataType":"any"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.uploadMediaToJournal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/trades-journal/:tradeId',
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeJournalController.prototype.deleteTradeFromJournal)),
+
+            function TradeJournalController_deleteTradeFromJournal(request: any, response: any, next: any) {
+            const args = {
+                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeJournalController();
+
+
+              const promise = controller.deleteTradeFromJournal.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
