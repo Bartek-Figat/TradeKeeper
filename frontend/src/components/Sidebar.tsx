@@ -10,7 +10,7 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
 
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 interface SidebarItemProps {
   title: string;
@@ -36,7 +36,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ title, Icon, children }) => {
   return (
     <div className="w-full">
       <button
-        className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-200 text-[#4b5563] rounded-md transition-colors duration-300"
+        className="flex w-full items-center justify-between p-4 text-left hover:bg-[#333b5166] text-gray-50 rounded-md transition-colors duration-300"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ const SidebarItemNoAnimation: React.FC<SidebarItemPropsNoAnimation> = ({
 
   return (
     <div className="w-full">
-      <button className="flex w-full items-center justify-between p-4 text-left hover:bg-gray-200 text-[#4b5563] rounded-md transition-colors duration-300">
+      <button className="flex w-full items-center justify-between p-4 text-left hover:bg-indigo-850 text-gray-50 rounded-md transition-colors duration-300 hover:bg-[#333b5166]">
         <div className="flex items-center gap-3">
           {iconElement}
           <span className="text-sm font-medium">{title}</span>
@@ -93,17 +93,10 @@ const Sidebar: React.FC = () => {
   return (
     <div className="">
       <div className="flex flex-col w-full p-6">
-        <div className="flex p-2 justify-between rounded-md bg-green-400 text-white">
-          <div className="flex items-center text-lg">$</div>
-          <div className="text-right">
-            <p>36,000.16</p>
-            <p>Account Balance</p>
-          </div>
-        </div>
         <NavLink
           to="/create-trade"
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#242157] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation
@@ -114,7 +107,7 @@ const Sidebar: React.FC = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#333b5166] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation title="Home" Icon={<HomeIcon />} />
@@ -122,7 +115,7 @@ const Sidebar: React.FC = () => {
         <NavLink
           to="/project"
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#333b5166] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation
@@ -133,7 +126,7 @@ const Sidebar: React.FC = () => {
         <NavLink
           to="/analytics "
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#333b5166] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation title="Analytics" Icon={<ChartBarIcon />} />
@@ -142,7 +135,7 @@ const Sidebar: React.FC = () => {
         <NavLink
           to="/profile"
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#333b5166] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation title="Profile" Icon={<UserCircleIcon />} />
@@ -152,7 +145,7 @@ const Sidebar: React.FC = () => {
         <NavLink
           to="/lightweigh"
           className={({ isActive }) =>
-            isActive ? "bg-gray-200 rounded-md" : ""
+            isActive ? "bg-[#333b5166] rounded-md" : ""
           }
         >
           <SidebarItemNoAnimation
