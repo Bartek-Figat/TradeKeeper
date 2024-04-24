@@ -52,7 +52,7 @@ const SectionWrapper = memo(
     searchParams,
     setSearchParams,
   }: SectionWrapperProps) => {
-    const { ref, inView } = useInView({ threshold: 0.5 });
+    const { ref, inView } = useInView({ threshold: 0.6 });
 
     useEffect(() => {
       if (inView && activeSection !== id) {

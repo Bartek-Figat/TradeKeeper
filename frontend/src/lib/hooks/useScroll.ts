@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setIsScrolled } from "../../store/scroll/scrollSlice";
 
 export const useScroll = (threshold: number, delay: number): boolean => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const isScrolled = useSelector((state: RootState) => state.scroll.isScrolled);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -10,7 +14,7 @@ export const useScroll = (threshold: number, delay: number): boolean => {
       if (!timeoutId) {
         timeoutId = setTimeout(() => {
           const scrollPosition = window.scrollY;
-          setIsScrolled(scrollPosition > threshold);
+          dispatch(setIsScrolled(scrollPosition > threshold));
           timeoutId = null;
         }, delay);
       }
@@ -24,7 +28,7 @@ export const useScroll = (threshold: number, delay: number): boolean => {
         clearTimeout(timeoutId);
       }
     };
-  }, [threshold, delay]);
+  }, [threshold, delay, dispatch]);
 
   return isScrolled;
 };

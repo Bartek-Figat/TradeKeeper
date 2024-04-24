@@ -1,13 +1,20 @@
 import { FC, useState, type MouseEvent } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
 
-import { MdInsertChart, MdMenu, MdOutlineClose } from "react-icons/md";
+import { MdMenu, MdOutlineClose } from "react-icons/md";
 import { Button, buttonVariants } from "./ui/button";
+import Logo from "./Logo";
 
-const NAV_LINKS = ["home", "about", "pricing", "team", "contact"] as const;
+enum NavigationLinks {
+  Home = "home",
+  About = "about",
+  Pricing = "pricing",
+  Team = "team",
+  Contact = "contact",
+}
 
 interface NavbarProps {
   searchParams: URLSearchParams;
@@ -56,17 +63,7 @@ const Navbar: FC<NavbarProps> = ({
           }
         )}
       >
-        {/* logo */}
-        <Link to="/" className="flex items-center space-x-1">
-          <MdInsertChart
-            className={cn("size-9", {
-              "fill-primary-foreground": !isScrolled,
-              "fill-primary dark:fill-primary-foreground": isScrolled,
-            })}
-          />
-          <span className="font-bold text-lg tracking-tight">Trade Keeper</span>
-        </Link>
-        {/* end of logo */}
+        <Logo />
         {/* nav links */}
         <div
           className={cn(
@@ -86,7 +83,7 @@ const Navbar: FC<NavbarProps> = ({
             </Button>
           </div>
           <ul className="text-base font-bold tracking-wide flex flex-col text-center space-y-6 md:flex-row md:space-x-4 lg:space-x-8 md:space-y-0">
-            {NAV_LINKS.map((link) => (
+            {Object.values(NavigationLinks).map((link) => (
               <li key={link}>
                 <a
                   onClick={(e) => smoothScrollToSection(e, link)}
@@ -109,7 +106,7 @@ const Navbar: FC<NavbarProps> = ({
         {/* mobile menu + outer navigation */}
         <div className="flex items-center space-x-1">
           <NavLink
-            to="/sign-in"
+            to="/login"
             className={cn(
               buttonVariants({
                 variant: "ghost",
@@ -119,6 +116,18 @@ const Navbar: FC<NavbarProps> = ({
             )}
           >
             Sign in
+          </NavLink>
+          <NavLink
+            to="/register"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "text-base font-bold",
+              })
+            )}
+          >
+            Sign up
           </NavLink>
           <Button
             className="md:hidden"
