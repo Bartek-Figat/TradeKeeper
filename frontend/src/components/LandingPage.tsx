@@ -1,52 +1,71 @@
-import { useState } from "react";
-import classNames from "classnames";
+import { ReactNode, memo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
+
+import Navbar from "./Navbar";
 
 const LandingPage: React.FC = () => {
-  const [theme, setTheme] = useState("light");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sectionQuery = {
+    activeSection: searchParams.get("section") ?? "home",
+    searchParams,
+    setSearchParams,
+  };
+
   return (
-    <div className="bg-lime-100 min-h-screen">
-      <div className={classNames("bg-background text-foreground", theme)}>
-        <div className="mb-20">
-          <button
-            className="border-destructive border p-3"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            {theme === "light" ? "switch to dark" : "switch to light"}
-          </button>
-        </div>
-        <div className="p-10">
-          <div className="space-x-3">
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-full">
-              primary
-            </button>
-            <button className="bg-secondary text-secondary-foreground px-4 py-2 rounded-full">
-              secondary
-            </button>
-            <button className="bg-accent text-accent-foreground px-4 py-2 rounded-full">
-              accent
-            </button>
-            <button className="bg-destructive text-destructive-foreground px-4 py-2 rounded-full">
-              destrutive
-            </button>
-            <button className="bg-destructive/80 text-destructive-foreground px-4 py-2 rounded-full">
-              opacity eg.: destructive/80
-            </button>
-          </div>
-          <div className="my-10">
-            <h1 className="">normal text</h1>
-            <h1 className="text-muted-foreground">muted text</h1>
-          </div>
-          <div className="my-10">
-            <input
-              type="text"
-              className="border-input border"
-              placeholder="border test"
-            />
-          </div>
-        </div>
-      </div>
+    <div className="bg-background text-foreground min-h-screen antialiased">
+      <Navbar {...sectionQuery} />
+      <SectionWrapper id="home" {...sectionQuery}>
+        <header className="min-h-[800px] pt-32 bg-primary">hero</header>
+      </SectionWrapper>
+      <SectionWrapper id="about" {...sectionQuery}>
+        <section className="max-w-screen-xl px-4 py-6 mx-auto bg-lime-200 min-h-[800px]"></section>
+      </SectionWrapper>
+      <SectionWrapper id="pricing" {...sectionQuery}>
+        <section className="max-w-screen-xl px-4 py-6 mx-auto bg-lime-400 min-h-[800px]"></section>
+      </SectionWrapper>
+      <SectionWrapper id="team" {...sectionQuery}>
+        <section className="max-w-screen-xl px-4 py-6 mx-auto bg-lime-600 min-h-[800px]"></section>
+      </SectionWrapper>
+      <SectionWrapper id="contact" {...sectionQuery}>
+        <section className="max-w-screen-xl px-4 py-6 mx-auto bg-lime-800 min-h-[800px]"></section>
+      </SectionWrapper>
     </div>
   );
 };
 
 export default LandingPage;
+
+interface SectionWrapperProps {
+  id: string;
+  children: ReactNode;
+  searchParams: URLSearchParams;
+  setSearchParams: (params: URLSearchParams) => void;
+  activeSection: string;
+}
+
+const SectionWrapper = memo(
+  ({
+    id,
+    children,
+    activeSection,
+    searchParams,
+    setSearchParams,
+  }: SectionWrapperProps) => {
+    const { ref, inView } = useInView({ threshold: 0.6 });
+
+    useEffect(() => {
+      if (inView && activeSection !== id) {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("section", id);
+        setSearchParams(newParams);
+      }
+    }, [inView]);
+
+    return (
+      <div ref={ref} id={id}>
+        {children}
+      </div>
+    );
+  }
+);
