@@ -32,12 +32,20 @@ const CreateTrade = () => {
     quantity: "",
     paidPrice: "",
     fee: "",
-    market: "", // Default market value
+    market: "",
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-      <div className="m-auto w-full md:w-[40rem] p-4 rounded-lg shadow-md">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center h-full w-full m-auto">
+      <div className="col-span-5 h-full w-full flex items-center justify-center text-center text-black p-8 z-10">
+        <div className="flex justify-center items-center w-3/4 h-3/4">
+          <h1 className="text-3xl font-bold leading-tight text-gray-800">
+            When it comes to our new business venture, I’m the TradeKeeper. I’ll
+            handle setting up all the necessary trades and transactions.
+          </h1>
+        </div>
+      </div>
+      <div className="col-span-6">
         <h1 className="text-2xl font-bold mb-4">Create Trade</h1>
         <Formik
           initialValues={initialValues}
@@ -223,6 +231,7 @@ const CreateTrade = () => {
           )}
         </Formik>
       </div>
+      <div className="col-span-1"></div>
     </div>
   );
 };

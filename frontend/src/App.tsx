@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
-import RequireAuth from "@auth-kit/react-router/RequireAuth";
+// import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import Content from "./components/Content";
 import { useRoutes } from "react-router-dom";
 import Layout from "./Layout/Layout";
@@ -21,13 +21,17 @@ export const App = () => {
         { path: "/project", element: <ProjectPage /> },
         { path: "/analytics", element: <AnalyticsPage /> },
         { path: "/lightweigh", element: <Lightweigh /> },
+        // {
+        //   path: "/create-trade",
+        //   element: (
+        //     <RequireAuth fallbackPath="/login">
+        //       <CreateTrade />
+        //     </RequireAuth>
+        //   ),
+        // },
         {
           path: "/create-trade",
-          element: (
-            <RequireAuth fallbackPath="/login">
-              <CreateTrade />
-            </RequireAuth>
-          ),
+          element: <CreateTrade />,
         },
       ],
     },
