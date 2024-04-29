@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 
-const Layout = () => {
+const DasboardLayout = () => {
   return (
     <div className="flex flex-col min-h-screen w-full">
       <div className="flex flex-1">
@@ -22,4 +22,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default DasboardLayout;

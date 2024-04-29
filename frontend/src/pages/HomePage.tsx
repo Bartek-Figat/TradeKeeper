@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 
 import Navbar from "../components/Navbar";
 
-const LandingPage: React.FC = () => {
+const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sectionQuery = {
     activeSection: searchParams.get("section") ?? "home",
@@ -34,7 +34,7 @@ const LandingPage: React.FC = () => {
   );
 };
 
-export default LandingPage;
+export default HomePage;
 
 interface SectionWrapperProps {
   id: string;
