@@ -1,14 +1,14 @@
 import "react-toastify/dist/ReactToastify.css";
 // import RequireAuth from "@auth-kit/react-router/RequireAuth";
-import Content from "./components/Content";
+import Content from "./pages/Content";
 import { useRoutes } from "react-router-dom";
-import Layout from "./Layout/Layout";
-import ProfilePage from "./components/Profile";
-import ProjectPage from "./components/Project";
-import AnalyticsPage from "./components/AnalyticsPage";
+import Layout from "./layouts/Layout";
+import ProfilePage from "./pages/ProfilePage";
+import ProjectPage from "./pages/ProjectPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 import Lightweigh from "./components/chart/Lightweigh";
 import CreateTrade from "./components/CreateTrade";
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./pages/LandingPage";
 
 export const App = () => {
   const element = useRoutes([

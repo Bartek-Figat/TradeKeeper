@@ -5,7 +5,7 @@ import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
 
 import { MdMenu, MdOutlineClose } from "react-icons/md";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./common/button";
 import Logo from "./Logo";
 
 enum NavigationLinks {

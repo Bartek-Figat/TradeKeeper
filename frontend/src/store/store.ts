@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import scrollReducer from "./scroll/scrollSlice";
+import scrollReducer from "../slice/scrollSlice";
 
 export const store = configureStore({
   reducer: {

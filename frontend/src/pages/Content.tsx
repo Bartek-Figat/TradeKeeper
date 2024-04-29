@@ -1,5 +1,5 @@
 import ChartComponent from "../components/chart/chartContentPage";
-import { staticData } from "./chart/priceData";
+import { staticData } from "../components/chart/priceData";
 
 const Content = () => {
   const myStocks = [

@@ -2,7 +2,7 @@ import { ReactNode, memo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 
 const LandingPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
