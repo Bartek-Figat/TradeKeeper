@@ -1,15 +1,10 @@
 import { ReactNode, memo, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import heroImage from "../img/hero.png";
-
-<<<<<<< HEAD:frontend/src/components/LandingPage.tsx
-import Navbar from "./Navbar";
-import { buttonVariants } from "./ui/button";
-import BlobBg from "./ui/blobBg";
-=======
 import Navbar from "../components/Navbar";
->>>>>>> 0ee79af218d0e32533aee161cd752e9399d01d3a:frontend/src/pages/HomePage.tsx
+import { buttonVariants } from "../components/common/button";
+import BlobBg from "../components/common/blobBg";
+import heroImage from "../img/hero.png";
 
 const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
