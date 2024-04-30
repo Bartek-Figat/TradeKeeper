@@ -8,6 +8,8 @@ import { UserController } from './../src/controllers/user/UserController';
 import { TradeController } from './../src/controllers/trade/TraedController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../src/controllers/auth/authController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { NotesController } from './../src/controllers/ai/ai.controller';
 import { expressAuthentication } from './../src/authentication/authGate';
 // @ts-ignore - no great way to install types from subpackage
 import type { RequestHandler, Router } from 'express';
@@ -456,6 +458,30 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.logoutFromAllDevices.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/notes/ai-notes',
+            ...(fetchMiddlewares<RequestHandler>(NotesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotesController.prototype.getAllTrades)),
+
+            function NotesController_getAllTrades(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new NotesController();
+
+
+              const promise = controller.getAllTrades.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
