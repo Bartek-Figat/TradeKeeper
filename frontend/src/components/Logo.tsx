@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { setIsScrolled } from "../store/scroll/scrollSlice";
+import { setIsScrolled } from "../slice/scrollSlice";
 import { cn } from "../lib/utils";
 import { MdInsertChart } from "react-icons/md";
 

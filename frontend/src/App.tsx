@@ -1,28 +1,38 @@
 import "react-toastify/dist/ReactToastify.css";
 // import RequireAuth from "@auth-kit/react-router/RequireAuth";
-import Content from "./components/Content";
 import { useRoutes } from "react-router-dom";
-import Layout from "./Layout/Layout";
-import ProfilePage from "./components/Profile";
-import ProjectPage from "./components/Project";
-import AnalyticsPage from "./components/AnalyticsPage";
+import DasboardLayout from "./layouts/DashboardLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import ProfilePage from "./pages/ProfilePage";
+import ProjectPage from "./pages/ProjectPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 import Lightweigh from "./components/chart/Lightweigh";
 import CreateTrade from "./components/CreateTrade";
-import LandingPage from "./components/LandingPage";
+import DashboardPage from "./pages/DashboardPage";
+import HomePage from "./pages/HomePage";
 
 export const App = () => {
   const element = useRoutes([
+    { path: "/", element: <HomePage /> },
     {
-      path: `/`,
-      element: <Layout />,
+      element: <AuthLayout />,
       children: [
-        { index: true, element: <Content /> },
-        { path: "/profile", element: <ProfilePage /> },
-        { path: "/project", element: <ProjectPage /> },
-        { path: "/analytics", element: <AnalyticsPage /> },
-        { path: "/lightweigh", element: <Lightweigh /> },
+        { path: "/login", element: <h1>Login Page</h1> },
+        { path: "/register", element: <h1>Register Page</h1> },
+      ],
+    },
+    // protect
+    {
+      path: `/dashboard`,
+      element: <DasboardLayout />,
+      children: [
+        { index: true, element: <DashboardPage /> },
+        { path: "profile", element: <ProfilePage /> },
+        { path: "project", element: <ProjectPage /> },
+        { path: "analytics", element: <AnalyticsPage /> },
+        { path: "lightweigh", element: <Lightweigh /> },
         // {
-        //   path: "/create-trade",
+        //   path: "create-trade",
         //   element: (
         //     <RequireAuth fallbackPath="/login">
         //       <CreateTrade />
@@ -30,14 +40,12 @@ export const App = () => {
         //   ),
         // },
         {
-          path: "/create-trade",
+          path: "create-trade",
           element: <CreateTrade />,
         },
       ],
     },
-    { path: "/login", element: <h1>Login Page</h1> },
-    { path: "/register", element: <h1>Register Page</h1> },
-    { path: "/landing", element: <LandingPage /> },
+    //
   ]);
   return element;
 };
