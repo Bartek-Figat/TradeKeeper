@@ -25,7 +25,9 @@ const Logo = () => {
           "fill-primary dark:fill-primary-foreground": isScrolled,
         })}
       />
-      <span className="font-bold text-lg tracking-tight">Trade Keeper</span>
+      <span className="font-bold text-lg tracking-tight hidden md:block">
+        Trade Keeper
+      </span>
     </button>
   );
 };
