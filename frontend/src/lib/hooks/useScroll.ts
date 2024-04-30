@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { setIsScrolled } from "../../store/scroll/scrollSlice";
+import { setIsScrolled } from "../../slice/scrollSlice";
 
 export const useScroll = (threshold: number, delay: number): boolean => {
   const isScrolled = useSelector((state: RootState) => state.scroll.isScrolled);

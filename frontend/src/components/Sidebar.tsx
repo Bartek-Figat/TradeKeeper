@@ -94,7 +94,7 @@ const Sidebar: React.FC = () => {
     <div className="">
       <div className="flex flex-col w-full p-6">
         <NavLink
-          to="/create-trade"
+          to="create-trade"
           className={({ isActive }) =>
             isActive ? "bg-[#242157] rounded-md" : ""
           }
@@ -113,7 +113,7 @@ const Sidebar: React.FC = () => {
           <SidebarItemNoAnimation title="Home" Icon={<HomeIcon />} />
         </NavLink>
         <NavLink
-          to="/project"
+          to="project"
           className={({ isActive }) =>
             isActive ? "bg-[#333b5166] rounded-md" : ""
           }
@@ -124,7 +124,7 @@ const Sidebar: React.FC = () => {
           />
         </NavLink>
         <NavLink
-          to="/analytics "
+          to="analytics "
           className={({ isActive }) =>
             isActive ? "bg-[#333b5166] rounded-md" : ""
           }
@@ -133,7 +133,7 @@ const Sidebar: React.FC = () => {
         </NavLink>
 
         <NavLink
-          to="/profile"
+          to="profile"
           className={({ isActive }) =>
             isActive ? "bg-[#333b5166] rounded-md" : ""
           }
@@ -143,7 +143,7 @@ const Sidebar: React.FC = () => {
 
         <SidebarItem title="Settings" Icon={<CogIcon />} />
         <NavLink
-          to="/lightweigh"
+          to="lightweigh"
           className={({ isActive }) =>
             isActive ? "bg-[#333b5166] rounded-md" : ""
           }
