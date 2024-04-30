@@ -1,7 +1,7 @@
 import ChartComponent from "../components/chart/chartContentPage";
-import { staticData } from "./chart/priceData";
+import { staticData } from "../components/chart/priceData";
 
-const Content = () => {
+const DashboardPage = () => {
   const myStocks = [
     { name: "Apple Inc.", quantity: 10, currentValue: "$1,116.90" },
     { name: "Twitter Inc.", quantity: 15, currentValue: "$993.21" },
@@ -210,4 +210,4 @@ const Content = () => {
   );
 };
 
-export default Content;
+export default DashboardPage;
