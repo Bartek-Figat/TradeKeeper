@@ -1,8 +1,10 @@
 import { ReactNode, memo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-
 import Navbar from "../components/Navbar";
+import { buttonVariants } from "../components/common/button";
+import BlobBg from "../components/common/blobBg";
+import heroImage from "../img/hero.png";
 
 const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,7 +18,52 @@ const HomePage: React.FC = () => {
     <div className="bg-background text-foreground min-h-screen antialiased">
       <Navbar {...sectionQuery} />
       <SectionWrapper id="home" {...sectionQuery}>
-        <header className="min-h-[800px] pt-32 bg-primary">hero</header>
+        <section className="h-dvh bg-primary px-6 lg:px-10 relative overflow-hidden">
+          {/* bg circles */}
+          <div className="bg-primary-foreground opacity-15 blur-xl w-72 h-72 rounded-full absolute -bottom-10 -right-10"></div>
+          <div className="bg-primary-foreground opacity-15 blur-xl w-[800px] h-[800px] rounded-full absolute -top-48 -left-72"></div>
+          {/* end of bg circles */}
+          <header className="h-dvh max-w-screen-xl mx-auto py-20 flex flex-col items-center justify-evenly lg:flex-row">
+            <div className="text-center max-w-[500px] flex-grow md:flex-grow-0 flex flex-col justify-evenly lg:text-start">
+              {/* h1 + subheading and action btn */}
+              <div className="space-y-12">
+                <h1 className="text-primary-foreground font-bold text-6xl lg:text-[5.5rem] leading-[1.1]">
+                  Trading journal for the people.
+                </h1>
+                <p className="text-primary-foreground/80">
+                  Looking for a free and ad free trading journal that's fast,
+                  easy to use and comprehensive enough to seamlessly integrate
+                  into your daily routine? Look no further!
+                </p>
+              </div>
+              <div className="mt-8 group relative w-fit mx-auto lg:mx-0">
+                <div className="absolute -inset-0.5 bg-accent rounded-lg blur opacity-70 group-hover:opacity-100 group-hover:blur-xl transition-all duration-300"></div>
+                <Link
+                  to="/dashboard"
+                  className={buttonVariants({
+                    variant: "secondary",
+                    size: "lg",
+                    className:
+                      "relative text-foreground font-semibold w-[180px]",
+                  })}
+                >
+                  Get Started
+                </Link>
+              </div>
+              {/* end */}
+            </div>
+            {/* hero image */}
+            <BlobBg className="hidden md:block">
+              <div className="relative">
+                <img
+                  src={heroImage}
+                  className="w-full object-cover object-bottom"
+                />
+              </div>
+            </BlobBg>
+            {/* end */}
+          </header>
+        </section>
       </SectionWrapper>
       <SectionWrapper id="about" {...sectionQuery}>
         <section className="max-w-screen-xl px-4 py-6 mx-auto bg-lime-200 min-h-[800px]"></section>
