@@ -1,5 +1,9 @@
 import { ObjectId } from "mongodb";
-import { quoteSummary, getHistoricalRatesForex } from "./tradeUtillts";
+import {
+  quoteSummary,
+  getHistoricalRatesForex,
+  getCompanySummaryProfile,
+} from "./tradeUtillts";
 import { Database } from "../../config/db/database";
 
 export class TradeRepository {
@@ -42,11 +46,24 @@ export class TradeRepository {
     return this.tradeCollection.findOne({ _id: new ObjectId(tradeId) });
   }
 
+  //Get company profile
+  async getCompanyProfile(symbol: string): Promise<any> {
+    const companyProfile = await getCompanySummaryProfile(symbol);
+    return companyProfile;
+  }
+
   // Update a trade by ID
   updateTrade(tradeId: string, updatedTrade: any): any {
     return this.tradeCollection.updateOne(
       { _id: new ObjectId(tradeId) },
       { $set: updatedTrade }
+    );
+  }
+  // Add note to trade
+  addNoteToTrade(tradeId: string, note: string): any {
+    return this.tradeCollection.updateOne(
+      { _id: new ObjectId(tradeId) },
+      { $set: { note } }
     );
   }
 

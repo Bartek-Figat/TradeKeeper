@@ -69,3 +69,27 @@ export const getHistoricalRatesForex = async (symbol: any) => {
     console.log("Error Get Historical Rates Forex", error);
   }
 };
+
+// Get Economics events calendar
+// export const getCalendarEvents = async (symbol: string) => {
+//   try {
+//     const profile = await yahooFinance.quoteSummary(symbol, {
+//       modules: ["calendarEvents"],
+//     });
+//     return profile;
+//   } catch (error) {
+//     console.log("Error Get Company Profile", error);
+//   }
+// };
+
+// Get Company Profile
+export const getCompanySummaryProfile = async (symbol: string) => {
+  try {
+    const profile = await yahooFinance.quoteSummary(symbol, {
+      modules: ["summaryProfile"],
+    });
+    return profile;
+  } catch (error) {
+    console.log("Error Get Company Profile", error);
+  }
+};
