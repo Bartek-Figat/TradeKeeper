@@ -10,6 +10,7 @@ import compression from "compression";
 import morgan from "morgan";
 import cors from "cors";
 import hpp from "hpp";
+import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 import { RegisterRoutes } from "../build/routes";
@@ -42,6 +43,8 @@ app.use(
     credentials: true,
   })
 );
+
+dotenv.config({ path: "./.env" });
 
 // Security middleware
 app.use(helmet());
