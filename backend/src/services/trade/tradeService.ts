@@ -1,12 +1,14 @@
-import { DeleteResult, ObjectId, UpdateResult, WithId } from "mongodb";
+import { DeleteResult, ObjectId, UpdateResult } from "mongodb";
 import {
   quoteSummary,
   getHistoricalRatesForex,
   getCompanySummaryProfile,
+  convertToTradeDTO,
 } from "./tradeUtillts";
 import { Database } from "../../config/db/database";
 import { Trade } from "src/utils/tradeTypes";
 import { QuoteSummaryResult } from "yahoo-finance2/dist/esm/src/modules/quoteSummary-iface";
+import { TradeDto } from "src/dto/dto";
 
 export class TradeRepository {
   private database: Database = new Database();
@@ -41,21 +43,21 @@ export class TradeRepository {
   }
 
   // Read all trades
-  async getAllTrades(): Promise<WithId<Trade>[]> {
-    return (await this.tradeCollection.find().toArray()) as WithId<Trade>[];
+  async getAllTrades(): Promise<TradeDto[]> {
+    const docs = await this.tradeCollection.find().toArray();
+    return docs.map(convertToTradeDTO);
   }
 
-  async getAllUserTrades(userId: string): Promise<WithId<Trade>[]> {
-    return (await this.tradeCollection
-      .find({ userId: userId })
-      .toArray()) as WithId<Trade>[];
+  async getAllUserTrades(userId: string): Promise<TradeDto[]> {
+    const docs = await this.tradeCollection.find({ userId: userId }).toArray();
+    return docs.map(convertToTradeDTO);
   }
 
-  // Read a specific trade by ID
-  async getTradeById(tradeId: string): Promise<WithId<Trade>> {
-    return (await this.tradeCollection.findOne({
+  async getTradeById(tradeId: string): Promise<TradeDto> {
+    const doc = await this.tradeCollection.findOne({
       _id: new ObjectId(tradeId),
-    })) as WithId<Trade>;
+    });
+    return convertToTradeDTO(doc as any);
   }
 
   // Update a trade by ID
@@ -89,6 +91,10 @@ export class TradeRepository {
   // Delete all trades
   deleteAllTrades(): Promise<DeleteResult> {
     return this.tradeCollection.deleteMany({});
+  }
+
+  deleteMyTrades(userId: string): Promise<DeleteResult> {
+    return this.tradeCollection.deleteMany({ userId: userId });
   }
 
   async getCompanyProfile(

@@ -1,3 +1,5 @@
+import { WithId, Document } from "mongodb";
+import { TradeDto } from "../../dto/dto";
 import yahooFinance from "yahoo-finance2";
 import { getHistoricalRates } from "dukascopy-node";
 
@@ -80,3 +82,29 @@ export const getCompanySummaryProfile = async (symbol: string) => {
     console.log("Error Get Company Profile", error);
   }
 };
+
+export function convertToTradeDTO(doc: WithId<Document>): TradeDto {
+  return {
+    id: doc._id.toString(), // Konwersja ObjectId na string
+    createdAt: doc.createdAt,
+    entry: doc.entry,
+    entryQty: doc.entryQty,
+    entryTotal: doc.entryTotal,
+    executions: doc.executions,
+    exit: doc.exit,
+    exitQty: doc.exitQty,
+    exitTotal: doc.exitTotal,
+    holdTime: doc.holdTime,
+    lastTransactionAt: doc.lastTransactionAt,
+    market: doc.market,
+    openDate: doc.openDate,
+    position: doc.position,
+    positionType: doc.positionType,
+    rMultiple: doc.rMultiple,
+    urnAmnt: doc.urnAmnt,
+    returnPercent: doc.returnPercent,
+    status: doc.status,
+    symbol: doc.symbol,
+    tags: doc.tags,
+  };
+}

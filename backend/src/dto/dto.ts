@@ -36,7 +36,7 @@ export class VerifyEmail {
 
 export class TradeDto {
   @IsNotEmpty()
-  tradeID!: string;
+  id!: string;
 
   @IsDate()
   createdAt: Date = new Date();

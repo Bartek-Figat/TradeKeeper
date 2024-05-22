@@ -15,6 +15,7 @@ import { TradeRepository } from "../../services/trade/tradeService";
 import { Trade } from "src/utils/tradeTypes";
 import { getUserId } from "../../middlewares/middleware";
 import { DeleteResult, UpdateResult } from "mongodb";
+import { TradeDto } from "src/dto/dto";
 
 @Route("trades")
 export class TradeController extends Controller {
@@ -22,19 +23,19 @@ export class TradeController extends Controller {
 
   @Security("jwt")
   @Get("/")
-  public async getAllTrades(): Promise<Trade[]> {
+  public async getAllTrades(): Promise<TradeDto[]> {
     return this.tradeRepository.getAllTrades();
   }
 
   @Security("jwt")
   @Middlewares(getUserId)
   @Get("/")
-  public async getAllUserTrades(req: Request): Promise<Trade[]> {
+  public async getAllUserTrades(req: Request): Promise<TradeDto[]> {
     return this.tradeRepository.getAllUserTrades(req.userId);
   }
   @Security("jwt")
   @Get("/{tradeId}")
-  public async getTradeById(@Path() tradeId: string): Promise<Trade> {
+  public async getTradeById(@Path() tradeId: string): Promise<TradeDto> {
     return this.tradeRepository.getTradeById(tradeId);
   }
   @Security("jwt")

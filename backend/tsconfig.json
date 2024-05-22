@@ -30,7 +30,7 @@
 
     /* Experimental Options */
     "experimentalDecorators": true,
-    // emitDecoratorMetadata is not needed by tsoa (unless you are using Custom Middlewares)
+    "emitDecoratorMetadata": true,
 
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true
