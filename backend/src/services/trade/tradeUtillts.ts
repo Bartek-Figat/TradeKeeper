@@ -2,7 +2,6 @@ import { WithId, Document } from "mongodb";
 import { TradeDto } from "../../dto/dto";
 import yahooFinance from "yahoo-finance2";
 import { getHistoricalRates } from "dukascopy-node";
-
 export const quoteSummary = async (symbol: string) => {
   try {
     const {
@@ -83,7 +82,7 @@ export const getCompanySummaryProfile = async (symbol: string) => {
   }
 };
 
-export function convertToTradeDTO(doc: WithId<Document>): TradeDto {
+export function convertToTradeDTO(doc: any): TradeDto {
   return {
     id: doc._id.toString(), // Konwersja ObjectId na string
     createdAt: doc.createdAt,

@@ -40,7 +40,6 @@ export class TradeController extends Controller {
   }
   @Security("jwt")
   @Post("/create-trade")
-  @Middlewares(getUserId)
   public async createTrade(
     req: Request,
     @Body() newTrade: Trade

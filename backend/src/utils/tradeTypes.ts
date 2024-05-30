@@ -1,4 +1,4 @@
-import { Document } from "mongodb";
+import { Document, ObjectId } from "mongodb";
 //import { TradeDto } from "src/dto/dto";
 //import { Request } from "express";
 
@@ -13,7 +13,7 @@ declare global {
 export type TradeBase = Omit<Document, "_id">;
 
 export interface Trade extends TradeBase {
-  _id: string;
+  _id: ObjectId;
   createdAt: Date;
   entry: number;
   entryQty: number;
