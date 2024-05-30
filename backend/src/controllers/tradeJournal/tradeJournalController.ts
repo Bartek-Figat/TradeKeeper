@@ -18,19 +18,21 @@ export class TradeJournalController extends Controller {
   private tradeJournalRepository: TradeJournalRepository =
     new TradeJournalRepository();
   @Security("jwt")
+  @Middlewares(getUserId)
   @Get("/")
   public async getAllTradesFromJournal() {
     return this.tradeJournalRepository.getAllTradesFromJournal();
   }
 
   @Security("jwt")
+  @Middlewares(getUserId)
   @Get("/{tradeId}")
   public async getTradeFromJournal(@Path() tradeId: string) {
     return this.tradeJournalRepository.getTradeFromJournal(tradeId);
   }
   @Security("jwt")
-  @Post("/create-journal-trade")
   @Middlewares(getUserId)
+  @Post("/create-journal-trade")
   public async createTradeInJournal(@Body() newTrade: any) {
     return this.tradeJournalRepository.createTradeInJournal(newTrade);
   }
@@ -47,6 +49,7 @@ export class TradeJournalController extends Controller {
   }
 
   @Security("jwt")
+  @Middlewares(getUserId)
   @Put("/{tradeId}/media")
   public async uploadMediaToJournal(
     @Path() tradeId: string,
@@ -56,6 +59,7 @@ export class TradeJournalController extends Controller {
   }
 
   @Security("jwt")
+  @Middlewares(getUserId)
   @Delete("/{tradeId}")
   public async deleteTradeFromJournal(@Path() tradeId: string) {
     return this.tradeJournalRepository.deleteTradeFromJournal(tradeId);
