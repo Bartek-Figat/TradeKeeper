@@ -1,7 +1,7 @@
 {
   "entryFile": "src/app.ts",
-  "noImplicitAdditionalProperties": "throw-on-extras",
-  "controllerPathGlobs": ["src/**/*Controller.ts"],
+  "noImplicitAdditionalProperties": "silently-remove-extras",
+  "controllerPathGlobs": ["src/controllers/**/*.ts"],
   "spec": {
     "outputDirectory": "build",
     "specVersion": 3,
@@ -21,5 +21,6 @@
   "routes": {
     "routesDir": "build",
     "authenticationModule": "./src/authentication/authGate.ts"
-  }
+  },
+  "ignore": ["**/node_modules/**"]
 }
