@@ -1,3 +1,4 @@
+import { getUserId } from "src/middlewares/middleware";
 import { TradeJournalRepository } from "../../services/tradeJournalService/tradeJournalService";
 import {
   Body,
@@ -9,6 +10,7 @@ import {
   Put,
   Route,
   Security,
+  Middlewares,
 } from "tsoa";
 
 @Route("trades-journal")
@@ -28,6 +30,7 @@ export class TradeJournalController extends Controller {
   }
   @Security("jwt")
   @Post("/create-journal-trade")
+  @Middlewares(getUserId)
   public async createTradeInJournal(@Body() newTrade: any) {
     return this.tradeJournalRepository.createTradeInJournal(newTrade);
   }

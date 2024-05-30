@@ -39,6 +39,7 @@ export class TradeController extends Controller {
     return this.tradeRepository.getTradeById(tradeId);
   }
   @Security("jwt")
+  @Middlewares(getUserId)
   @Post("/create-trade")
   public async createTrade(
     req: Request,
@@ -49,7 +50,6 @@ export class TradeController extends Controller {
 
   @Security("jwt")
   @Put("/{tradeId}")
-  @Middlewares(getUserId)
   public async updateTrade(
     @Path() tradeId: string,
     @Body() updatedTrade: Trade
