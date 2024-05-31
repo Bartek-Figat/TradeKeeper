@@ -1,12 +1,20 @@
-import { ObjectId } from "mongodb";
-import { quoteSummary, getHistoricalRatesForex } from "./tradeUtillts";
+import { DeleteResult, ObjectId, UpdateResult } from "mongodb";
+import {
+  quoteSummary,
+  getHistoricalRatesForex,
+  getCompanySummaryProfile,
+  convertToTradeDTO,
+} from "./tradeUtillts";
 import { Database } from "../../config/db/database";
+import { Trade } from "src/utils/tradeTypes";
+import { QuoteSummaryResult } from "yahoo-finance2/dist/esm/src/modules/quoteSummary-iface";
+import { TradeDto } from "src/dto/dto";
 
 export class TradeRepository {
   private database: Database = new Database();
   private tradeCollection = this.database.getCollection("trade");
 
-  async createTrade(newTrade: any) {
+  async createTrade(newTrade: Trade, userId: string) {
     let formattedData: any = {};
     if (newTrade.stock || newTrade.crypto) {
       const quoteSummaryResult = await quoteSummary(newTrade.symbol);
@@ -17,6 +25,7 @@ export class TradeRepository {
           summary: quoteSummaryResult?.summaryResult,
           resultHistorical: quoteSummaryResult?.resultHistorical,
           type: newTrade.stock ? "stock" : "crypto",
+          userId: userId,
         };
       }
     } else if (newTrade.forex) {
@@ -25,6 +34,7 @@ export class TradeRepository {
         symbol: newTrade.symbol,
         data: historicalRates,
         type: `${newTrade.forex}`,
+        userId: userId,
       };
     }
     if (Object.keys(formattedData).length > 0) {
@@ -33,17 +43,25 @@ export class TradeRepository {
   }
 
   // Read all trades
-  getAllTrades(): any {
-    return this.tradeCollection.find().toArray();
+  async getAllTrades(): Promise<TradeDto[]> {
+    const docs = await this.tradeCollection.find().toArray();
+    return docs.map(convertToTradeDTO);
   }
 
-  // Read a specific trade by ID
-  getTradeById(tradeId: string): any {
-    return this.tradeCollection.findOne({ _id: new ObjectId(tradeId) });
+  async getAllUserTrades(userId: string): Promise<TradeDto[]> {
+    const docs = await this.tradeCollection.find({ userId: userId }).toArray();
+    return docs.map(convertToTradeDTO);
+  }
+
+  async getTradeById(tradeId: string): Promise<TradeDto> {
+    const doc = await this.tradeCollection.findOne({
+      _id: new ObjectId(tradeId),
+    });
+    return convertToTradeDTO(doc as any);
   }
 
   // Update a trade by ID
-  updateTrade(tradeId: string, updatedTrade: any): any {
+  updateTrade(tradeId: string, updatedTrade: Trade): Promise<UpdateResult> {
     return this.tradeCollection.updateOne(
       { _id: new ObjectId(tradeId) },
       { $set: updatedTrade }
@@ -51,17 +69,17 @@ export class TradeRepository {
   }
 
   // Delete a trade by ID
-  deleteTrade(tradeId: string): any {
+  deleteTrade(tradeId: string): Promise<DeleteResult> {
     return this.tradeCollection.deleteOne({ _id: new ObjectId(tradeId) });
   }
 
   // Find trades by a specific field
-  findTradesByField(field: string, value: any): any {
+  findTradesByField(field: string, value: string): any {
     return this.tradeCollection.find({ [field]: value }).toArray();
   }
 
   // Count total number of trades
-  countTotalTrades(): any {
+  countTotalTrades(): Promise<number> {
     return this.tradeCollection.countDocuments();
   }
 
@@ -71,7 +89,18 @@ export class TradeRepository {
   }
 
   // Delete all trades
-  deleteAllTrades(): any {
+  deleteAllTrades(): Promise<DeleteResult> {
     return this.tradeCollection.deleteMany({});
+  }
+
+  deleteMyTrades(userId: string): Promise<DeleteResult> {
+    return this.tradeCollection.deleteMany({ userId: userId });
+  }
+
+  async getCompanyProfile(
+    symbol: string
+  ): Promise<QuoteSummaryResult | undefined> {
+    const companyProfile = await getCompanySummaryProfile(symbol);
+    return companyProfile;
   }
 }

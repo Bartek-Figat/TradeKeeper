@@ -3,10 +3,6 @@ import { JwtPayload, verify } from "jsonwebtoken";
 import { Database } from "../config/db/database";
 import { ApiError } from "../error/apiError";
 
-// Function is used for authenticating the user using JWT (JSON Web Token).
-// It takes in a request object, a security name, and an optional array of scopes.
-// It returns a Promise that resolves to an object containing the decoded JWT and the auth header,
-// or undefined if the security name is not "jwt".
 export async function expressAuthentication(
   req: Request,
   securityName: string,

@@ -7,6 +7,7 @@ import {
   IsArray,
 } from "class-validator";
 import { Match } from "./match.decorator";
+import { ObjectId } from "mongodb";
 
 export class RegisterDto {
   @IsNotEmpty()
@@ -35,7 +36,7 @@ export class VerifyEmail {
 
 export class TradeDto {
   @IsNotEmpty()
-  tradeID!: string;
+  id!: string;
 
   @IsDate()
   createdAt: Date = new Date();
@@ -109,6 +110,23 @@ export class FolderDto {
   trades!: TradeDto[];
 }
 
+export class NoteDto {
+  @IsNotEmpty()
+  id!: string;
+
+  @IsString()
+  title!: string;
+
+  @IsString()
+  content!: string;
+
+  @IsDate()
+  createdAt!: Date;
+
+  @IsDate()
+  updatedAt!: Date;
+}
+
 export class MediaDto {
   @IsNotEmpty()
   id!: string;
@@ -125,7 +143,7 @@ export class MediaDto {
 
 export class JournalEntryDto {
   @IsNotEmpty()
-  _id!: string;
+  _id!: ObjectId;
 
   @IsString()
   title!: string;

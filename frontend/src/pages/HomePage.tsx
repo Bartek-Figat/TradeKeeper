@@ -27,13 +27,14 @@ const HomePage: React.FC = () => {
             <div className="text-center max-w-[500px] flex-grow md:flex-grow-0 flex flex-col justify-evenly lg:text-start">
               {/* h1 + subheading and action btn */}
               <div className="space-y-12">
-                <h1 className="text-primary-foreground font-bold text-6xl lg:text-[5.5rem] leading-[1.1]">
-                  Trading journal for the people.
+                <h1 className="text-primary-foreground font-bold text-6xl lg:text-[4.5rem] leading-[1.1]">
+                  A Trading Journal Designed for Everyone.
                 </h1>
-                <p className="text-primary-foreground/80">
-                  Looking for a free and ad free trading journal that's fast,
-                  easy to use and comprehensive enough to seamlessly integrate
-                  into your daily routine? Look no further!
+                <p className="text-primary-foreground/80 text-[1.2rem]">
+                  Found what you’re looking for? Don’t wait! Click the ‘Get
+                  Started’ to begin your journey with our comprehensive,
+                  user-friendly trading journal. It’s free, fast, and ad-free.
+                  Start optimizing your trading routine today!
                 </p>
               </div>
               <div className="mt-8 group relative w-fit mx-auto lg:mx-0">
