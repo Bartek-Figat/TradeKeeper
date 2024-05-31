@@ -29,6 +29,10 @@ export type LogoutDto = {
   user: { decoded: { token: string }; authHeader: string };
 };
 
+export type TokenDto = {
+  user: { decoded: { token: string }; authHeader: string };
+};
+
 export class VerifyEmail {
   @IsEmail()
   email!: string;
@@ -36,7 +40,7 @@ export class VerifyEmail {
 
 export class TradeDto {
   @IsNotEmpty()
-  id!: string;
+  id: ObjectId | undefined;
 
   @IsDate()
   createdAt: Date = new Date();
@@ -101,7 +105,7 @@ export class TradeDto {
 
 export class FolderDto {
   @IsNotEmpty()
-  id!: string;
+  id: ObjectId | undefined;
 
   @IsString()
   name!: string;
@@ -112,7 +116,7 @@ export class FolderDto {
 
 export class NoteDto {
   @IsNotEmpty()
-  id!: string;
+  id: ObjectId | undefined;
 
   @IsString()
   title!: string;
@@ -129,7 +133,7 @@ export class NoteDto {
 
 export class MediaDto {
   @IsNotEmpty()
-  id!: string;
+  id: ObjectId | undefined;
 
   @IsNotEmpty()
   tradeId!: string;
@@ -143,7 +147,7 @@ export class MediaDto {
 
 export class JournalEntryDto {
   @IsNotEmpty()
-  _id!: ObjectId;
+  _id: ObjectId | undefined;
 
   @IsString()
   title!: string;
@@ -169,7 +173,7 @@ export class JournalEntryDto {
 
 export class TradeNewDto {
   @IsNotEmpty()
-  _id!: string;
+  _id: ObjectId | undefined;
 
   @IsNotEmpty()
   userId!: string;

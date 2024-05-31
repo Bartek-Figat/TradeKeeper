@@ -12,12 +12,12 @@ export class TradeJournalRepository {
     const journalEntryDto = new JournalEntryDto();
     Object.assign(journalEntryDto, newJournalTrade);
 
-    const _id = new ObjectId();
-    journalEntryDto._id = _id;
+    // const _id = new ObjectId();
+    // journalEntryDto._id = _id;
 
-    const currentDate = new Date();
-    journalEntryDto.createdAt = currentDate;
-    journalEntryDto.updatedAt = currentDate;
+    // const currentDate = new Date();
+    // journalEntryDto.createdAt = currentDate;
+    // journalEntryDto.updatedAt = currentDate;
 
     //const errors = await validate(journalEntryDto);
     // if (errors.length > 0) {

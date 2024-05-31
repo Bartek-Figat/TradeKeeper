@@ -1,0 +1,889 @@
+{
+    "openapi": "3.0.0",
+    "components": {
+        "examples": {},
+        "headers": {},
+        "parameters": {},
+        "requestBodies": {},
+        "responses": {},
+        "schemas": {
+            "UpdateProfileRequest": {
+                "properties": {},
+                "type": "object",
+                "additionalProperties": false
+            },
+            "ObjectId": {
+                "type": "string",
+                "description": "A class representation of the BSON ObjectId type."
+            },
+            "TradeDto": {
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "default": "2024-05-31T00:53:31.711Z"
+                    },
+                    "entry": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "entryQty": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "entryTotal": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "executions": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "exit": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "exitQty": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "exitTotal": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "holdTime": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "lastTransactionAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "market": {
+                        "type": "string"
+                    },
+                    "openDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "position": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "positionType": {
+                        "type": "string"
+                    },
+                    "rMultiple": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "urnAmnt": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "returnPercent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "entry",
+                    "entryQty",
+                    "entryTotal",
+                    "executions",
+                    "exit",
+                    "exitQty",
+                    "exitTotal",
+                    "holdTime",
+                    "lastTransactionAt",
+                    "market",
+                    "openDate",
+                    "position",
+                    "positionType",
+                    "rMultiple",
+                    "urnAmnt",
+                    "returnPercent",
+                    "status",
+                    "symbol",
+                    "tags"
+                ],
+                "type": "object",
+                "additionalProperties": false
+            },
+            "Pick_Document.Exclude_keyofDocument._id__": {
+                "properties": {},
+                "additionalProperties": {},
+                "type": "object",
+                "description": "From T, pick a set of properties whose keys are in the union K"
+            },
+            "Omit_Document._id_": {
+                "$ref": "#/components/schemas/Pick_Document.Exclude_keyofDocument._id__",
+                "description": "Construct a type with the properties of T except for those in type K."
+            },
+            "Trade": {
+                "properties": {
+                    "_id": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "entry": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "entryQty": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "entryTotal": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "executions": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "exit": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "exitQty": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "exitTotal": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "holdTime": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "lastTransactionAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "market": {
+                        "type": "string"
+                    },
+                    "openDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "position": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "positionType": {
+                        "type": "string"
+                    },
+                    "rMultiple": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "urnAmnt": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "returnPercent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "stock": {
+                        "type": "boolean"
+                    },
+                    "crypto": {
+                        "type": "boolean"
+                    },
+                    "forex": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "_id",
+                    "createdAt",
+                    "entry",
+                    "entryQty",
+                    "entryTotal",
+                    "executions",
+                    "exit",
+                    "exitQty",
+                    "exitTotal",
+                    "holdTime",
+                    "lastTransactionAt",
+                    "market",
+                    "openDate",
+                    "position",
+                    "positionType",
+                    "rMultiple",
+                    "urnAmnt",
+                    "returnPercent",
+                    "status",
+                    "symbol",
+                    "tags"
+                ],
+                "type": "object",
+                "additionalProperties": false
+            },
+            "InferIdType_Document_": {
+                "$ref": "#/components/schemas/InferIdType_Document_",
+                "description": "Given an object shaped type, return the type of the _id field or default to ObjectId"
+            },
+            "UpdateResult": {
+                "properties": {
+                    "acknowledged": {
+                        "type": "boolean",
+                        "description": "Indicates whether this write result was acknowledged. If not, then all other members of this result will be undefined"
+                    },
+                    "matchedCount": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "The number of documents that matched the filter"
+                    },
+                    "modifiedCount": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "The number of documents that were modified"
+                    },
+                    "upsertedCount": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "The number of documents that were upserted"
+                    },
+                    "upsertedId": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/InferIdType_Document_"
+                            }
+                        ],
+                        "nullable": true,
+                        "description": "The identifier of the inserted document if an upsert took place"
+                    }
+                },
+                "required": [
+                    "acknowledged",
+                    "matchedCount",
+                    "modifiedCount",
+                    "upsertedCount",
+                    "upsertedId"
+                ],
+                "type": "object",
+                "additionalProperties": false
+            },
+            "DeleteResult": {
+                "properties": {
+                    "acknowledged": {
+                        "type": "boolean",
+                        "description": "Indicates whether this write result was acknowledged. If not, then all other members of this result will be undefined."
+                    },
+                    "deletedCount": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "The number of documents that were deleted"
+                    }
+                },
+                "required": [
+                    "acknowledged",
+                    "deletedCount"
+                ],
+                "type": "object",
+                "additionalProperties": false
+            }
+        },
+        "securitySchemes": {
+            "jwt": {
+                "type": "jwt",
+                "name": "token",
+                "in": "headers"
+            },
+            "tsoa_auth": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "http://swagger.io/api/oauth/dialog",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    },
+    "info": {
+        "title": "backend",
+        "version": "1.0.0",
+        "license": {
+            "name": "MIT"
+        },
+        "contact": {
+            "name": "Bartek-Figat"
+        }
+    },
+    "paths": {
+        "/profile/user-profile-info": {
+            "get": {
+                "operationId": "GetUser",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/profile/update-profile": {
+            "post": {
+                "operationId": "UpdateProfile",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/all-users": {
+            "get": {
+                "operationId": "GetAllUsers",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/profile/delete-user/{userId}": {
+            "delete": {
+                "operationId": "DeleteUser",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/profile/user/{userId}": {
+            "get": {
+                "operationId": "GetUserById",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/trades": {
+            "get": {
+                "operationId": "GetAllTrades",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/TradeDto"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/trades/all-user-trade": {
+            "get": {
+                "operationId": "GetAllUserTrades",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/TradeDto"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/trades/{tradeId}": {
+            "get": {
+                "operationId": "GetTradeById",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TradeDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            },
+            "put": {
+                "operationId": "UpdateTrade",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResult"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tradeId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Trade"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "DeleteTrade",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResult"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/trades/create-trade": {
+            "post": {
+                "operationId": "CreateTrade",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Trade"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trades/{symbol}": {
+            "get": {
+                "operationId": "GetCompanyProfile",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "symbol",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/api/auth/registration": {
+            "post": {
+                "operationId": "Registration",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [],
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "operationId": "Login",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "token"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/activate/{token}": {
+            "get": {
+                "operationId": "EmailConfirmation",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/api/auth/reset-password": {
+            "get": {
+                "operationId": "PasswordUpdate",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [],
+                "parameters": []
+            }
+        },
+        "/api/auth/update-password": {
+            "get": {
+                "operationId": "UpdatePassword",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [],
+                "parameters": []
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "operationId": "Logout",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/api/auth/logout-from-all": {
+            "get": {
+                "operationId": "LogoutFromAllDevices",
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "parameters": []
+            }
+        },
+        "/notes/ai-notes": {
+            "get": {
+                "operationId": "GenerateNotes",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [],
+                "parameters": []
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ]
+}

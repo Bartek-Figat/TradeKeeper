@@ -7,15 +7,13 @@ import {
   Route,
   Path,
   Body,
-  Middlewares,
   Security,
+  Request,
 } from "tsoa";
-import { Request } from "express";
 import { TradeRepository } from "../../services/trade/tradeService";
-import { Trade } from "src/utils/tradeTypes";
-import { getUserId } from "../../middlewares/middleware";
+import { Trade } from "../../utils/tradeTypes";
 import { DeleteResult, UpdateResult } from "mongodb";
-import { TradeDto } from "src/dto/dto";
+import { TradeDto } from "../../dto/dto";
 
 @Route("trades")
 export class TradeController extends Controller {
@@ -28,24 +26,22 @@ export class TradeController extends Controller {
   }
 
   @Security("jwt")
-  @Middlewares(getUserId)
-  @Get("/")
-  public async getAllUserTrades(req: Request): Promise<TradeDto[]> {
-    return this.tradeRepository.getAllUserTrades(req.userId);
+  @Get("/all-user-trade")
+  public async getAllUserTrades(@Request() req: any): Promise<TradeDto[]> {
+    return this.tradeRepository.getAllUserTrades(req);
   }
   @Security("jwt")
   @Get("/{tradeId}")
-  public async getTradeById(@Path() tradeId: string): Promise<TradeDto> {
+  public async getTradeById(@Request() tradeId: string): Promise<TradeDto> {
     return this.tradeRepository.getTradeById(tradeId);
   }
   @Security("jwt")
-  @Middlewares(getUserId)
   @Post("/create-trade")
   public async createTrade(
-    req: Request,
+    @Request() req: any,
     @Body() newTrade: Trade
   ): Promise<any> {
-    return this.tradeRepository.createTrade(newTrade, req.userId);
+    return this.tradeRepository.createTrade(newTrade, req);
   }
 
   @Security("jwt")
@@ -57,9 +53,8 @@ export class TradeController extends Controller {
     return this.tradeRepository.updateTrade(tradeId, updatedTrade);
   }
   @Security("jwt")
-  @Middlewares(getUserId)
   @Delete("/{tradeId}")
-  public async deleteTrade(@Path() tradeId: string): Promise<DeleteResult> {
+  public async deleteTrade(@Request() tradeId: string): Promise<DeleteResult> {
     return this.tradeRepository.deleteTrade(tradeId);
   }
   @Security("jwt")

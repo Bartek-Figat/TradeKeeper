@@ -24,6 +24,106 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ObjectId": {
+        "dataType": "refAlias",
+        "type": {"dataType":"string","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TradeDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"union","subSchemas":[{"ref":"ObjectId"},{"dataType":"undefined"}],"required":true},
+            "createdAt": {"dataType":"datetime","default":"2024-05-31T00:53:54.834Z"},
+            "entry": {"dataType":"double","required":true},
+            "entryQty": {"dataType":"double","required":true},
+            "entryTotal": {"dataType":"double","required":true},
+            "executions": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "exit": {"dataType":"double","required":true},
+            "exitQty": {"dataType":"double","required":true},
+            "exitTotal": {"dataType":"double","required":true},
+            "holdTime": {"dataType":"double","required":true},
+            "lastTransactionAt": {"dataType":"datetime","required":true},
+            "market": {"dataType":"string","required":true},
+            "openDate": {"dataType":"datetime","required":true},
+            "position": {"dataType":"double","required":true},
+            "positionType": {"dataType":"string","required":true},
+            "rMultiple": {"dataType":"double","required":true},
+            "urnAmnt": {"dataType":"double","required":true},
+            "returnPercent": {"dataType":"double","required":true},
+            "status": {"dataType":"string","required":true},
+            "symbol": {"dataType":"string","required":true},
+            "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_Document.Exclude_keyofDocument._id__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"any"}]},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_Document._id_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_Document.Exclude_keyofDocument._id__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Trade": {
+        "dataType": "refObject",
+        "properties": {
+            "_id": {"ref":"ObjectId","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "entry": {"dataType":"double","required":true},
+            "entryQty": {"dataType":"double","required":true},
+            "entryTotal": {"dataType":"double","required":true},
+            "executions": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "exit": {"dataType":"double","required":true},
+            "exitQty": {"dataType":"double","required":true},
+            "exitTotal": {"dataType":"double","required":true},
+            "holdTime": {"dataType":"double","required":true},
+            "lastTransactionAt": {"dataType":"datetime","required":true},
+            "market": {"dataType":"string","required":true},
+            "openDate": {"dataType":"datetime","required":true},
+            "position": {"dataType":"double","required":true},
+            "positionType": {"dataType":"string","required":true},
+            "rMultiple": {"dataType":"double","required":true},
+            "urnAmnt": {"dataType":"double","required":true},
+            "returnPercent": {"dataType":"double","required":true},
+            "status": {"dataType":"string","required":true},
+            "symbol": {"dataType":"string","required":true},
+            "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "stock": {"dataType":"boolean"},
+            "crypto": {"dataType":"boolean"},
+            "forex": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InferIdType_Document_": {
+        "dataType": "refAlias",
+        "type": {"ref":"InferIdType_Document_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateResult": {
+        "dataType": "refObject",
+        "properties": {
+            "acknowledged": {"dataType":"boolean","required":true},
+            "matchedCount": {"dataType":"double","required":true},
+            "modifiedCount": {"dataType":"double","required":true},
+            "upsertedCount": {"dataType":"double","required":true},
+            "upsertedId": {"dataType":"union","subSchemas":[{"ref":"InferIdType_Document_"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DeleteResult": {
+        "dataType": "refObject",
+        "properties": {
+            "acknowledged": {"dataType":"boolean","required":true},
+            "deletedCount": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -163,6 +263,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/trades',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(TradeController)),
             ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getAllTrades)),
 
@@ -186,13 +287,40 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/trades/all-user-trade',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TradeController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getAllUserTrades)),
+
+            function TradeController_getAllUserTrades(request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeController();
+
+
+              const promise = controller.getAllUserTrades.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/trades/:tradeId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(TradeController)),
             ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getTradeById)),
 
             function TradeController_getTradeById(request: any, response: any, next: any) {
             const args = {
-                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+                    tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -212,12 +340,14 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/trades/create-trade',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(TradeController)),
             ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.createTrade)),
 
             function TradeController_createTrade(request: any, response: any, next: any) {
             const args = {
-                    newTrade: {"in":"body","name":"newTrade","required":true,"dataType":"any"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    newTrade: {"in":"body","name":"newTrade","required":true,"ref":"Trade"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -237,13 +367,14 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/trades/:tradeId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(TradeController)),
             ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.updateTrade)),
 
             function TradeController_updateTrade(request: any, response: any, next: any) {
             const args = {
                     tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
-                    updatedTrade: {"in":"body","name":"updatedTrade","required":true,"dataType":"any"},
+                    updatedTrade: {"in":"body","name":"updatedTrade","required":true,"ref":"Trade"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -263,12 +394,13 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/trades/:tradeId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(TradeController)),
             ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.deleteTrade)),
 
             function TradeController_deleteTrade(request: any, response: any, next: any) {
             const args = {
-                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+                    tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -281,6 +413,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.deleteTrade.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/trades/:symbol',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TradeController)),
+            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getCompanyProfile)),
+
+            function TradeController_getCompanyProfile(request: any, response: any, next: any) {
+            const args = {
+                    symbol: {"in":"path","name":"symbol","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TradeController();
+
+
+              const promise = controller.getCompanyProfile.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -466,9 +624,9 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/notes/ai-notes',
             ...(fetchMiddlewares<RequestHandler>(NotesController)),
-            ...(fetchMiddlewares<RequestHandler>(NotesController.prototype.getAllTrades)),
+            ...(fetchMiddlewares<RequestHandler>(NotesController.prototype.generateNotes)),
 
-            function NotesController_getAllTrades(request: any, response: any, next: any) {
+            function NotesController_generateNotes(request: any, response: any, next: any) {
             const args = {
             };
 
@@ -481,7 +639,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new NotesController();
 
 
-              const promise = controller.getAllTrades.apply(controller, validatedArgs as any);
+              const promise = controller.generateNotes.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -611,24 +769,24 @@ export function RegisterRoutes(app: Router) {
                 case 'request':
                     return request;
                 case 'query':
-                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'queries':
-                    return validationService.ValidateParam(args[key], request.query, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.query, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'path':
-                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'header':
-                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'body':
-                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'body-prop':
-                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', {"noImplicitAdditionalProperties":"throw-on-extras"});
+                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', {"noImplicitAdditionalProperties":"silently-remove-extras"});
                 case 'formData':
                     if (args[key].dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.file, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.file, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                     } else if (args[key].dataType === 'array' && args[key].array.dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.files, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.files, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                     } else {
-                        return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
+                        return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"silently-remove-extras"});
                     }
                 case 'res':
                     return responder(response);

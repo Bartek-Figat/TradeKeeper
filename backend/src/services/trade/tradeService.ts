@@ -8,7 +8,7 @@ import {
 import { Database } from "../../config/db/database";
 import { Trade } from "src/utils/tradeTypes";
 import { QuoteSummaryResult } from "yahoo-finance2/dist/esm/src/modules/quoteSummary-iface";
-import { TradeDto } from "src/dto/dto";
+import { TokenDto, TradeDto } from "../../dto/dto";
 
 export class TradeRepository {
   private database: Database = new Database();
@@ -48,8 +48,13 @@ export class TradeRepository {
     return docs.map(convertToTradeDTO);
   }
 
-  async getAllUserTrades(userId: string): Promise<TradeDto[]> {
-    const docs = await this.tradeCollection.find({ userId: userId }).toArray();
+  async getAllUserTrades({ user }: TokenDto): Promise<TradeDto[]> {
+    const {
+      decoded: { token },
+    } = user;
+    const docs = await this.tradeCollection
+      .find({ userId: new ObjectId(token) })
+      .toArray();
     return docs.map(convertToTradeDTO);
   }
 

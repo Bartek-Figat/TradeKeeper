@@ -1,3 +1,4 @@
+"use strict";
 // import { getUserId } from "src/middlewares/middleware";
 // import { TradeJournalRepository } from "../../services/tradeJournalService/tradeJournalService";
 // import {
@@ -12,7 +13,6 @@
 //   Security,
 //   Middlewares,
 // } from "tsoa";
-
 // @Route("trades-journal")
 // export class TradeJournalController extends Controller {
 //   private tradeJournalRepository: TradeJournalRepository =
@@ -23,7 +23,6 @@
 //   public async getAllTradesFromJournal() {
 //     return this.tradeJournalRepository.getAllTradesFromJournal();
 //   }
-
 //   @Security("jwt")
 //   @Middlewares(getUserId)
 //   @Get("/{tradeId}")
@@ -47,7 +46,6 @@
 //       updatedTradeInJournal
 //     );
 //   }
-
 //   @Security("jwt")
 //   @Middlewares(getUserId)
 //   @Put("/{tradeId}/media")
@@ -57,7 +55,6 @@
 //   ) {
 //     return this.tradeJournalRepository.uploadMediaToJournal(tradeId, media);
 //   }
-
 //   @Security("jwt")
 //   @Middlewares(getUserId)
 //   @Delete("/{tradeId}")

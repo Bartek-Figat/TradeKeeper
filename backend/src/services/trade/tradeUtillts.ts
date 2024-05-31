@@ -1,4 +1,3 @@
-import { WithId, Document } from "mongodb";
 import { TradeDto } from "../../dto/dto";
 import yahooFinance from "yahoo-finance2";
 import { getHistoricalRates } from "dukascopy-node";
