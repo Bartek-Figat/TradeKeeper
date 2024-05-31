@@ -106,7 +106,7 @@ const Navbar: FC<NavbarProps> = ({
         {/* mobile menu + outer navigation */}
         <div className="flex items-center space-x-1">
           <NavLink
-            to="/login"
+            to="/sign-in"
             className={cn(
               buttonVariants({
                 variant: "ghost",
@@ -118,7 +118,7 @@ const Navbar: FC<NavbarProps> = ({
             Sign in
           </NavLink>
           <NavLink
-            to="/register"
+            to="/sign-up"
             className={cn(
               buttonVariants({
                 variant: "ghost",

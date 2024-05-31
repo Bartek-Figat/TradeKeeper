@@ -6,3 +6,7 @@ export const cn = (...args: classNames.ArgumentArray) =>
 
 export const capitalizeString = (s: string) =>
   s.charAt(0).toUpperCase() + s.substring(1);
+
+export const handlePasswordDisplay = (setState: React.Dispatch<React.SetStateAction<boolean>>): void => {
+  setState(prevState => !prevState);
+}

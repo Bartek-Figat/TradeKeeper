@@ -106,3 +106,56 @@ body {
 .chart-container {
   flex: 1;
 }
+
+.input-error-message {
+  @apply mt-2 text-sm text-red-600 dark:text-red-500
+}
+
+.authentication-type {
+  @apply text-[1.25rem] font-semibold text-secondary-foreground mb-1.5;
+}
+
+.authentication-span-with-gradient {
+  @apply relative my-12 text-xs text-secondary-foreground text-center block
+  after:w-[45%] before:content-[''] before:w-[45%] before:h-1 before:rounded 
+  before:absolute before:top-1/2 before:left-0 before:translate-x-0 
+  before:translate-y-[-50%] before:bg-gradient-to-r after:content-[''] 
+  after:h-1 after:rounded after:absolute after:top-1/2 after:right-0
+  after:translate-x-0 after:translate-y-[-50%] after:bg-gradient-to-l 
+  from-white to-gray-100
+}
+
+.authentication-input {
+  @apply text-sm text-secondary-foreground  w-full outline-none 
+  border-input transition-colors focus:border-primary focus:ring-0 
+  placeholder:text-[#8c9097];   
+}
+
+.authentication-checkbox {
+  @apply size-3.5 border-slate-300 rounded checked:bg-primary focus:border-primary 
+  focus:checked:bg-primary focus:ring-0 hover:checked:bg-primary cursor-pointer;
+}
+
+.authentication-label {
+  @apply block text-[.8rem] text-secondary-foreground font-semibold;
+}
+
+.authentication-button {
+  @apply font-semibold text-white bg-primary rounded-lg py-[0.65rem] px-[1rem] mt-6;
+}
+
+.swiper-pagination {
+  @apply static flex justify-center mt-8;
+}
+
+.swiper-pagination-bullet-active.custom-bullet {
+  @apply bg-white opacity-50;
+}
+
+.swiper-button-disabled {
+  @apply pointer-events-none opacity-40; 
+}
+
+.custom-bullet {
+  @apply w-5 h-[4px] bg-gray-500 rounded-md;
+}
