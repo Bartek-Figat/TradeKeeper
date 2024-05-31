@@ -10,6 +10,9 @@ import Lightweigh from "./components/chart/Lightweigh";
 import CreateTrade from "./components/CreateTrade";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
+import SignInPage from "./pages/SignIn";
+import SignUpPage from "./pages/SignUp";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 export const App = () => {
   const element = useRoutes([
@@ -17,8 +20,9 @@ export const App = () => {
     {
       element: <AuthLayout />,
       children: [
-        { path: "/login", element: <h1>Login Page</h1> },
-        { path: "/register", element: <h1>Register Page</h1> },
+        { path: "/sign-in", element: <SignInPage /> },
+        { path: "/sign-up", element: <SignUpPage /> },
+        { path: "/reset-password", element: <ResetPasswordPage /> },
       ],
     },
     // protect

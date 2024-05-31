@@ -87,7 +87,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="tradeSymbol">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -108,7 +108,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="limitPrice">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -129,7 +129,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="profitTarget">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -150,7 +150,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="quantity">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -171,7 +171,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="paidPrice">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -191,7 +191,7 @@ const CreateTrade = () => {
               />
               <ErrorMessage name="fee">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
@@ -215,7 +215,7 @@ const CreateTrade = () => {
               </Field>
               <ErrorMessage name="market">
                 {(msg) => (
-                  <div className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <div className="input-error-message">
                     {msg}
                   </div>
                 )}
