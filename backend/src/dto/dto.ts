@@ -5,17 +5,21 @@ import {
   IsNumber,
   IsString,
   IsArray,
+  IsBoolean,
 } from "class-validator";
-import { Match } from "./match.decorator";
+import { Match, IsMatch } from "./match.decorator";
 import { ObjectId } from "mongodb";
 
 export class RegisterDto {
   @IsNotEmpty()
   password!: string;
   @IsEmail()
-  email?: string;
-  @Match("password", { message: "Does not match" })
+  email!: string | undefined; 
+  @IsMatch("password", { message: "Does not match" })
   matchPassword!: string;
+  @IsNotEmpty()
+  @IsBoolean()
+  agreementToWebsitePolicy!: boolean | undefined;
 }
 export class LoginDto {
   @IsNotEmpty()

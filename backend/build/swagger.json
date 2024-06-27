@@ -24,7 +24,7 @@
 					"createdAt": {
 						"type": "string",
 						"format": "date-time",
-						"default": "2024-05-31T00:53:54.834Z"
+						"default": "2024-06-27T01:26:00.302Z"
 					},
 					"entry": {
 						"type": "number",

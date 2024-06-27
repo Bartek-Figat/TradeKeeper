@@ -17,27 +17,30 @@ export class AuthService {
   private tokenService: TokenService = new TokenService();
   private userCollection = this.database.getCollection("user");
 
-  async registration({ email, password }: RegisterDto): Promise<void> {
-    try {
-      const userExists = await this.userCollection.findOne({ email });
-      if (userExists) throw new ApiError("Email already exists", 400);
+  async registration({ email, password, agreementToWebsitePolicy }: RegisterDto): Promise<void> {
 
+    const userExists = await this.userCollection.findOne({ email });
+
+    if (userExists) {
+      throw new ApiError("Email already exists", 400, "Email already exists");
+    }
+    try {
       const salt = await genSalt(10);
-      const hashedPassword = await hash(password, salt);
 
       const newUser = {
         email,
-        password: hashedPassword,
+        password: await hash(password, salt),
         isVerified: false,
         dateAdded: new Date(),
         lastLoggedIn: null,
         logOutDate: null,
         isLogin: false,
+        agreementToWebsitePolicy
       };
 
       await this.userCollection.insertOne(newUser);
     } catch (error: any) {
-      throw new ApiError("Registration failed", 500, error.message);
+      throw new ApiError("Registration failed", 500, "Email Exist");
     }
   }
 
@@ -195,7 +198,7 @@ export class AuthService {
     }
   }
 
-  private async sendEmail(
+   async sendEmail(
     to: string,
     subject: string,
     html: string
