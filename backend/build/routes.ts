@@ -33,7 +33,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"union","subSchemas":[{"ref":"ObjectId"},{"dataType":"undefined"}],"required":true},
-            "createdAt": {"dataType":"datetime","default":"2024-06-27T01:26:00.302Z"},
+            "createdAt": {"dataType":"datetime","default":"2024-06-28T01:38:43.618Z"},
             "entry": {"dataType":"double","required":true},
             "entryQty": {"dataType":"double","required":true},
             "entryTotal": {"dataType":"double","required":true},
