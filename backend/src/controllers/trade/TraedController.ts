@@ -15,8 +15,8 @@ import { Trade } from "../../utils/tradeTypes";
 import { DeleteResult, UpdateResult } from "mongodb";
 import { TradeDto } from "../../dto/dto";
 
-@Route("trades")
-export class TradeController extends Controller {
+@Route("custom-trades")
+export class CustomTradeController extends Controller {
   private tradeRepository: TradeRepository = new TradeRepository();
 
   @Security("jwt")
@@ -26,17 +26,19 @@ export class TradeController extends Controller {
   }
 
   @Security("jwt")
-  @Get("/all-user-trade")
+  @Get("/user-trades")
   public async getAllUserTrades(@Request() req: any): Promise<TradeDto[]> {
     return this.tradeRepository.getAllUserTrades(req);
   }
+
   @Security("jwt")
-  @Get("/{tradeId}")
+  @Get("/trade/{tradeId}")
   public async getTradeById(@Request() tradeId: string): Promise<TradeDto> {
     return this.tradeRepository.getTradeById(tradeId);
   }
+
   @Security("jwt")
-  @Post("/create-trade")
+  @Post("/create-new-trade")
   public async createTrade(
     @Request() req: any,
     @Body() newTrade: Trade
@@ -45,21 +47,24 @@ export class TradeController extends Controller {
   }
 
   @Security("jwt")
-  @Put("/{tradeId}")
+  @Put("/update-existing-trade/{tradeId}")
   public async updateTrade(
     @Path() tradeId: string,
     @Body() updatedTrade: Trade
   ): Promise<UpdateResult> {
     return this.tradeRepository.updateTrade(tradeId, updatedTrade);
   }
+
   @Security("jwt")
-  @Delete("/{tradeId}")
+  @Delete("/remove-trade/{tradeId}")
   public async deleteTrade(@Request() tradeId: string): Promise<DeleteResult> {
     return this.tradeRepository.deleteTrade(tradeId);
   }
+
   @Security("jwt")
-  @Get("/{symbol}")
+  @Get("/company/{symbol}")
   public async getCompanyProfile(@Path() symbol: string): Promise<any> {
     return this.tradeRepository.getCompanyProfile(symbol);
   }
 }
+

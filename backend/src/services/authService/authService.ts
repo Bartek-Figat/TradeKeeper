@@ -9,10 +9,6 @@ import { ObjectId } from "mongodb";
 import { sign } from "jsonwebtoken";
 
 
-
-
-
-
 export class AuthService {
   private database: Database = new Database();
   private tokenService: TokenService = new TokenService();
@@ -24,7 +20,7 @@ export class AuthService {
     const userExists = await this.userCollection.findOne({ email });
 
     if (userExists) {
-      throw new ApiError("Email already exists", 400, "Email already exists");
+      throw new ApiError("Email already exists", 400, "Bad Request");
     }
     try {
       const salt = await genSalt(10);
@@ -100,5 +96,21 @@ export class AuthService {
       throw new ApiError("Logout failed", 500, error.message);
     }
   }
+
+  async sendWelcomeEmail(token: string): Promise<void> {
+    console.log("Token:  ", token)
+    const authToken = await this.userCollection.findOne(
+      { authToken: token },
+      {
+        projection: {
+          authToken: 1,
+          _id: 0,
+        },
+      }
+    );
+   console.log("Auth Token :", authToken)
+  }
+
+
  
 }

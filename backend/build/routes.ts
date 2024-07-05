@@ -5,9 +5,9 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../src/controllers/user/UserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { TradeController } from './../src/controllers/trade/TraedController';
+import { CustomTradeController } from './../src/controllers/trade/TraedController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AuthController } from './../src/controllers/auth/authController';
+import { CustomAuthController } from './../src/controllers/auth/authController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { NotesController } from './../src/controllers/ai/ai.controller';
 import { expressAuthentication } from './../src/authentication/authGate';
@@ -33,7 +33,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"union","subSchemas":[{"ref":"ObjectId"},{"dataType":"undefined"}],"required":true},
-            "createdAt": {"dataType":"datetime","default":"2024-06-28T01:38:43.618Z"},
+            "createdAt": {"dataType":"datetime","default":"2024-07-05T00:57:41.521Z"},
             "entry": {"dataType":"double","required":true},
             "entryQty": {"dataType":"double","required":true},
             "entryTotal": {"dataType":"double","required":true},
@@ -262,12 +262,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/trades',
+        app.get('/custom-trades',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getAllTrades)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getAllTrades)),
 
-            function TradeController_getAllTrades(request: any, response: any, next: any) {
+            function CustomTradeController_getAllTrades(request: any, response: any, next: any) {
             const args = {
             };
 
@@ -277,7 +277,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.getAllTrades.apply(controller, validatedArgs as any);
@@ -287,12 +287,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/trades/all-user-trade',
+        app.get('/custom-trades/user-trades',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getAllUserTrades)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getAllUserTrades)),
 
-            function TradeController_getAllUserTrades(request: any, response: any, next: any) {
+            function CustomTradeController_getAllUserTrades(request: any, response: any, next: any) {
             const args = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
@@ -303,7 +303,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.getAllUserTrades.apply(controller, validatedArgs as any);
@@ -313,12 +313,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/trades/:tradeId',
+        app.get('/custom-trades/trade/:tradeId',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getTradeById)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getTradeById)),
 
-            function TradeController_getTradeById(request: any, response: any, next: any) {
+            function CustomTradeController_getTradeById(request: any, response: any, next: any) {
             const args = {
                     tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
             };
@@ -329,7 +329,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.getTradeById.apply(controller, validatedArgs as any);
@@ -339,12 +339,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/trades/create-trade',
+        app.post('/custom-trades/create-new-trade',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.createTrade)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.createTrade)),
 
-            function TradeController_createTrade(request: any, response: any, next: any) {
+            function CustomTradeController_createTrade(request: any, response: any, next: any) {
             const args = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
                     newTrade: {"in":"body","name":"newTrade","required":true,"ref":"Trade"},
@@ -356,7 +356,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.createTrade.apply(controller, validatedArgs as any);
@@ -366,12 +366,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/trades/:tradeId',
+        app.put('/custom-trades/update-existing-trade/:tradeId',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.updateTrade)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.updateTrade)),
 
-            function TradeController_updateTrade(request: any, response: any, next: any) {
+            function CustomTradeController_updateTrade(request: any, response: any, next: any) {
             const args = {
                     tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
                     updatedTrade: {"in":"body","name":"updatedTrade","required":true,"ref":"Trade"},
@@ -383,7 +383,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.updateTrade.apply(controller, validatedArgs as any);
@@ -393,12 +393,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/trades/:tradeId',
+        app.delete('/custom-trades/remove-trade/:tradeId',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.deleteTrade)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.deleteTrade)),
 
-            function TradeController_deleteTrade(request: any, response: any, next: any) {
+            function CustomTradeController_deleteTrade(request: any, response: any, next: any) {
             const args = {
                     tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
             };
@@ -409,7 +409,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.deleteTrade.apply(controller, validatedArgs as any);
@@ -419,12 +419,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/trades/:symbol',
+        app.get('/custom-trades/company/:symbol',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(TradeController)),
-            ...(fetchMiddlewares<RequestHandler>(TradeController.prototype.getCompanyProfile)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getCompanyProfile)),
 
-            function TradeController_getCompanyProfile(request: any, response: any, next: any) {
+            function CustomTradeController_getCompanyProfile(request: any, response: any, next: any) {
             const args = {
                     symbol: {"in":"path","name":"symbol","required":true,"dataType":"string"},
             };
@@ -435,7 +435,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new TradeController();
+                const controller = new CustomTradeController();
 
 
               const promise = controller.getCompanyProfile.apply(controller, validatedArgs as any);
@@ -445,11 +445,11 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/api/auth/registration',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.registration)),
+        app.post('/custom-auth/register',
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.registration)),
 
-            function AuthController_registration(request: any, response: any, next: any) {
+            function CustomAuthController_registration(request: any, response: any, next: any) {
             const args = {
                     req: {"in":"body","name":"req","required":true,"dataType":"any"},
             };
@@ -460,7 +460,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new AuthController();
+                const controller = new CustomAuthController();
 
 
               const promise = controller.registration.apply(controller, validatedArgs as any);
@@ -470,11 +470,11 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/api/auth/login',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.login)),
+        app.post('/custom-auth/login',
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.login)),
 
-            function AuthController_login(request: any, response: any, next: any) {
+            function CustomAuthController_login(request: any, response: any, next: any) {
             const args = {
                     req: {"in":"body","name":"req","required":true,"dataType":"any"},
             };
@@ -485,7 +485,7 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new AuthController();
+                const controller = new CustomAuthController();
 
 
               const promise = controller.login.apply(controller, validatedArgs as any);
@@ -495,11 +495,63 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/auth/activate/:token',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.emailConfirmation)),
+        app.get('/custom-auth/logout',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.logout)),
 
-            function AuthController_emailConfirmation(request: any, response: any, next: any) {
+            function CustomAuthController_logout(request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CustomAuthController();
+
+
+              const promise = controller.logout.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/custom-auth/logout-all',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.logoutFromAllDevices)),
+
+            function CustomAuthController_logoutFromAllDevices(request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CustomAuthController();
+
+
+              const promise = controller.logoutFromAllDevices.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/custom-auth/activate-email/:token',
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.sendWelcomeEmail)),
+
+            function CustomAuthController_sendWelcomeEmail(request: any, response: any, next: any) {
             const args = {
                     token: {"in":"path","name":"token","required":true,"dataType":"string"},
             };
@@ -510,112 +562,10 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new AuthController();
+                const controller = new CustomAuthController();
 
 
-              const promise = controller.emailConfirmation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/auth/reset-password',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.passwordUpdate)),
-
-            function AuthController_passwordUpdate(request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new AuthController();
-
-
-              const promise = controller.passwordUpdate.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/auth/update-password',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.updatePassword)),
-
-            function AuthController_updatePassword(request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new AuthController();
-
-
-              const promise = controller.updatePassword.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/auth/logout',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.logout)),
-
-            function AuthController_logout(request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new AuthController();
-
-
-              const promise = controller.logout.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/auth/logout-from-all',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.logoutFromAllDevices)),
-
-            function AuthController_logoutFromAllDevices(request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new AuthController();
-
-
-              const promise = controller.logoutFromAllDevices.apply(controller, validatedArgs as any);
+              const promise = controller.sendWelcomeEmail.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
