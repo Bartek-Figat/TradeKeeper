@@ -1,7 +1,7 @@
 export type Login = {
-  email: string;
+  username: string;
   password: string;
-  matchPassword: string;
+  rememberPassword: boolean;
 };
 
 export type Register = {

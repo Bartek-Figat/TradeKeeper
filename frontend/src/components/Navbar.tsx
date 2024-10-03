@@ -1,9 +1,7 @@
 import { FC, useState, type MouseEvent } from "react";
 import { NavLink } from "react-router-dom";
-
 import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
-
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import { Button, buttonVariants } from "./common/button";
 import Logo from "./Logo";
@@ -42,6 +40,7 @@ const Navbar: FC<NavbarProps> = ({
       setSearchParams(newParams);
       target.scrollIntoView({ behavior: "smooth" });
     }
+    setMobileNavLinksVisible(false); // Close mobile menu after navigation
   };
 
   return (
@@ -70,6 +69,7 @@ const Navbar: FC<NavbarProps> = ({
             "fixed top-0 bottom-0 right-0 w-2/3 p-4 space-y-6 backdrop-blur-md border-l border-border/50 md:static md:border-none md:p-0 md:space-y-0 md:w-auto md:translate-x-0 transition-transform ease-in-out duration-300",
             {
               "translate-x-full": !mobileNavLinksVisible,
+              "bg-white md:bg-transparent": mobileNavLinksVisible,
             }
           )}
         >
@@ -78,6 +78,7 @@ const Navbar: FC<NavbarProps> = ({
               variant="ghost"
               size="icon"
               onClick={() => setMobileNavLinksVisible(false)}
+              aria-label="Close navigation menu"
             >
               <MdOutlineClose className="size-6 flex-shrink-0" />
             </Button>
@@ -134,6 +135,7 @@ const Navbar: FC<NavbarProps> = ({
             variant="ghost"
             size="icon"
             onClick={() => setMobileNavLinksVisible(true)}
+            aria-label="Open navigation menu"
           >
             <MdMenu className="size-6 flex-shrink-0" />
           </Button>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
 
 type AreaChartProps = {
@@ -9,28 +9,21 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
 
-  useEffect(() => {
+  const initializeChart = useCallback(() => {
     if (!chartContainerRef.current) return;
 
-    // Initialize chart
-    const chart = createChart(chartContainerRef.current!, {
-      width: chartContainerRef.current!.clientWidth,
-      height: chartContainerRef.current!.clientHeight,
+    const chart = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: chartContainerRef.current.clientHeight,
       layout: {
         background: { color: "#ffffff" },
         textColor: "rgba(33, 56, 77, 1)",
       },
       grid: {
-        vertLines: {
-          visible: false,
-        },
-        horzLines: {
-          visible: false,
-        },
+        vertLines: { visible: false },
+        horzLines: { visible: false },
       },
     });
-
-    chartRef.current = chart;
 
     chart.applyOptions({
       watermark: {
@@ -62,18 +55,22 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
     });
 
     areaSeries.setData(data);
+    chartRef.current = chart;
+  }, [data]);
 
-    // Resize chart on container resize
+  useEffect(() => {
+    initializeChart();
+
     const resizeObserver = new ResizeObserver((entries) => {
       if (entries.length === 0 || !chartRef.current) return;
-      const { width, height } =
-        chartContainerRef.current!.getBoundingClientRect();
+      const { width, height } = chartContainerRef.current!.getBoundingClientRect();
       chartRef.current.applyOptions({ width, height });
     });
 
-    resizeObserver.observe(chartContainerRef.current!);
+    if (chartContainerRef.current) {
+      resizeObserver.observe(chartContainerRef.current);
+    }
 
-    // Cleanup
     return () => {
       resizeObserver.disconnect();
       if (chartRef.current) {
@@ -81,11 +78,9 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
         chartRef.current = null;
       }
     };
-  }, [data]);
+  }, [initializeChart]);
 
-  return (
-    <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />
-  );
+  return <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />;
 };
 
 export default AreaChart;

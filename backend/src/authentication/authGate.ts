@@ -12,9 +12,14 @@ export async function expressAuthentication(
     return;
   }
 
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    throw new ApiError("Unauthorized", 401, "No token provided");
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    throw new ApiError("Unauthorized", 401, "Authorization header is missing.");
+  }
+
+  const [bearer, token] = authHeader.split(" ");
+  if (bearer !== "Bearer" || !token) {
+    throw new ApiError("Unauthorized", 401, "Invalid or missing token.");
   }
 
   const database = new Database();

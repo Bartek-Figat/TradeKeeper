@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
-import OtherOptionsLogin from "../components/OtherOptionsLogin";
 import Logo from "../components/Logo";
+import { useLoginMutation } from "../services/apiCall";
 
 const signInSchema = yup.object().shape({
   username: yup.string().required("Username is required"),
-  password: yup.string().required("Password is required")
+  password: yup.string().required("Password is required"),
 });
 
 interface SignInFormValues {
@@ -22,46 +22,44 @@ const SignInPage: FC = () => {
     username: "",
     password: "",
     rememberPassword: false,
-  }
+  };
 
   const [displayPassword, setDisplayPassword] = useState(false);
+  const [login] = useLoginMutation();
 
   return (
-    <div className="col-span-7 flex flex-col items-center justify-center max-[1200px]:col-span-12">
-      <div className="p-12 max-[375px]:p-4">
+    <div className="col-span-7 flex flex-col items-center justify-center max-[1200px]:col-span-12 bg-gray-50 min-h-screen">
+      <div className="p-12 max-[375px]:p-4 bg-white shadow-lg rounded-lg">
         <Logo />
-        <div className="my-4">
-          <p className="authentication-type">Sign In</p>
-          <p className="text-[0.8rem] text-[#8c9097]">Hello John!</p>
+        <div className="my-4 text-center">
+          <p className="text-2xl font-semibold text-gray-800">Sign In</p>
+          <p className="text-sm text-gray-500">
+            Welcome back! Please sign in to your account.
+          </p>
         </div>
-        <OtherOptionsLogin />
-        <span className="authentication-span-with-gradient">OR</span>
         <Formik
           initialValues={initialValues}
           validationSchema={signInSchema}
-          onSubmit={(
-            {
-              username,
-              password,
-              rememberPassword,
-            }: SignInFormValues,
-            { resetForm }
-          ) => {
-            alert(
-              `username: ${username},
-              password: ${password},
-              remember password: ${rememberPassword}`
-            );
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              const response = await login(values).unwrap();
+              console.log("Login successful:", response);
+              // Add user feedback for successful login
+              alert("Login successful!");
+            } catch (err) {
+              console.error("Login failed:", err);
+              // Add user feedback for failed login
+              alert(
+                "Login failed. Please check your credentials and try again."
+              );
+            }
             resetForm();
           }}
         >
           {({ errors, touched, isSubmitting }) => (
             <Form className="grid gap-4">
               <div className="flex flex-col">
-                <label
-                  htmlFor="username"
-                  className="authentication-label mb-2"
-                >
+                <label htmlFor="username" className="authentication-label mb-2">
                   User Name
                 </label>
                 <Field
@@ -69,29 +67,24 @@ const SignInPage: FC = () => {
                   name="username"
                   type="text"
                   placeholder="User name"
-                  className="authentication-input rounded-md"
-                  style={{
-                    borderColor:
-                      errors.username && touched.username ? "red" : null
-                  }}
+                  className={`authentication-input rounded-md ${
+                    errors.username && touched.username
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
                 />
                 <ErrorMessage name="username">
-                  {(msg) => (
-                    <div className="input-error-message">{msg}</div>
-                  )}
+                  {(msg) => <div className="input-error-message">{msg}</div>}
                 </ErrorMessage>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center justify-between mb-2">
-                  <label
-                    htmlFor="password"
-                    className="authentication-label"
-                  >
+                  <label htmlFor="password" className="authentication-label">
                     Password
                   </label>
                   <Link
                     to="/reset-password"
-                    className="text-[0.8rem] font-semibold text-red-500 cursor-pointer"
+                    className="text-sm font-semibold text-blue-500 hover:underline"
                   >
                     Forgot password?
                   </Link>
@@ -103,19 +96,24 @@ const SignInPage: FC = () => {
                       name="password"
                       type={displayPassword ? "text" : "password"}
                       placeholder="Password"
-                      className="authentication-input rounded-l-md"
-                      style={{
-                        borderColor:
-                          errors.password && touched.password ? "red" : null
-                      }}
+                      className={`authentication-input rounded-l-md ${
+                        errors.password && touched.password
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                     />
                     <div
                       onClick={() => handlePasswordDisplay(setDisplayPassword)}
-                      className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md">
+                      className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md"
+                    >
                       <img
                         className="w-4"
-                        src={`/images/icon/${displayPassword ? 'eye' : 'eye-slash'}.svg`}
-                        alt={`${displayPassword ? 'hide password' : 'show password'}`}
+                        src={`/images/icon/${
+                          displayPassword ? "eye" : "eye-slash"
+                        }.svg`}
+                        alt={`${
+                          displayPassword ? "hide password" : "show password"
+                        }`}
                         loading="lazy"
                       />
                     </div>
@@ -134,7 +132,7 @@ const SignInPage: FC = () => {
                     />
                     <label
                       htmlFor="rememberPassword"
-                      className="text-[0.8rem] text-[#8c9097] pl-2 cursor-pointer"
+                      className="text-sm text-gray-500 pl-2 cursor-pointer"
                     >
                       Remember password?
                     </label>
@@ -143,20 +141,23 @@ const SignInPage: FC = () => {
               </div>
               <button
                 type="submit"
-                className="authentication-button"
+                className="authentication-button bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
                 disabled={isSubmitting}
               >
-                Sign In
+                {isSubmitting ? "Signing In..." : "Sign In"}
               </button>
             </Form>
           )}
         </Formik>
-        <p className="text-[#8c9097] text-xs text-center mt-5">
-          Don't have an account? <Link to="/sign-up" className="text-primary">Sign Up</Link>
+        <p className="text-gray-500 text-xs text-center mt-5">
+          Don't have an account?{" "}
+          <Link to="/sign-up" className="text-blue-500 hover:underline">
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>
   );
-}
+};
 
 export default SignInPage;

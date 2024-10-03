@@ -3,10 +3,10 @@ import { Login, Register } from "./type";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/api/auth/" }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    login: builder.mutation<Login, void>({
+    login: builder.mutation<void, Login>({
       query: (credential) => ({
         url: "login",
         method: "POST",

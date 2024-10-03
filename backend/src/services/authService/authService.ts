@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import { hash, genSalt, compare } from "bcrypt";
 import sgMail from "@sendgrid/mail";
 import { RegisterDto, LoginDto, LogoutDto, VerifyEmail } from "../../dto/dto";
@@ -7,15 +6,16 @@ import { Database } from "../../config/db/database";
 import { TokenService } from "../tokenService/token";
 import { ObjectId } from "mongodb";
 
-config({ path: "../../.env" });
-const { SENDGRID_API, EMAIL_FROM } = process.env;
+const USER_COLLECTION = "user";
+const SENDGRID_API_KEY = process.env.SENDGRID_API;
+const EMAIL_FROM = process.env.EMAIL_FROM;
 
-sgMail.setApiKey(`${SENDGRID_API}`);
+sgMail.setApiKey(`${SENDGRID_API_KEY}`);
 
 export class AuthService {
   private database: Database = new Database();
   private tokenService: TokenService = new TokenService();
-  private userCollection = this.database.getCollection("user");
+  private userCollection = this.database.getCollection(USER_COLLECTION);
 
   async registration({ email, password }: RegisterDto): Promise<void> {
     try {
@@ -42,24 +42,26 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginDto): Promise<{ token: string }> {
-    try {
-      const user = await this.userCollection.findOne({ email });
-      if (!user) throw new ApiError("User not found", 404);
-
-      const isMatch = await compare(password, user.password);
-      if (!isMatch) throw new ApiError("Invalid credentials", 401);
-
-      const userIdAsString = user._id.toString();
-      const token = this.tokenService.generateAccessToken(userIdAsString);
-      await this.userCollection.updateOne(
-        { _id: user._id },
-        { $set: { isLogin: true, lastLoggedIn: new Date() } }
-      );
-
-      return { token };
-    } catch (error: any) {
-      throw new ApiError("Login failed", 500, error.message);
+    const userCollection = this.database.getCollection(USER_COLLECTION);
+    const user = await userCollection.findOne({ email });
+    console.log("User", user);
+    if (!user) {
+      throw new ApiError("User not found", 404);
     }
+
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
+      throw new ApiError("Invalid credentials", 401);
+    }
+
+    const userIdAsString = user._id.toString();
+    const token = this.tokenService.generateAccessToken(userIdAsString);
+    await userCollection.updateOne(
+      { _id: user._id },
+      { $set: { isLogin: true, lastLoggedIn: new Date() } }
+    );
+
+    return { token };
   }
 
   async logout(dto: LogoutDto): Promise<void> {
