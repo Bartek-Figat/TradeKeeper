@@ -7,7 +7,7 @@ export class Database {
   private maxRetries: number;
 
   constructor() {
-    this.client = new MongoClient("mongodb://localhost:27017");
+    this.client = new MongoClient(`mongodb://localhost:${27018}`);// mongodb://localhost:27017
     this.db = this.client.db("tradekeeper");
     this.retryCount = 0;
     this.maxRetries = 3;

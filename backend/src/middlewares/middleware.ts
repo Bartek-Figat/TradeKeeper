@@ -8,6 +8,7 @@ export async function validateIncomingFields(
   res: Response,
   next: NextFunction
 ) {
+  
   const userRegisterValidation = new RegisterDto();
   Object.assign(userRegisterValidation, req.body);
 

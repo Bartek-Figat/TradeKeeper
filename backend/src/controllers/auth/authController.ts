@@ -6,20 +6,21 @@ import {
   Middlewares,
   Security,
   Get,
-  Path,
   Request,
+  Path,
 } from "tsoa";
 import { AuthService } from "../../services/authService/authService";
 import {
-  validateEmail,
   validateIncomingFields,
 } from "../../middlewares/middleware";
 
-@Route("api/auth")
-export class AuthController extends Controller {
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYmJAZ21haWwuY29tIiwiaWF0IjoxNzE5OTYwMzQyfQ.1hNVBXPszEdVETj2qtXWJZoHgRKmu6QY-4pfeL2UPgs
+
+@Route("custom-auth")
+export class CustomAuthController extends Controller {
   private authService = new AuthService();
 
-  @Post("registration")
+  @Post("register")
   @Middlewares(validateIncomingFields)
   async registration(@Body() req: any): Promise<void> {
     return this.authService.registration(req);
@@ -31,23 +32,6 @@ export class AuthController extends Controller {
     return this.authService.login(req);
   }
 
-  @Get("activate/{token}")
-  async emailConfirmation(@Path() token: string) {
-    return this.authService.emailConfirmation(token);
-  }
-
-  @Get("reset-password")
-  @Middlewares(validateEmail)
-  async passwordUpdate(@Request() req: any) {
-    return this.authService.generateAuniqueEmailForPasswordReset(req);
-  }
-
-  @Get("update-password")
-  @Middlewares(validateEmail)
-  async updatePassword(@Request() req: any) {
-    return this.authService.updatePassword(req);
-  }
-
   @Security("jwt")
   @Get("logout")
   async logout(@Request() req: any) {
@@ -55,8 +39,16 @@ export class AuthController extends Controller {
   }
 
   @Security("jwt")
-  @Get("logout-from-all")
+  @Get("logout-all")
   async logoutFromAllDevices(@Request() req: any) {
     return this.authService.logoutFromAllDevices(req);
   }
+
+
+  @Get("/activate-email/{token}")
+  async sendWelcomeEmail(@Path() token: string) {
+    return this.authService.sendWelcomeEmail(token);
+  }
+
 }
+

@@ -4,8 +4,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
 import Logo from "../components/Logo";
+import { useRegisterMutation } from "../services/apiCall"
+
+
+// const { data: productsQuery, isLoading } =
+//     useFilterAndPaginationProductsQuery({
+//       page: currentPage,
+//       ...queryParams,
+//     });
 
 const signUpSchema = yup.object().shape({
+  email: yup.string().email("Email is required"),
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   password: yup
@@ -25,6 +34,7 @@ const signUpSchema = yup.object().shape({
 });
 
 interface SignUpFormValues {
+  email: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -33,7 +43,10 @@ interface SignUpFormValues {
 }
 
 const SignUpPage: FC = () => {
+  const [ userRegister ] = useRegisterMutation();
+
   const initialValues: SignUpFormValues = {
+    email: "",
     firstName: "",
     lastName: "",
     password: "",
@@ -57,16 +70,9 @@ const SignUpPage: FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={signUpSchema}
-          onSubmit={(
-            {
-              firstName,
-              lastName,
-              password,
-              confirmPassword,
-              agreementToWebsitePolicy,
-            }: SignUpFormValues,
-            { resetForm }
+          onSubmit={(value: SignUpFormValues,{ resetForm }
           ) => {
+<<<<<<< HEAD
             try {
               // Simulate a successful sign-up process
               console.log("Sign-up successful:", {
@@ -81,11 +87,42 @@ const SignUpPage: FC = () => {
               console.error("Sign-up failed:", err);
               alert("Sign-up failed. Please try again.");
             }
+=======
+            
+            userRegister(value).unwrap().then((payload) => console.log('fulfilled', payload))
+            .catch((error) => console.error('rejected', error));;
+>>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
             resetForm();
           }}
         >
           {({ errors, touched, isSubmitting }) => (
             <Form className="grid gap-4">
+              {/*  */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="authentication-label mb-2"
+                >
+                  First Name
+                </label>
+                <Field
+                  id="email"
+                  name="email"
+                  type="text"
+                  placeholder="Email"
+                  className="authentication-input rounded-md"
+                  style={{
+                    borderColor:
+                      errors.firstName && touched.firstName ? "red" : null
+                  }}
+                />
+                <ErrorMessage name="email">
+                  {(msg) => (
+                    <div className="input-error-message">{msg}</div>
+                  )}
+                </ErrorMessage>
+              </div>
+              {/*  */}
               <div>
                 <label
                   htmlFor="firstName"

@@ -24,7 +24,11 @@
 					"createdAt": {
 						"type": "string",
 						"format": "date-time",
+<<<<<<< HEAD
 						"default": "2024-09-07T04:04:59.987Z"
+=======
+						"default": "2024-07-05T00:57:41.521Z"
+>>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
 					},
 					"entry": {
 						"type": "number",
@@ -534,7 +538,7 @@
 				]
 			}
 		},
-		"/trades": {
+		"/custom-trades": {
 			"get": {
 				"operationId": "GetAllTrades",
 				"responses": {
@@ -560,7 +564,7 @@
 				"parameters": []
 			}
 		},
-		"/trades/all-user-trade": {
+		"/custom-trades/user-trades": {
 			"get": {
 				"operationId": "GetAllUserTrades",
 				"responses": {
@@ -586,7 +590,7 @@
 				"parameters": []
 			}
 		},
-		"/trades/{tradeId}": {
+		"/custom-trades/trade/{tradeId}": {
 			"get": {
 				"operationId": "GetTradeById",
 				"responses": {
@@ -607,7 +611,40 @@
 					}
 				],
 				"parameters": []
-			},
+			}
+		},
+		"/custom-trades/create-new-trade": {
+			"post": {
+				"operationId": "CreateTrade",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Trade"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/custom-trades/update-existing-trade/{tradeId}": {
 			"put": {
 				"operationId": "UpdateTrade",
 				"responses": {
@@ -647,7 +684,9 @@
 						}
 					}
 				}
-			},
+			}
+		},
+		"/custom-trades/remove-trade/{tradeId}": {
 			"delete": {
 				"operationId": "DeleteTrade",
 				"responses": {
@@ -670,38 +709,7 @@
 				"parameters": []
 			}
 		},
-		"/trades/create-trade": {
-			"post": {
-				"operationId": "CreateTrade",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Trade"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/trades/{symbol}": {
+		"/custom-trades/company/{symbol}": {
 			"get": {
 				"operationId": "GetCompanyProfile",
 				"responses": {
@@ -731,7 +739,7 @@
 				]
 			}
 		},
-		"/api/auth/registration": {
+		"/custom-auth/register": {
 			"post": {
 				"operationId": "Registration",
 				"responses": {
@@ -751,7 +759,7 @@
 				}
 			}
 		},
-		"/api/auth/login": {
+		"/custom-auth/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
@@ -786,9 +794,41 @@
 				}
 			}
 		},
-		"/api/auth/activate/{token}": {
+		"/custom-auth/logout": {
 			"get": {
-				"operationId": "EmailConfirmation",
+				"operationId": "Logout",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/custom-auth/logout-all": {
+			"get": {
+				"operationId": "LogoutFromAllDevices",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/custom-auth/activate-email/{token}": {
+			"get": {
+				"operationId": "SendWelcomeEmail",
 				"responses": {
 					"204": {
 						"description": "No content"
@@ -805,62 +845,6 @@
 						}
 					}
 				]
-			}
-		},
-		"/api/auth/reset-password": {
-			"get": {
-				"operationId": "PasswordUpdate",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/api/auth/update-password": {
-			"get": {
-				"operationId": "UpdatePassword",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/api/auth/logout": {
-			"get": {
-				"operationId": "Logout",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/api/auth/logout-from-all": {
-			"get": {
-				"operationId": "LogoutFromAllDevices",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": []
 			}
 		},
 		"/notes/ai-notes": {
