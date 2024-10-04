@@ -21,7 +21,7 @@ const Logo = () => {
     <button onClick={handleClick} className="flex items-center space-x-1">
       <MdInsertChart
         className={cn("size-9 p-1 rounded", {
-          "fill-primary-foreground bg-[#232259]": !isScrolled,
+          "fill-primary-foreground": !isScrolled,
           "fill-primary dark:fill-primary-foreground": isScrolled,
         })}
       />

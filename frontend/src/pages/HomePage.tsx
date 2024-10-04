@@ -1,12 +1,10 @@
 import { ReactNode, memo, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import ImageSlider from "./ImageSlider";
 import { FaPlus, FaMinus } from "react-icons/fa";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import Navbar from "../components/Navbar";
-import { buttonVariants } from "../components/common/button";
-import BlobBg from "../components/common/blobBg";
-import heroImage from "../img/hero.png";
 
 const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,13 +19,6 @@ const HomePage: React.FC = () => {
   const toggleAnswer = (index: number) => {
     setExpandedFAQIndex(expandedFAQIndex === index ? null : index);
   };
-
-  const [currentImage, setCurrentImage] = useState(0);
-  const images = [
-    "https://images.unsplash.com/photo-1642142783250-d1bef1dafbc9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 1
-    "https://plus.unsplash.com/premium_photo-1661609098718-3408828713ba?q=80&w=2081&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 2
-    "https://plus.unsplash.com/premium_photo-1683141154082-324d296f3c66?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 3
-  ];
 
   const faqData = [
     {
@@ -86,53 +77,77 @@ const HomePage: React.FC = () => {
     <div className="bg-background text-foreground min-h-screen antialiased">
       <Navbar {...sectionQuery} />
       <SectionWrapper id="home" {...sectionQuery}>
-        <section className="h-dvh bg-primary px-6 lg:px-10 relative overflow-hidden">
-          {/* bg circles */}
-          <div className="bg-primary-foreground opacity-15 blur-xl w-72 h-72 rounded-full absolute -bottom-10 -right-10"></div>
-          <div className="bg-primary-foreground opacity-15 blur-xl w-[800px] h-[800px] rounded-full absolute -top-48 -left-72"></div>
-          {/* end of bg circles */}
-          <header className="h-dvh max-w-screen-xl mx-auto py-20 flex flex-col items-center justify-evenly lg:flex-row">
-            <div className="text-center max-w-[500px] flex-grow md:flex-grow-0 flex flex-col justify-evenly lg:text-start">
-              {/* h1 + subheading and action btn */}
-              <div className="space-y-12">
-                <h1 className="text-primary-foreground font-bold text-6xl lg:text-[4.5rem] leading-[1.1]">
-                  A Trading Journal Designed for Everyone.
-                </h1>
-                <p className="text-primary-foreground/80 text-[1.2rem]">
-                  Found what you’re looking for? Don’t wait! Click the ‘Get
-                  Started’ to begin your journey with our comprehensive,
-                  user-friendly trading journal. It’s free, fast, and ad-free.
-                  Start optimizing your trading routine today!
-                </p>
-              </div>
-              <div className="mt-8 group relative w-fit mx-auto lg:mx-0">
-                <div className="absolute -inset-0.5 bg-accent rounded-lg blur opacity-70 group-hover:opacity-100 group-hover:blur-xl transition-all duration-300"></div>
-                <Link
-                  to="/dashboard"
-                  className={buttonVariants({
-                    variant: "secondary",
-                    size: "lg",
-                    className:
-                      "relative text-foreground font-semibold w-[180px]",
-                  })}
-                >
+        <div className="w-full h-auto bg-[#111c43] px-5 @lg:px-12 lg:px-20 py-10">
+          {/* Home Section */}
+          <section className="flex flex-col lg:flex-row h-auto w-full my-20">
+            <div className="w-full lg:w-1/2">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white max-w-sm">
+                Track Your Trades with Our{" "}
+                <span className="text-lime-500">Trading Journal.</span>
+              </h1>
+              <p className="text-gray-300 text-sm lg:text-base mt-5">
+                Our trading journal provides you with the tools to analyze your
+                trading performance, identify patterns, and improve your
+                strategies. Start documenting your trades and take control of
+                your trading journey today!
+              </p>
+              <div className="mt-10 h-12 flex items-center justify-start gap-3">
+                <button className="px-6 py-1.5 h-12 text-white bg-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
                   Get Started
-                </Link>
+                </button>
+                <button className="px-3 py-1.5 text-white rounded-lg hover:opacity-75 transition-all duration-300">
+                  Learn More
+                </button>
               </div>
-              {/* end */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 w-full h-auto gap-2 lg:divide-x-[1px] place-content-center">
+                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+                  <h2 className="text-5xl font-bold text-lime-500">
+                    10<span className="text-white">K</span>
+                  </h2>
+                  <h3 className="text-gray-300 text-sm mt-2">Traders</h3>
+                </div>
+                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+                  <h2 className="text-5xl font-bold text-lime-500">
+                    5<span className="text-white">K</span>
+                  </h2>
+                  <h3 className="text-gray-300 text-sm mt-2">Strategies</h3>
+                </div>
+                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+                  <h2 className="text-5xl font-bold text-lime-500">
+                    1<span className="text-white">M</span>
+                  </h2>
+                  <h3 className="text-gray-300 text-sm mt-2">Trades Logged</h3>
+                </div>
+              </div>
             </div>
-            {/* hero image */}
-            <BlobBg className="hidden md:block">
-              <div className="relative">
-                <img
-                  src={heroImage}
-                  className="w-full object-cover object-bottom"
-                />
+            <div className="relative w-full lg:w-1/2 lg:px-10 flex justify-center">
+              <div className="absolute left-10 top-20 h-[30%] w-[30%] bg-emerald-300 blur-[130px]"></div>
+              <img
+                src="https://media.istockphoto.com/id/1645926305/photo/stock-exchange-chart-on-the-screen.jpg?s=2048x2048&w=is&k=20&c=rWefVXE5ixXNDrJh0TU9zi-Sq2V1iCXuIa6ZN_5sXXg="
+                alt=""
+                className="h-auto w-full md:w-[70%] rounded-3xl"
+              />
+              <div className="absolute w-[50%] bg-slate-900 border-t border-lime-500 rounded-xl bottom-0 translate-y-1/2 right-10 z-10 h-auto p-5">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <p className="text-sm text-lime-500">Stock</p>
+                    <p className="text-sm text-white">NASDAQ: MSFT</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-lime-500">Crypto</p>
+                    <p className="text-sm text-white">BTC</p>
+                  </div>
+                </div>
+                <NavLink to="/sign-up">
+                  <button className="px-3 py-1.5 w-full text-lime-500 border border-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
+                    Sign up
+                  </button>
+                  Sign up
+                </NavLink>
               </div>
-            </BlobBg>
-            {/* end */}
-          </header>
-        </section>
+            </div>
+          </section>
+        </div>
       </SectionWrapper>
       {/* About Us Section */}
       <SectionWrapper id="about" {...sectionQuery}>
@@ -356,6 +371,132 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       {/* Features Section */}
+      {/*  */}
+      <SectionWrapper id="snapshot" {...sectionQuery}>
+        <section className="relative pt-16 bg-gray-50">
+          <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+              Application Snapshot
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+              {/* Card 1 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1645923179/photo/stock-market-and-exchange-chart-and-numbers.jpg?s=2048x2048&w=is&k=20&c=NNl980Aeq9GSKCHUbZXua52QvKpXh3dh2YIsRosUo-Q="
+                  alt="Feature 1"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Real-Time Data
+                  </h3>
+                  <p className="text-gray-600">
+                    Access live market data and analytics to make informed
+                    trading decisions. Stay ahead of the curve with
+                    up-to-the-minute information.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1796395298/photo/close-up-on-a-computer-screen-with-real-time-stock-market-analytics-graphs-and-reports-stock.jpg?s=2048x2048&w=is&k=20&c=6g04dq_ZM-2WzBAumjFUzqXSM1VtIjm6OSONuXqCvMo="
+                  alt="Feature 2"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Advanced Charting
+                  </h3>
+                  <p className="text-gray-600">
+                    Utilize advanced charting tools to visualize market trends
+                    and patterns. Customize your charts to suit your trading
+                    style and preferences.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1358050858/photo/financial-analyst-working-on-a-computer-with-multi-monitor-workstation-with-real-time-stocks.jpg?s=2048x2048&w=is&k=20&c=hQVVYYT4Jk082rxBujsy8KQ3u7Yj0jDGcTu4l9zywiI="
+                  alt="Feature 3"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Custom Alerts
+                  </h3>
+                  <p className="text-gray-600">
+                    Set personalized alerts for price changes, volume spikes,
+                    and other market events. Never miss an opportunity with
+                    timely notifications.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 4 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1455038781/photo/business-woman-hand-using-smart-phone-with-cafe-shop-stock-market-charts-on-phone-and-laptop.jpg?s=2048x2048&w=is&k=20&c=brCcH1vktDyr3Qt3v9PYgnG93n91JQ_BGbocVfPIRLU="
+                  alt="Feature 4"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Portfolio Management
+                  </h3>
+                  <p className="text-gray-600">
+                    Manage your investments with our intuitive portfolio
+                    management tools. Track performance, analyze risk, and
+                    optimize your asset allocation.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 5 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1796395298/photo/close-up-on-a-computer-screen-with-real-time-stock-market-analytics-graphs-and-reports-stock.jpg?s=2048x2048&w=is&k=20&c=6g04dq_ZM-2WzBAumjFUzqXSM1VtIjm6OSONuXqCvMo="
+                  alt="Feature 5"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Risk Assessment
+                  </h3>
+                  <p className="text-gray-600">
+                    Evaluate your trading strategies with comprehensive risk
+                    assessment tools. Make data-driven decisions to minimize
+                    potential losses.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 6 */}
+              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                <img
+                  src="https://media.istockphoto.com/id/1358050858/photo/financial-analyst-working-on-a-computer-with-multi-monitor-workstation-with-real-time-stocks.jpg?s=2048x2048&w=is&k=20&c=hQVVYYT4Jk082rxBujsy8KQ3u7Yj0jDGcTu4l9zywiI="
+                  alt="Feature 6"
+                  className="rounded-t-lg h-48 w-full object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    User-Friendly Interface
+                  </h3>
+                  <p className="text-gray-600">
+                    Experience a seamless user interface designed for traders of
+                    all levels. Navigate effortlessly and access all features
+                    with ease.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </SectionWrapper>
+      {/*  */}
       <SectionWrapper id="features" {...sectionQuery}>
         <section className="max-w-screen-xl px-6 py-6 mx-auto min-h-[800px] rounded-lg">
           <h2 className="text-4xl font-bold mb-4 text-center text-primary-foreground">
@@ -442,9 +583,12 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       </SectionWrapper>
+      {/*  */}
+
+      {/*  */}
       {/* Trading Insights Section */}
       <SectionWrapper id="trading-slider" {...sectionQuery}>
-        <ImageSlider images={images} />
+        <ImageSlider />
       </SectionWrapper>
       {/* Testimonials Section */}
       <SectionWrapper id="testimonials" {...sectionQuery}>
@@ -508,40 +652,6 @@ const HomePage: React.FC = () => {
                 </svg>
                 <div className="flex justify-center items-start flex-col text-left gap-5">
                   <p className="italic text-sm md:text-base">
-                    "I love how easy it is to track my trades and analyze my
-                    performance. The insights I've gained have been invaluable."
-                  </p>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
-                      Maria Garcia
-                    </h3>
-                    <p className="text-xs md:text-sm">Trader</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
-              <div className="flex justify-center items-start flex-col p-5 flex-grow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="30"
-                  height="30"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="icon icon-tabler icon-tabler-quote rotate-180 text-sky-500"
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z"></path>
-                  <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
-                </svg>
-                <div className="flex justify-center items-start flex-col text-left gap-5">
-                  <p className="italic text-sm md:text-base">
                     "The best trading journal I've ever used. It's helped me
                     stay organized and make better trading decisions."
                   </p>
@@ -556,7 +666,7 @@ const HomePage: React.FC = () => {
               <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
             </div>
 
-            {/* Testimonial 4 */}
+            {/* Testimonial 3 */}
             <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
               <div className="flex justify-center items-start flex-col p-5 flex-grow">
                 <svg
@@ -589,171 +699,111 @@ const HomePage: React.FC = () => {
               </div>
               <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
             </div>
+            {/* Testimonial 4 */}
+            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
+              <div className="flex justify-center items-start flex-col p-5 flex-grow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  className="icon icon-tabler icon-tabler-quote rotate-180 text-sky-500"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z"></path>
+                  <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
+                </svg>
+                <div className="flex justify-center items-start flex-col text-left gap-5">
+                  <p className="italic text-sm md:text-base">
+                    "This trading journal has transformed my trading experience.
+                    The insights I gained have been invaluable!"
+                  </p>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-semibold">
+                      John Doe
+                    </h3>
+                    <p className="text-xs md:text-sm">Professional Trader</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
+            </div>
           </div>
         </section>
       </SectionWrapper>
       {/* Pricing Section */}
       <SectionWrapper id="pricing" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 pt-20 lg:pt-[120px] pb-12 lg:pb-[90px] relative z-20 overflow-hidden">
-          <div className="container mx-auto">
-            <div className="flex flex-wrap justify-center -mx-4">
-              <div className="w-full px-4">
-                <div className="text-center mx-auto mb-[60px] lg:mb-20 max-w-[510px]">
-                  <span className="font-semibold text-lg text-primary mb-2 block">
-                    Pricing Table
-                  </span>
-                  <h2 className="font-bold text-3xl sm:text-4xl md:text-[40px] text-dark mb-4">
-                    Our Pricing Plan
-                  </h2>
-                  <p className="text-base text-body-color">
-                    Choose a plan that fits your trading needs. Each plan is
-                    designed to help you maximize your trading potential.
-                  </p>
+        <SectionWrapper id="pricing" {...sectionQuery}>
+          <section className="bg-blue-50 py-10">
+            <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Choose Your Trading Plan
+              </h2>
+              <p className="text-gray-600 mb-10">
+                Select a plan that fits your trading needs and start maximizing
+                your potential today!
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Basic Plan */}
+                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                    Basic Plan
+                  </h3>
+                  <p className="text-2xl text-gray-900 mb-4">$10/month</p>
+
+                  <ul className="text-gray-700 mb-6">
+                    <li>Track up to 200 trades</li>
+                    <li>Advanced analytics and insights</li>
+                    <li>Priority email support</li>
+                    <li>Access to trading community</li>
+                  </ul>
+                  <button className="self-end w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                    Choose Pro
+                  </button>
+                </div>
+
+                {/* Pro Plan */}
+                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                    Pro Plan
+                  </h3>
+                  <p className="text-2xl text-gray-900 mb-4">$25/month</p>
+                  <ul className="text-gray-700 mb-6">
+                    <li>Track up to 200 trades</li>
+                    <li>Advanced analytics and insights</li>
+                    <li>Priority email support</li>
+                    <li>Access to trading community</li>
+                  </ul>
+                  <button className="w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                    Choose Pro
+                  </button>
+                </div>
+
+                {/* Premium Plan */}
+                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                    Premium Plan
+                  </h3>
+                  <p className="text-2xl text-gray-900 mb-4">$50/month</p>
+                  <ul className="text-gray-700 mb-6">
+                    <li>Unlimited trade tracking</li>
+                    <li>Comprehensive analytics and insights</li>
+                    <li>24/7 support via chat</li>
+                    <li>Personalized trading strategies</li>
+                  </ul>
+                  <button className="w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                    Choose Premium
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="flex flex-wrap justify-center -mx-4">
-              {/* Personal Plan */}
-              <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-                <div className="bg-white rounded-xl relative z-10 overflow-hidden border border-primary border-opacity-20 shadow-pricing py-10 px-8 sm:p-12 lg:py-10 lg:px-6 xl:p-12 mb-10">
-                  <span className="text-primary font-semibold text-lg block mb-4">
-                    Personal
-                  </span>
-                  <h2 className="font-bold text-dark mb-5 text-[42px]">
-                    $5
-                    <span className="text-base text-body-color font-medium">
-                      {" "}
-                      / year
-                    </span>
-                  </h2>
-                  <p className="text-base text-body-color pb-8 mb-8 border-b border-[#F2F2F2]">
-                    Ideal for individual traders looking to track their
-                    performance and improve their strategies. Enjoy personalized
-                    insights and analytics.
-                  </p>
-                  <div className="mb-7">
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      1 User
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      All UI components
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Lifetime access
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Free updates
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Use on 1 project
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      3 Months support
-                    </p>
-                  </div>
-                  <a
-                    href="javascript:void(0)"
-                    className="w-full block text-base font-semibold text-primary bg-transparent border border-[#D4DEFF] rounded-md text-center p-4 hover:text-white hover:bg-primary hover:border-primary transition"
-                  >
-                    Choose Personal
-                  </a>
-                </div>
-              </div>
-              {/* Business Plan */}
-              <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-                <div className="bg-white rounded-xl relative z-10 overflow-hidden border border-primary border-opacity-20 shadow-pricing py-10 px-8 sm:p-12 lg:py-10 lg:px-6 xl:p-12 mb-10">
-                  <span className="text-primary font-semibold text-lg block mb-4">
-                    Business
-                  </span>
-                  <h2 className="font-bold text-dark mb-5 text-[42px]">
-                    $15
-                    <span className="text-base text-body-color font-medium">
-                      {" "}
-                      / year
-                    </span>
-                  </h2>
-                  <p className="text-base text-body-color pb-8 mb-8 border-b border-[#F2F2F2]">
-                    Perfect for small teams looking to collaborate and share
-                    insights. Get advanced analytics and team features to
-                    enhance your trading experience.
-                  </p>
-                  <div className="mb-7">
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      5 Users
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      All UI components
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Lifetime access
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Free updates
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Use on 3 projects
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      4 Months support
-                    </p>
-                  </div>
-                  <a
-                    href="javascript:void(0)"
-                    className="w-full block text-base font-semibold text-white bg-primary border border-primary rounded-md text-center p-4 hover:bg-opacity-90 transition"
-                  >
-                    Choose Business
-                  </a>
-                </div>
-              </div>
-              {/* Professional Plan */}
-              <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-                <div className="bg-white rounded-xl relative z-10 overflow-hidden border border-primary border-opacity-20 shadow-pricing py-10 px-8 sm:p-12 lg:py-10 lg:px-6 xl:p-12 mb-10">
-                  <span className="text-primary font-semibold text-lg block mb-4">
-                    Professional
-                  </span>
-                  <h2 className="font-bold text-dark mb-5 text-[42px]">
-                    $25
-                    <span className="text-base text-body-color font-medium">
-                      {" "}
-                      / year
-                    </span>
-                  </h2>
-                  <p className="text-base text-body-color pb-8 mb-8 border-b border-[#F2F2F2]">
-                    For serious traders who want to take their trading to the
-                    next level. Access to all features, unlimited users, and
-                    priority support.
-                  </p>
-                  <div className="mb-7">
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Unlimited Users
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      All UI components
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Lifetime access
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Free updates
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      Use on Unlimited projects
-                    </p>
-                    <p className="text-base text-body-color leading-loose mb-1">
-                      12 Months support
-                    </p>
-                  </div>
-                  <a
-                    href="javascript:void(0)"
-                    className="w-full block text-base font-semibold text-primary bg-transparent border border-[#D4DEFF] rounded-md text-center p-4 hover:text-white hover:bg-primary hover:border-primary transition"
-                  >
-                    Choose Professional
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        </SectionWrapper>
       </SectionWrapper>
       {/* FAQs Section */}
       <SectionWrapper id="faqs" {...sectionQuery}>
@@ -801,7 +851,7 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="text-md flex-grow">
                     <h1
-                      className="text-gray-900 font-semibold mb-2 flex items-center"
+                      className="text-gray-900 font-semibold mb-2 flex items-center cursor-pointer transition duration-300 ease-in-out hover:text-indigo-600"
                       onClick={() => toggleAnswer(index)}
                     >
                       {expandedFAQIndex === index ? (
@@ -811,9 +861,17 @@ const HomePage: React.FC = () => {
                       )}
                       {faq.question}
                     </h1>
-                    {expandedFAQIndex === index && ( // Show answer if expanded
-                      <p className="text-gray-500 text-sm">{faq.answer}</p>
-                    )}
+                    <div
+                      className={`transition-all duration-500 ease-in-out transform ${
+                        expandedFAQIndex === index
+                          ? "scale-100 max-h-40"
+                          : "scale-0 max-h-0"
+                      } overflow-hidden`}
+                    >
+                      {expandedFAQIndex === index && (
+                        <p className="text-gray-500 text-sm">{faq.answer}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -853,7 +911,7 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="text-md flex-grow">
                     <h1
-                      className="text-gray-900 font-semibold mb-2 flex items-center"
+                      className="text-gray-900 font-semibold mb-2 flex items-center cursor-pointer transition duration-300 ease-in-out hover:text-indigo-600"
                       onClick={() => toggleAnswer(index + 5)}
                     >
                       {expandedFAQIndex === index + 5 ? (
@@ -863,15 +921,63 @@ const HomePage: React.FC = () => {
                       )}
                       {faq.question}
                     </h1>
-                    {expandedFAQIndex === index + 5 && ( // Show answer if expanded
-                      <p className="text-gray-500 text-sm">{faq.answer}</p>
-                    )}
+                    <div
+                      className={`transition-all duration-500 ease-in-out transform ${
+                        expandedFAQIndex === index + 5
+                          ? "scale-100 max-h-40"
+                          : "scale-0 max-h-0"
+                      } overflow-hidden`}
+                    >
+                      {expandedFAQIndex === index + 5 && (
+                        <p className="text-gray-500 text-sm">{faq.answer}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+      </SectionWrapper>
+      {/* Contact Section */}
+      <SectionWrapper id="contact" {...sectionQuery}>
+        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-4 text-center">
+              {/* Contact Section Content */}
+            </div>
+          </div>
+        </section>
+      </SectionWrapper>
+      {/* Contact Section */}
+      <SectionWrapper id="contact" {...sectionQuery}>
+        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-4 text-center">
+              {/* Contact Section Content */}
+            </div>
+          </div>
+        </section>
+      </SectionWrapper>
+      {/* Contact Section */}
+      <SectionWrapper id="contact" {...sectionQuery}>
+        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-4 text-center">
+              {/* Contact Section Content */}
+            </div>
+          </div>
+        </section>
+      </SectionWrapper>
+      {/* Contact Section */}
+      <SectionWrapper id="contact" {...sectionQuery}>
+        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-4 text-center">
+              {/* Contact Section Content */}
+            </div>
+          </div>
+        </section>
       </SectionWrapper>
       {/* Contact Section */}
       <SectionWrapper id="contact" {...sectionQuery}>
@@ -1049,76 +1155,273 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       </SectionWrapper>
-      <footer className="bg-[#232259] text-white py-8">
-        <div className="max-w-screen-xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-bold">Trading Journal</h3>
-              <p className="text-sm">
-                © 2023 Trading Journal. All rights reserved.
+      <footer className="bg-[#111c43] lg:grid lg:grid-cols-5">
+        <div className="relative block h-32 lg:col-span-2 lg:h-full">
+          <img
+            src="https://images.unsplash.com/photo-1651340981821-b519ad14da7c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="px-4 py-16 sm:px-6 lg:col-span-3 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <div>
+              <p>
+                <span className="text-xs uppercase tracking-wide text-gray-500">
+                  {" "}
+                  Call us{" "}
+                </span>
+                <a
+                  href="#"
+                  className="block text-2xl font-medium text-white hover:opacity-75 sm:text-3xl"
+                >
+                  0123456789
+                </a>
               </p>
+
+              <ul className="mt-8 space-y-1 text-sm text-gray-300">
+                <li>Monday to Friday: 10am - 5pm</li>
+                <li>Weekend: 10am - 3pm</li>
+              </ul>
+
+              <ul className="mt-8 flex gap-6">
+                <li>
+                  <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    <span className="sr-only">Facebook</span>
+                    <svg
+                      className="size-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    <span className="sr-only">Instagram</span>
+                    <svg
+                      className="size-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    <span className="sr-only">Twitter</span>
+                    <svg
+                      className="size-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                    </svg>
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    <span className="sr-only">GitHub</span>
+                    <svg
+                      className="size-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    <span className="sr-only">Dribbble</span>
+                    <svg
+                      className="size-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div className="flex space-x-4">
-              <Link to="/privacy" className="text-sm hover:underline">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="text-sm hover:underline">
-                Terms of Service
-              </Link>
-              <Link to="/contact" className="text-sm hover:underline">
-                Contact Us
-              </Link>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <p className="font-medium text-white">Services</p>
+                <ul className="mt-6 space-y-4 text-sm">
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      1on1 Coaching{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      Company Review{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      Accounts Review{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      HR Consulting{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      SEO Optimisation{" "}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <p className="font-medium text-white">Company</p>
+                <ul className="mt-6 space-y-4 text-sm">
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      About{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      Meet the Team{" "}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-gray-300 transition hover:opacity-75"
+                    >
+                      {" "}
+                      Accounts Review{" "}
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="mt-4 text-center">
-            <p className="text-sm mb-4">
-              Follow us on:
-              <a href="https://twitter.com" className="ml-2 hover:underline">
-                Twitter
-              </a>
-              <a href="https://facebook.com" className="ml-2 hover:underline">
-                Facebook
-              </a>
-              <a href="https://instagram.com" className="ml-2 hover:underline">
-                Instagram
-              </a>
-            </p>
-            <div className="flex justify-center space-x-4 mb-4">
-              <a href="https://twitter.com" className="hover:underline">
-                <img
-                  src="/icons/twitter.svg"
-                  alt="Twitter"
-                  className="w-6 h-6"
-                />
-              </a>
-              <a href="https://facebook.com" className="hover:underline">
-                <img
-                  src="/icons/facebook.svg"
-                  alt="Facebook"
-                  className="w-6 h-6"
-                />
-              </a>
-              <a href="https://instagram.com" className="hover:underline">
-                <img
-                  src="/icons/instagram.svg"
-                  alt="Instagram"
-                  className="w-6 h-6"
-                />
-              </a>
+
+          <div className="mt-12 border-t border-gray-100 pt-12">
+            <div className="sm:flex sm:items-center sm:justify-between">
+              <ul className="flex flex-wrap gap-4 text-xs">
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    {" "}
+                    Terms & Conditions{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    {" "}
+                    Privacy Policy{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-300 transition hover:opacity-75"
+                  >
+                    {" "}
+                    Cookies{" "}
+                  </a>
+                </li>
+              </ul>
+
+              <p className="mt-8 text-xs text-gray-300 sm:mt-0">
+                &copy; 2022. Company Name. All rights reserved.
+              </p>
             </div>
-            <form className="flex justify-center">
-              <input
-                type="email"
-                placeholder="Subscribe to our newsletter"
-                className="px-4 py-2 rounded-l-md focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition duration-300"
-              >
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
       </footer>
@@ -1152,10 +1455,10 @@ const SectionWrapper = memo(
         newParams.set("section", id);
         setSearchParams(newParams);
       }
-    }, [inView]);
+    }, [activeSection, id, inView, searchParams, setSearchParams]);
 
     return (
-      <div ref={ref} id={id}>
+      <div ref={ref} id={id} role="region" aria-labelledby={id}>
         {children}
       </div>
     );

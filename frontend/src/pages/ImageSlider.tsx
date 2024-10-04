@@ -1,61 +1,63 @@
-import React, { useState } from "react";
+import React from "react";
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  EffectCoverflow,
+} from "swiper/modules";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/effect-coverflow";
 
-interface ImageSliderProps {
-  images: string[];
-}
+// Use Swiper modules
+SwiperCore.use([Navigation, Pagination, Scrollbar, EffectCoverflow]);
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
-  const [currentImage, setCurrentImage] = useState(0);
+const images = [
+  "https://images.unsplash.com/photo-1642142783250-d1bef1dafbc9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 1
+  "https://plus.unsplash.com/premium_photo-1661609098718-3408828713ba?q=80&w=2081&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 2
+  "https://plus.unsplash.com/premium_photo-1683141154082-324d296f3c66?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 3
+  "https://images.unsplash.com/photo-1642142783250-d1bef1dafbc9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 1
+  "https://plus.unsplash.com/premium_photo-1661609098718-3408828713ba?q=80&w=2081&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 2
+  "https://plus.unsplash.com/premium_photo-1683141154082-324d296f3c66?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Trading Image 3
+  // Additional unique images can be added here
+];
 
-  const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "ArrowRight") {
-      nextImage();
-    } else if (event.key === "ArrowLeft") {
-      prevImage();
-    }
-  };
-
+const ImageSlider: React.FC = () => {
   return (
-    <section
-      className="max-w-screen-xl px-6 py-6 mx-auto min-h-[800px] rounded-lg"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
+    <Swiper
+      spaceBetween={30}
+      slidesPerView={3}
+      navigation={true}
+      pagination={{ clickable: true }}
+      effect="coverflow"
+      coverflowEffect={{
+        rotate: 30, // Adjusted for a more subtle effect
+        stretch: 10, // Slightly stretch the slides
+        depth: 200, // Increased depth for a more pronounced effect
+        modifier: 2, // Adjusted modifier for scaling
+        slideShadows: true,
+      }}
+      autoplay={{ delay: 3000, disableOnInteraction: false }}
+      loop={true} // Enable looping
+      onSlideChange={() => console.log("slide change")}
+      onSwiper={(swiper) => console.log(swiper)}
     >
-      <h2 className="text-4xl font-bold mb-4 text-center text-primary-foreground">
-        Trading Insights
-      </h2>
-      <div className="relative">
-        <div className="flex justify-center">
+      {images.map((image, index) => (
+        <SwiperSlide key={index}>
           <img
-            src={images[currentImage]}
-            alt="Trading"
-            className="w-full rounded-lg transition-transform duration-300"
+            src={image}
+            alt={`Trading Image ${index + 1}`}
+            className="w-full h-auto object-cover rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-110" // Added hover scale effect
           />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-between">
-          <button
-            onClick={prevImage}
-            className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-200"
-          >
-            &#10094; {/* Left Arrow */}
-          </button>
-          <button
-            onClick={nextImage}
-            className="bg-white rounded-full p-2 shadow-lg hover:bg-gray-200"
-          >
-            &#10095; {/* Right Arrow */}
-          </button>
-        </div>
-      </div>
-    </section>
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 };
 

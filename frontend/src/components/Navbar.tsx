@@ -1,4 +1,4 @@
-import { FC, useState, type MouseEvent } from "react";
+import { FC, useState, type MouseEvent, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
@@ -39,17 +39,33 @@ const Navbar: FC<NavbarProps> = ({
       newParams.set("section", targetId);
       setSearchParams(newParams);
       target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      console.error(`Element with ID ${targetId} not found.`);
     }
     setMobileNavLinksVisible(false); // Close mobile menu after navigation
   };
 
+  // Effect to handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileNavLinksVisible(false); // Hide mobile menu on larger screens
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-500 ease-in-out",
+        "fixed top-0 w-full z-50 transition-all duration-300 ease-in-out",
         {
           "bg-background shadow-md": isScrolled,
-          "bg-transparent": !isScrolled,
+          "#000": !isScrolled,
         }
       )}
     >
@@ -69,7 +85,7 @@ const Navbar: FC<NavbarProps> = ({
             "fixed top-0 bottom-0 right-0 w-2/3 p-4 space-y-6 backdrop-blur-md border-l border-border/50 md:static md:border-none md:p-0 md:space-y-0 md:w-auto md:translate-x-0 transition-transform ease-in-out duration-300",
             {
               "translate-x-full": !mobileNavLinksVisible,
-              "bg-white md:bg-transparent": mobileNavLinksVisible,
+              "#000": mobileNavLinksVisible,
             }
           )}
         >
@@ -96,6 +112,7 @@ const Navbar: FC<NavbarProps> = ({
                     "text-inherit dark:hover:text-primary-foreground":
                       activeSection === link,
                   })}
+                  aria-label={`Navigate to ${capitalizeString(link)}`}
                 >
                   {capitalizeString(link)}
                 </a>
@@ -115,6 +132,7 @@ const Navbar: FC<NavbarProps> = ({
                 className: "text-base font-bold",
               })
             )}
+            aria-label="Sign in"
           >
             Sign in
           </NavLink>
@@ -127,6 +145,7 @@ const Navbar: FC<NavbarProps> = ({
                 className: "text-base font-bold",
               })
             )}
+            aria-label="Sign up"
           >
             Sign up
           </NavLink>

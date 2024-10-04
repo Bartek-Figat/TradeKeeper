@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
 import Logo from "../components/Logo";
-import { useRegisterMutation } from "../services/apiCall";
+// import { useRegisterMutation } from "../services/apiCall";
 
 // const { data: productsQuery, isLoading } =
 //     useFilterAndPaginationProductsQuery({
@@ -42,7 +42,7 @@ interface SignUpFormValues {
 }
 
 const SignUpPage: FC = () => {
-  const [userRegister] = useRegisterMutation();
+  // const [userRegister] = useRegisterMutation();
 
   const initialValues: SignUpFormValues = {
     email: "",
@@ -69,7 +69,7 @@ const SignUpPage: FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={signUpSchema}
-          onSubmit={(value: SignUpFormValues, { resetForm }) => {
+          onSubmit={(_value: SignUpFormValues, { resetForm }) => {
             try {
               alert("Sign-up successful!");
             } catch (err) {
