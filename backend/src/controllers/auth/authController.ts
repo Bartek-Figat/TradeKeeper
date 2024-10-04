@@ -14,7 +14,6 @@ import {
   validateIncomingFields,
 } from "../../middlewares/middleware";
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYmJAZ21haWwuY29tIiwiaWF0IjoxNzE5OTYwMzQyfQ.1hNVBXPszEdVETj2qtXWJZoHgRKmu6QY-4pfeL2UPgs
 
 @Route("custom-auth")
 export class CustomAuthController extends Controller {

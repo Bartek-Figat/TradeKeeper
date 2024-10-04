@@ -85,6 +85,4 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-// Additional cookie configuration improvements can be added here
-
 export default app;

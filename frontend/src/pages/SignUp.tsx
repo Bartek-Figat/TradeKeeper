@@ -4,8 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
 import Logo from "../components/Logo";
-import { useRegisterMutation } from "../services/apiCall"
-
+import { useRegisterMutation } from "../services/apiCall";
 
 // const { data: productsQuery, isLoading } =
 //     useFilterAndPaginationProductsQuery({
@@ -43,7 +42,7 @@ interface SignUpFormValues {
 }
 
 const SignUpPage: FC = () => {
-  const [ userRegister ] = useRegisterMutation();
+  const [userRegister] = useRegisterMutation();
 
   const initialValues: SignUpFormValues = {
     email: "",
@@ -70,28 +69,13 @@ const SignUpPage: FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={signUpSchema}
-          onSubmit={(value: SignUpFormValues,{ resetForm }
-          ) => {
-<<<<<<< HEAD
+          onSubmit={(value: SignUpFormValues, { resetForm }) => {
             try {
-              // Simulate a successful sign-up process
-              console.log("Sign-up successful:", {
-                firstName,
-                lastName,
-                password,
-                confirmPassword,
-                agreementToWebsitePolicy,
-              });
               alert("Sign-up successful!");
             } catch (err) {
               console.error("Sign-up failed:", err);
               alert("Sign-up failed. Please try again.");
             }
-=======
-            
-            userRegister(value).unwrap().then((payload) => console.log('fulfilled', payload))
-            .catch((error) => console.error('rejected', error));;
->>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
             resetForm();
           }}
         >
@@ -99,10 +83,7 @@ const SignUpPage: FC = () => {
             <Form className="grid gap-4">
               {/*  */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="authentication-label mb-2"
-                >
+                <label htmlFor="email" className="authentication-label mb-2">
                   First Name
                 </label>
                 <Field
@@ -113,13 +94,11 @@ const SignUpPage: FC = () => {
                   className="authentication-input rounded-md"
                   style={{
                     borderColor:
-                      errors.firstName && touched.firstName ? "red" : null
+                      errors.firstName && touched.firstName ? "red" : null,
                   }}
                 />
                 <ErrorMessage name="email">
-                  {(msg) => (
-                    <div className="input-error-message">{msg}</div>
-                  )}
+                  {(msg) => <div className="input-error-message">{msg}</div>}
                 </ErrorMessage>
               </div>
               {/*  */}

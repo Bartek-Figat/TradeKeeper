@@ -3,32 +3,24 @@ import { RegisterDto, LoginDto, LogoutDto } from "../../dto/dto";
 import { ApiError } from "../../error/apiError";
 import { Database } from "../../config/db/database";
 import { TokenService } from "../tokenService/token";
-import { EmailHandler } from "./email"
-import { SendVerificationEmailData } from "./type"
+import { EmailHandler } from "./email";
+import { SendVerificationEmailData } from "./type";
 import { ObjectId } from "mongodb";
 import { sign } from "jsonwebtoken";
 
-<<<<<<< HEAD
 const USER_COLLECTION = "user";
-const SENDGRID_API_KEY = process.env.SENDGRID_API;
-const EMAIL_FROM = process.env.EMAIL_FROM;
-
-sgMail.setApiKey(`${SENDGRID_API_KEY}`);
-=======
->>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
 
 export class AuthService {
   private database: Database = new Database();
   private tokenService: TokenService = new TokenService();
-<<<<<<< HEAD
-  private userCollection = this.database.getCollection(USER_COLLECTION);
-=======
   private emailHandler: EmailHandler = new EmailHandler();
-  private userCollection = this.database.getCollection("user");
->>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
+  private userCollection = this.database.getCollection(USER_COLLECTION);
 
-  async registration({ email, password, agreementToWebsitePolicy }: RegisterDto): Promise<void> {
-
+  async registration({
+    email,
+    password,
+    agreementToWebsitePolicy,
+  }: RegisterDto): Promise<void> {
     const userExists = await this.userCollection.findOne({ email });
 
     if (userExists) {
@@ -46,11 +38,11 @@ export class AuthService {
         lastLoggedIn: null,
         logOutDate: null,
         isLogin: false,
-        agreementToWebsitePolicy
+        agreementToWebsitePolicy,
       };
 
       await this.userCollection.insertOne(newUser);
-      await this.emailHandler.sendVerificationEmail(newUser)
+      await this.emailHandler.sendVerificationEmail(newUser);
     } catch (error: any) {
       throw new ApiError("Registration failed", 500, "Email Exist");
     }
@@ -112,7 +104,7 @@ export class AuthService {
   }
 
   async sendWelcomeEmail(token: string): Promise<void> {
-    console.log("Token:  ", token)
+    console.log("Token:  ", token);
     const authToken = await this.userCollection.findOne(
       { authToken: token },
       {
@@ -122,9 +114,6 @@ export class AuthService {
         },
       }
     );
-   console.log("Auth Token :", authToken)
+    console.log("Auth Token :", authToken);
   }
-
-
- 
 }
