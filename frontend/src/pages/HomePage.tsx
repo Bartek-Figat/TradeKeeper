@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
           {/* Home Section */}
           <section className="flex flex-col lg:flex-row h-auto w-full my-20">
             <div className="w-full lg:w-1/2">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white max-w-sm">
+              <h1 className="text-2xl md:text-3xl lg:text-5xl font-semibold text-white max-w-sm">
                 Track Your Trades with Our{" "}
                 <span className="text-lime-500">Trading Journal.</span>
               </h1>
@@ -91,15 +91,15 @@ const HomePage: React.FC = () => {
                 strategies. Start documenting your trades and take control of
                 your trading journey today!
               </p>
-              <div className="mt-10 h-12 flex items-center justify-start gap-3">
-                <button className="px-6 py-1.5 h-12 text-white bg-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
+              <div className="mt-5 h-10 flex items-start  md:items-start justify-start gap-2 flex-col md:flex-row">
+                <button className="px-4 py-1 h-10 text-white bg-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
                   Get Started
                 </button>
-                <button className="px-3 py-1.5 text-white rounded-lg hover:opacity-75 transition-all duration-300">
+                <button className="px-2 py-1 text-white rounded-lg hover:opacity-75 transition-all duration-300">
                   Learn More
                 </button>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 w-full h-auto gap-2 lg:divide-x-[1px] place-content-center">
+              <div className="hidden lg:grid lg:grid-cols-3 mt-10 w-full h-auto gap-2 lg:divide-x-[1px] place-content-center">
                 <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
                   <h2 className="text-5xl font-bold text-lime-500">
                     10<span className="text-white">K</span>
@@ -120,12 +120,12 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="relative w-full lg:w-1/2 lg:px-10 flex justify-center">
+            <div className="relative w-full lg:w-1/2 lg:px-10 flex justify-center mt-5">
               <div className="absolute left-10 top-20 h-[30%] w-[30%] bg-emerald-300 blur-[130px]"></div>
               <img
                 src="https://media.istockphoto.com/id/1645926305/photo/stock-exchange-chart-on-the-screen.jpg?s=2048x2048&w=is&k=20&c=rWefVXE5ixXNDrJh0TU9zi-Sq2V1iCXuIa6ZN_5sXXg="
                 alt=""
-                className="h-auto w-full md:w-[70%] rounded-3xl"
+                className="h-auto w-full md:w-[70%] rounded-3xl hidden md:block"
               />
               <div className="absolute w-[50%] bg-slate-900 border-t border-lime-500 rounded-xl bottom-0 translate-y-1/2 right-10 z-10 h-auto p-5">
                 <div className="flex items-center justify-between mb-5">
@@ -142,7 +142,6 @@ const HomePage: React.FC = () => {
                   <button className="px-3 py-1.5 w-full text-lime-500 border border-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
                     Sign up
                   </button>
-                  Sign up
                 </NavLink>
               </div>
             </div>
@@ -941,37 +940,7 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/* Contact Section */}
       <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-4 text-center">
-              {/* Contact Section Content */}
-            </div>
-          </div>
-        </section>
-      </SectionWrapper>
-      {/* Contact Section */}
-      <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-4 text-center">
-              {/* Contact Section Content */}
-            </div>
-          </div>
-        </section>
-      </SectionWrapper>
-      {/* Contact Section */}
-      <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-4 text-center">
-              {/* Contact Section Content */}
-            </div>
-          </div>
-        </section>
-      </SectionWrapper>
-      {/* Contact Section */}
-      <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
+        <section className="bg-blue-50 dark:bg-slate-800 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-4 text-center">
               {/* Contact Section Content */}

@@ -9,8 +9,11 @@ import Logo from "./Logo";
 enum NavigationLinks {
   Home = "home",
   About = "about",
+  Snapshot = "snapshot",
+  Features = "features",
+  Testimonials = "testimonials",
   Pricing = "pricing",
-  Team = "team",
+  Faqs = "faqs",
   Contact = "contact",
 }
 

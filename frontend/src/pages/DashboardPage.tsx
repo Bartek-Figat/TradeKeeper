@@ -5,8 +5,20 @@ import ChartComponent from "../components/chart/chartContentPage";
 import { staticData } from "../components/chart/priceData";
 import { useState } from "react";
 
+export interface Transaction {
+  id: number;
+  date: string;
+  type: "Buy" | "Sell";
+  amount: string;
+  status: "Completed" | "Pending" | "Cancel";
+  description?: string;
+  notes?: string;
+  relatedTransactions?: Array<{ id: string; amount: string; status: string }>;
+}
+
 const DashboardPage = () => {
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const myStocks = [
     { name: "Apple Inc.", quantity: 10, currentValue: "$1,116.90" },
@@ -20,7 +32,7 @@ const DashboardPage = () => {
     },
   ];
 
-  const transactionHistory = [
+  const transactionHistory: Transaction[] = [
     {
       id: 1,
       date: "2023-04-01",
@@ -34,6 +46,27 @@ const DashboardPage = () => {
       type: "Sell",
       amount: "$500",
       status: "Pending",
+    },
+    {
+      id: 3,
+      date: "2023-04-01",
+      type: "Buy",
+      amount: "$1,000",
+      status: "Completed",
+    },
+    {
+      id: 4,
+      date: "2021-04-02",
+      type: "Sell",
+      amount: "$200",
+      status: "Cancel",
+    },
+    {
+      id: 5,
+      date: "2020-04-01",
+      type: "Buy",
+      amount: "$5,000",
+      status: "Completed",
     },
   ];
 
@@ -51,42 +84,7 @@ const DashboardPage = () => {
     { type: "Crypto", name: "Litecoin (LTC)", price: "$150.00", gain: "+2.0%" },
   ];
 
-  const renderTable = (data) => (
-    <table className="min-w-full text-sm text-left text-gray-500">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-        <tr>
-          <th scope="col" className="px-6 py-3">
-            Date
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Type
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Amount
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Status
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        {data.map((transaction) => (
-          <tr
-            key={transaction.id}
-            className="border-b cursor-pointer"
-            onClick={() => openModal(transaction)}
-          >
-            <td className="px-6 py-4">{transaction.date}</td>
-            <td className="px-6 py-4">{transaction.type}</td>
-            <td className="px-6 py-4">{transaction.amount}</td>
-            <td className="px-6 py-4">{transaction.status}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-
-  const openModal = (transaction) => {
+  const openModal = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setIsModalOpen(true);
   };
@@ -100,33 +98,30 @@ const DashboardPage = () => {
     <div className="flex w-full flex-col justify-center gap-6 p-10">
       <PriceTicker />
       {/* Portfolio Overview */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1 flex justify-center items-center"></div>
-        <div className="flex flex-wrap justify-between gap-4">
-          {[
-            { label: "Total Value", value: "$8.89k", color: "text-primary" },
-            { label: "Market Value", value: "$15.9k", color: "text-warning" },
-            { label: "Yield", value: "3.4%", color: "text-danger" },
-            { label: "Dividend", value: "$1.3k", color: "text-info" },
-            { label: "Gain", value: "$116", color: "text-success" },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center bg-white p-4 rounded-md shadow-md"
-            >
-              <span className="block font-semibold text-gray-700">
-                {item.label}
-              </span>
-              <span className={`block ${item.color} text-lg font-bold`}>
-                {item.value}
-              </span>
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {[
+          { label: "Total Value", value: "$8.89k", color: "text-primary" },
+          { label: "Market Value", value: "$15.9k", color: "text-warning" },
+          { label: "Yield", value: "3.4%", color: "text-danger" },
+          { label: "Dividend", value: "$1.3k", color: "text-info" },
+          { label: "Gain", value: "$116", color: "text-success" },
+        ].map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center bg-white p-4 rounded-md shadow-md"
+          >
+            <span className="block font-semibold text-gray-700">
+              {item.label}
+            </span>
+            <span className={`block ${item.color} text-lg font-bold`}>
+              {item.value}
+            </span>
+          </div>
+        ))}
       </div>
 
       {/* Investment Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Amount Invested", value: "$50,000" },
           { label: "Number of Investments", value: "25" },
@@ -148,11 +143,11 @@ const DashboardPage = () => {
       </div>
 
       {/* Chart and My Stocks */}
-      <div className="grid grid-cols-1 md:grid-cols-12 lg:gap-4 sm:gap-0">
-        <div className="lg:col-span-8 md:col-span-6 p-2 rounded-lg shadow-md">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="md:col-span-2 lg:col-span-2 p-2 rounded-lg shadow-md bg-white">
           <ChartComponent data={staticData} />
         </div>
-        <div className="lg:col-span-4 md:col-span-6 p-2 rounded-lg shadow-md">
+        <div className="p-2 rounded-lg shadow-md bg-white">
           <h3 className="text-lg font-semibold mb-2">My Stocks</h3>
           <div className="space-y-2">
             {myStocks.map((stock, index) => (
@@ -170,13 +165,73 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Transaction History and Market Movers */}
-      <div className="flex flex-col md:flex-row gap-4">
-        {/* Transaction History */}
+      {/* Transaction History  */}
+      <div className="flex flex-col lg:flex-row gap-4">
         <div className="flex-1 shadow-lg p-4 rounded-lg bg-white">
           <h3 className="text-lg font-semibold mb-4">Transaction History</h3>
-          {renderTable(transactionHistory)}
+          <table className="min-w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Type
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Amount
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {transactionHistory.map((transaction) => (
+                <tr key={transaction.id} className="border-b cursor-pointer">
+                  <td className="px-6 py-4">{transaction.date}</td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-2 py-1 rounded-full text-white ${
+                        transaction.type === "Buy"
+                          ? "bg-[#2aa0698f]"
+                          : transaction.type === "Sell"
+                          ? "bg-[#a02a2ab0]"
+                          : "bg-gray-500"
+                      }`}
+                    >
+                      {transaction.type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">{transaction.amount}</td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-2 py-1 rounded-full text-white ${
+                        transaction.status === "Completed"
+                          ? "bg-green-500"
+                          : transaction.status === "Pending"
+                          ? "bg-yellow-500"
+                          : "bg-gray-500"
+                      }`}
+                    >
+                      {transaction.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                      onClick={() => openModal(transaction)}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+
         <Modal
           isOpen={isModalOpen}
           onClose={closeModal}
@@ -193,7 +248,15 @@ const DashboardPage = () => {
                 className="flex justify-between items-center p-2 border-b"
               >
                 <div>
-                  <span className="block text-gray-700 font-semibold">
+                  <span
+                    className={`block text-sm font-semibold ${
+                      transaction.type === "Buy"
+                        ? "text-green-500"
+                        : transaction.type === "Sell"
+                        ? "text-red-500"
+                        : "text-gray-500"
+                    }`}
+                  >
                     {transaction.type}
                   </span>
                   <span className="text-sm text-gray-500">
@@ -232,10 +295,9 @@ const DashboardPage = () => {
       </div>
       {/* Recent News Section */}
       <div className="shadow-lg p-4 rounded-lg bg-white">
-        <h3 className="text-lg font-semibold mb-4">Recent News</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex flex-wrap gap-4">
           {/* Stock News */}
-          <div>
+          <div className="flex-1 min-w-[250px]">
             <h4 className="font-semibold text-md mb-2">Stock News</h4>
             <ul className="space-y-4">
               {[
@@ -296,7 +358,7 @@ const DashboardPage = () => {
           </div>
 
           {/* Forex News */}
-          <div>
+          <div className="flex-1 min-w-[250px]">
             <h4 className="font-semibold text-md mb-2">Forex News</h4>
             <ul className="space-y-4">
               {[
@@ -357,7 +419,7 @@ const DashboardPage = () => {
           </div>
 
           {/* Crypto News */}
-          <div>
+          <div className="flex-1 min-w-[250px]">
             <h4 className="font-semibold text-md mb-2">Crypto News</h4>
             <ul className="space-y-4">
               {[

@@ -16,87 +16,179 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <header className="bg-gray-800 text-white text-center p-4 w-full">
-        <h1 className="text-3xl font-bold">User Profile</h1>
-      </header>
-      <main className="flex-1 p-10 w-full">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Profile Information Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Profile Picture"
-                className="rounded-full h-24 w-24 mx-auto mb-4"
-              />
-              <h2 className="text-2xl font-bold text-center text-gray-800">
-                {name}
-              </h2>
-              <p className="text-lg text-center text-gray-600">{job}</p>
-              <div className="mt-4">
-                <p className="text-gray-700 font-semibold">Bio:</p>
-                <p className="text-gray-600">{bio}</p>
-              </div>
-              <div className="mt-4">
-                <p className="text-gray-700 font-semibold">Location:</p>
-                <p className="text-gray-600">{location}</p>
-              </div>
-              <div className="mt-4">
-                <p className="text-gray-700 font-semibold">Email:</p>
-                <p className="text-gray-600">{email}</p>
-              </div>
-              <div className="mt-4">
-                <p className="text-gray-700 font-semibold">Phone:</p>
-                <p className="text-gray-600">{phone}</p>
-              </div>
-            </div>
-
-            {/* Update Profile Form */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {[
-                  { label: "Name", value: name, setValue: setName, type: "text" },
-                  { label: "Job", value: job, setValue: setJob, type: "text" },
-                  { label: "Bio", value: bio, setValue: setBio, type: "textarea" },
-                  { label: "Location", value: location, setValue: setLocation, type: "text" },
-                  { label: "Email", value: email, setValue: setEmail, type: "email" },
-                  { label: "Phone", value: phone, setValue: setPhone, type: "tel" },
-                ].map(({ label, value, setValue, type }, index) => (
-                  <div key={index}>
-                    <label htmlFor={label.toLowerCase()} className="text-gray-700 font-semibold">
-                      {label}:
+    <section className="py-10 my-auto dark:bg-gray-900">
+      <div className="lg:w-[80%] md:w-[90%] xs:w-[96%] mx-auto flex gap-4">
+        <div className="lg:w-[88%] md:w-[80%] sm:w-[88%] xs:w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
+          <div className="">
+            <form onSubmit={handleSubmit}>
+              {/* Cover Image */}
+              <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1583752028088-91e3e9880b46?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-no-repeat items-center">
+                {/* Profile Image */}
+                <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full bg-[url('https://plus.unsplash.com/premium_photo-1689539137236-b68e436248de?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-no-repeat">
+                  <div className="bg-white/90 rounded-full w-6 h-6 text-center ml-28 mt-4">
+                    <input
+                      type="file"
+                      name="profile"
+                      id="upload_profile"
+                      hidden
+                      required
+                    />
+                    <label htmlFor="upload_profile">
+                      <svg
+                        data-slot="icon"
+                        className="w-6 h-5 text-blue-700"
+                        fill="none"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                        ></path>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                        ></path>
+                      </svg>
                     </label>
-                    {type === "textarea" ? (
-                      <textarea
-                        id={label.toLowerCase()}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                      />
-                    ) : (
-                      <input
-                        type={type}
-                        id={label.toLowerCase()}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                      />
-                    )}
                   </div>
-                ))}
-                <button
-                  type="submit"
-                  className="w-full bg-indigo-500 text-white rounded-md py-2 mt-4 hover:bg-indigo-600"
-                >
-                  Update Profile
+                </div>
+                <div className="flex justify-end">
+                  <input
+                    type="file"
+                    name="profile"
+                    id="upload_cover"
+                    hidden
+                    required
+                  />
+                  <div className="bg-white flex items-center gap-1 rounded-tl-md px-2 text-center font-semibold">
+                    <label
+                      htmlFor="upload_cover"
+                      className="inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      Cover
+                      <svg
+                        data-slot="icon"
+                        className="w-6 h-5 text-blue-700"
+                        fill="none"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                        ></path>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                        ></path>
+                      </svg>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <h2 className="text-center mt-1 font-semibold dark:text-gray-300">
+                Upload Profile and Cover Image
+              </h2>
+              <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
+                <div className="w-full mb-4 mt-6">
+                  <label htmlFor="name" className="mb-2 dark:text-gray-300">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    placeholder="Name"
+                  />
+                </div>
+                <div className="w-full mb-4 lg:mt-6">
+                  <label htmlFor="job" className="dark:text-gray-300">
+                    Job
+                  </label>
+                  <input
+                    type="text"
+                    id="job"
+                    value={job}
+                    onChange={(e) => setJob(e.target.value)}
+                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                    placeholder="Job"
+                  />
+                </div>
+              </div>
+              <div className="w-full mb-4">
+                <label htmlFor="bio" className="dark:text-gray-300">
+                  Bio
+                </label>
+                <textarea
+                  id="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                  placeholder="Bio"
+                />
+              </div>
+              <div className="w-full mb-4">
+                <label htmlFor="location" className="dark:text-gray-300">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                  placeholder="Location"
+                />
+              </div>
+              <div className="w-full mb-4">
+                <label htmlFor="email" className="dark:text-gray-300">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="w-full mb-4">
+                <label htmlFor="phone" className="dark:text-gray-300">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
+                  placeholder="Phone"
+                />
+              </div>
+              <div className="w-full rounded-lg bg-blue-500 mt-4 text-white text-lg font-semibold">
+                <button type="submit" className="w-full p-4">
+                  Submit
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </section>
   );
 };
 

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 interface Transaction {
+  id: number;
   date: string;
-  type: string;
+  type: "Buy" | "Sell";
   amount: string;
-  status: string;
-  id: string;
+  status: "Completed" | "Pending" | "Cancel";
   description?: string;
   notes?: string;
   relatedTransactions?: Array<{ id: string; amount: string; status: string }>;

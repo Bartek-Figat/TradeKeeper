@@ -63,7 +63,8 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
 
     const resizeObserver = new ResizeObserver((entries) => {
       if (entries.length === 0 || !chartRef.current) return;
-      const { width, height } = chartContainerRef.current!.getBoundingClientRect();
+      const { width, height } =
+        chartContainerRef.current!.getBoundingClientRect();
       chartRef.current.applyOptions({ width, height });
     });
 
@@ -80,7 +81,9 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
     };
   }, [initializeChart]);
 
-  return <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />
+  );
 };
 
 export default AreaChart;

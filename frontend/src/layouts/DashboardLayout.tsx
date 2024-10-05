@@ -178,7 +178,7 @@ const DashboardLayout = () => {
             </div>
           </aside>
           <div
-            className={`flex flex-1 flex-col transition-all duration-300 ease-in-out ${
+            className={`flex flex-auto flex-col min-h-screen min-w-0 w-full transition-all duration-300 ease-in-out ${
               !isOpen ? "ml-[-240px] justify-between" : "ml-0"
             }`}
           >
