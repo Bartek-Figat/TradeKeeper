@@ -108,7 +108,7 @@ body {
 }
 
 .input-error-message {
-  @apply mt-2 text-sm text-red-600 dark:text-red-500
+  @apply mt-2 text-sm text-red-600 dark:text-red-500;
 }
 
 .authentication-type {
@@ -122,13 +122,13 @@ body {
   before:translate-y-[-50%] before:bg-gradient-to-r after:content-[''] 
   after:h-1 after:rounded after:absolute after:top-1/2 after:right-0
   after:translate-x-0 after:translate-y-[-50%] after:bg-gradient-to-l 
-  from-white to-gray-100
+  from-white to-gray-100;
 }
 
 .authentication-input {
   @apply text-sm text-secondary-foreground  w-full outline-none 
   border-input transition-colors focus:border-primary focus:ring-0 
-  placeholder:text-[#8c9097];   
+  placeholder:text-[#8c9097];
 }
 
 .authentication-checkbox {
@@ -153,9 +153,23 @@ body {
 }
 
 .swiper-button-disabled {
-  @apply pointer-events-none opacity-40; 
+  @apply pointer-events-none opacity-40;
 }
 
 .custom-bullet {
   @apply w-5 h-[4px] bg-gray-500 rounded-md;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%); /* Adjust to -100% for a full loop */
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+  will-change: transform; /* Hint to the browser for optimization */
 }

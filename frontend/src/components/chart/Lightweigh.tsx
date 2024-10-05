@@ -6,7 +6,7 @@ import {
   CrosshairMode,
 } from "lightweight-charts";
 import { priceData } from "./priceData";
-import CardInformation from "./CardInformation";
+// import CardInformation from "./CardInformation";
 
 const TradingViewChart: React.FC = () => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
@@ -195,10 +195,6 @@ const TradingViewChart: React.FC = () => {
             </h3>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col w-auto max-w-7xl">
-        {" "}
-        <CardInformation />
       </div>
     </div>
   );
