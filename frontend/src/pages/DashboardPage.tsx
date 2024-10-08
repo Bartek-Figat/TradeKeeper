@@ -1,4 +1,5 @@
 import Modal from "./Modal";
+import PortfolioOverview from "./PortfolioOverview"
 import PriceTicker from "./PriceTicker";
 import { FaArrowRight } from "react-icons/fa";
 import ChartComponent from "../components/chart/chartContentPage";
@@ -98,50 +99,22 @@ const DashboardPage = () => {
     <div className="flex w-full flex-col justify-center gap-6 p-10">
       <PriceTicker />
       {/* Portfolio Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {[
-          { label: "Total Value", value: "$8.89k", color: "text-primary" },
-          { label: "Market Value", value: "$15.9k", color: "text-warning" },
-          { label: "Yield", value: "3.4%", color: "text-danger" },
-          { label: "Dividend", value: "$1.3k", color: "text-info" },
-          { label: "Gain", value: "$116", color: "text-success" },
-        ].map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center bg-white p-4 rounded-md shadow-md"
-          >
-            <span className="block font-semibold text-gray-700">
-              {item.label}
-            </span>
-            <span className={`block ${item.color} text-lg font-bold`}>
-              {item.value}
-            </span>
-          </div>
-        ))}
-      </div>
+      <PortfolioOverview/>
 
       {/* Investment Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-12 gap-6">
         {[
           { label: "Total Amount Invested", value: "$50,000" },
           { label: "Number of Investments", value: "25" },
           { label: "Portfolio Value", value: "$34,000" },
           { label: "Returns Rate", value: "7.5%" },
         ].map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center bg-white p-4 rounded-md shadow-md"
-          >
-            <span className="block font-semibold text-gray-700">
-              {item.label}
-            </span>
-            <span className="block text-primary text-lg font-bold">
-              {item.value}
-            </span>
+          <div key={index} className="col-span-12 sm:col-span-6 lg:col-span-3 bg-white p-4 rounded shadow">
+            <h2 className="text-xl font-semibold">{item.label}</h2>
+            <p className="text-gray-600">{item.value}</p>
           </div>
         ))}
       </div>
-
       {/* Chart and My Stocks */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="md:col-span-2 lg:col-span-2 p-2 rounded-lg shadow-md bg-white">

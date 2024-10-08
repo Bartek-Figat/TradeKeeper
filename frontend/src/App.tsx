@@ -1,5 +1,4 @@
 import "react-toastify/dist/ReactToastify.css";
-// import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import { useRoutes } from "react-router-dom";
 import DasboardLayout from "./layouts/DashboardLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -13,6 +12,8 @@ import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ProtectedRoute from "./layouts/ProtectedRoute";
+import PublicRoute from "./layouts/PublicRoute"; // Import the PublicRoute component
 
 export const App = () => {
   const element = useRoutes([
@@ -20,36 +21,49 @@ export const App = () => {
     {
       element: <AuthLayout />,
       children: [
-        { path: "/sign-in", element: <SignInPage /> },
-        { path: "/sign-up", element: <SignUpPage /> },
-        { path: "/reset-password", element: <ResetPasswordPage /> },
+        {
+          path: "/sign-in",
+          element: (
+            <PublicRoute>
+              <SignInPage />
+            </PublicRoute>
+          ),
+        },
+        {
+          path: "/sign-up",
+          element: (
+            <PublicRoute>
+              <SignUpPage />
+            </PublicRoute>
+          ),
+        },
+        {
+          path: "/reset-password",
+          element: (
+            <PublicRoute>
+              <ResetPasswordPage />
+            </PublicRoute>
+          ),
+        },
       ],
     },
-    // protect
+    // Protect the dashboard routes
     {
       path: `/dashboard`,
-      element: <DasboardLayout />,
+      element: (
+        <ProtectedRoute>
+          <DasboardLayout />
+        </ProtectedRoute>
+      ),
       children: [
         { index: true, element: <DashboardPage /> },
         { path: "profile", element: <ProfilePage /> },
         { path: "project", element: <ProjectPage /> },
         { path: "analytics", element: <AnalyticsPage /> },
         { path: "lightweigh", element: <Lightweigh /> },
-        // {
-        //   path: "create-trade",
-        //   element: (
-        //     <RequireAuth fallbackPath="/login">
-        //       <CreateTrade />
-        //     </RequireAuth>
-        //   ),
-        // },
-        {
-          path: "create-trade",
-          element: <CreateTrade />,
-        },
+        { path: "create-trade", element: <CreateTrade /> },
       ],
     },
-    //
   ]);
   return element;
 };

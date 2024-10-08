@@ -3,47 +3,57 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Route,
   Path,
   Body,
   Security,
-  Request,
+  Query,
 } from "tsoa";
-import { TradeRepository } from "../../services/trade/tradeService";
+import { CompanyProfileTradeRepository } from "../../services/trade/tradeService";
 import { Trade } from "../../utils/tradeTypes";
-import { DeleteResult, UpdateResult } from "mongodb";
-import { TradeDto } from "../../dto/dto";
+import { CalculateTradeMetricsRepository } from "../../services/trade/calculateMetrics";
+import { TradeDto } from "../../services/trade/trade.dto";
+import {
+  ICreateTrade,
+  TradeFilter,
+} from "../../services/trade/trade.interface";
 
 @Route("custom-trades")
 export class CustomTradeController extends Controller {
-  private tradeRepository: TradeRepository = new TradeRepository();
+  private companyProfileTradeRepository: CompanyProfileTradeRepository =
+    new CompanyProfileTradeRepository();
+  private calculateTradeMetricsRepository: CalculateTradeMetricsRepository =
+    new CalculateTradeMetricsRepository();
 
   @Security("jwt")
-  @Get("/")
+  @Security("jwt")
+  @Get("/get-trade/{tradeId}")
+  public async getTradeById(@Path() tradeId: string): Promise<TradeDto> {
+    try {
+      return await this.calculateTradeMetricsRepository.getTradeById(tradeId);
+    } catch (error) {
+      this.setStatus(500);
+      throw new Error("Failed to fetch trade");
+    }
+  }
+
+  @Get("/get-all-trades")
   public async getAllTrades(): Promise<TradeDto[]> {
-    return this.tradeRepository.getAllTrades();
+    return this.calculateTradeMetricsRepository.getAllTrades();
   }
 
   @Security("jwt")
-  @Get("/user-trades")
-  public async getAllUserTrades(@Request() req: any): Promise<TradeDto[]> {
-    return this.tradeRepository.getAllUserTrades(req);
-  }
-
-  @Security("jwt")
-  @Get("/trade/{tradeId}")
-  public async getTradeById(@Request() tradeId: string): Promise<TradeDto> {
-    return this.tradeRepository.getTradeById(tradeId);
-  }
-
-  @Security("jwt")
-  @Post("/create-new-trade")
-  public async createTrade(
-    @Request() req: any,
-    @Body() newTrade: Trade
-  ): Promise<any> {
-    return this.tradeRepository.createTrade(newTrade, req);
+  @Post("/create")
+  public async createTrade(@Body() newTrade: ICreateTrade): Promise<TradeDto> {
+    try {
+      const createdTrade =
+        await this.calculateTradeMetricsRepository.createTrade(newTrade);
+      this.setStatus(201);
+      return createdTrade;
+    } catch (error) {
+      this.setStatus(500);
+      throw new Error("Failed to create trade");
+    }
   }
 
   @Security("jwt")
@@ -51,20 +61,35 @@ export class CustomTradeController extends Controller {
   public async updateTrade(
     @Path() tradeId: string,
     @Body() updatedTrade: Trade
-  ): Promise<UpdateResult> {
-    return this.tradeRepository.updateTrade(tradeId, updatedTrade);
+  ) {
+    return this.calculateTradeMetricsRepository.updateTrade(
+      tradeId,
+      updatedTrade
+    );
   }
 
   @Security("jwt")
-  @Delete("/remove-trade/{tradeId}")
-  public async deleteTrade(@Request() tradeId: string): Promise<DeleteResult> {
-    return this.tradeRepository.deleteTrade(tradeId);
+  @Get("/filter-trades")
+  public async filterTrades(
+    @Body() filter: TradeFilter,
+    @Query() page: number = 1,
+    @Query() limit: number = 10
+  ): Promise<TradeDto[]> {
+    try {
+      return await this.calculateTradeMetricsRepository.filterTrades(
+        filter,
+        page,
+        limit
+      );
+    } catch (error) {
+      this.setStatus(500);
+      throw new Error("Failed to filter trades");
+    }
   }
 
   @Security("jwt")
   @Get("/company/{symbol}")
   public async getCompanyProfile(@Path() symbol: string): Promise<any> {
-    return this.tradeRepository.getCompanyProfile(symbol);
+    return this.companyProfileTradeRepository.getCompanyProfile(symbol);
   }
 }
-

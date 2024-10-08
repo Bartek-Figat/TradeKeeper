@@ -6,15 +6,14 @@ import { TokenService } from "../tokenService/token";
 import { EmailHandler } from "./email";
 import { SendVerificationEmailData } from "./type";
 import { ObjectId } from "mongodb";
-import { sign } from "jsonwebtoken";
-
-const USER_COLLECTION = "user";
+import { JsonWebTokenError, sign, verify } from "jsonwebtoken";
 
 export class AuthService {
+  private readonly userDB: string = "user"; 
   private database: Database = new Database();
   private tokenService: TokenService = new TokenService();
   private emailHandler: EmailHandler = new EmailHandler();
-  private userCollection = this.database.getCollection(USER_COLLECTION);
+  private userCollection = this.database.getCollection(this.userDB);
 
   async registration({
     email,
@@ -32,7 +31,7 @@ export class AuthService {
       const newUser: SendVerificationEmailData = {
         email,
         password: await hash(password, salt),
-        authToken: sign({ data: email }, `secret`),
+        authToken: sign({ data: email }, `${process.env.JWT_SECRET}`),
         isVerified: false,
         dateAdded: new Date(),
         lastLoggedIn: null,
@@ -48,10 +47,35 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }: LoginDto): Promise<{ token: string }> {
-    const userCollection = this.database.getCollection(USER_COLLECTION);
-    const user = await userCollection.findOne({ email });
-    console.log("User", user);
+  async emailConfirmation({ authToken }: { authToken: string }): Promise<void> {
+    try {
+      const decoded = verify(authToken, `${process.env.JWT_SECRET}`) as { data: string };
+      const email = decoded.data;
+      const user = await this.userCollection.findOne({ email });
+
+      if (!user) {
+        throw new ApiError("User not found", 404, "Not Found");
+      }
+
+      if (user.isVerified) {
+        throw new ApiError("User already verified", 400, "Bad Request");
+      }
+      await this.userCollection.updateOne(
+        { email },
+        { $set: { isVerified: true } }
+      );
+
+      await this.emailHandler.emailConfirmationHandler({ email });
+    } catch (error: any) {
+      if (error instanceof JsonWebTokenError) {
+        throw new ApiError("Invalid token", 400, "Bad Request");
+      }
+      throw new ApiError("Email confirmation failed", 500, "Internal Server Error");
+    }
+  }
+
+  async login({ email, password }: LoginDto): Promise<{ accessToken: string, refreshToken: string }> {
+    const user = await this.userCollection.findOne({ email });
     if (!user) {
       throw new ApiError("User not found", 404);
     }
@@ -62,13 +86,15 @@ export class AuthService {
     }
 
     const userIdAsString = user._id.toString();
-    const token = this.tokenService.generateAccessToken(userIdAsString);
-    await userCollection.updateOne(
+    const accessToken = this.tokenService.generateAccessToken(userIdAsString);
+    const refreshToken = this.tokenService.generateRefreshToken(userIdAsString);
+
+    await this.userCollection.updateOne(
       { _id: user._id },
-      { $set: { isLogin: true, lastLoggedIn: new Date() } }
+      { $set: { isLogin: true, lastLoggedIn: new Date(), refreshToken } }
     );
 
-    return { token };
+    return { accessToken, refreshToken };
   }
 
   async logout(dto: LogoutDto): Promise<void> {
@@ -80,7 +106,7 @@ export class AuthService {
       } = dto;
       await this.userCollection.updateOne(
         { _id: new ObjectId(token) },
-        { $set: { isLogin: false, logOutDate: new Date() } }
+        { $set: { isLogin: false, logOutDate: new Date(), refreshToken: null } }
       );
     } catch (error: any) {
       throw new ApiError("Logout failed", 500, error.message);
@@ -96,24 +122,10 @@ export class AuthService {
       } = dto;
       await this.userCollection.updateOne(
         { _id: new ObjectId(token) },
-        { $set: { authorizationToken: [] } }
+        { $set: { authorizationToken: [], refreshToken: null } }
       );
     } catch (error: any) {
       throw new ApiError("Logout failed", 500, error.message);
     }
-  }
-
-  async sendWelcomeEmail(token: string): Promise<void> {
-    console.log("Token:  ", token);
-    const authToken = await this.userCollection.findOne(
-      { authToken: token },
-      {
-        projection: {
-          authToken: 1,
-          _id: 0,
-        },
-      }
-    );
-    console.log("Auth Token :", authToken);
   }
 }

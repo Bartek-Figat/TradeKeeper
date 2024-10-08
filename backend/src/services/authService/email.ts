@@ -31,7 +31,7 @@ export class EmailHandler {
     }
   }
 
-  async emailConfirmation({email}: {email: string} ): Promise<void> {
+  async emailConfirmationHandler({email}: {email: string} ): Promise<void> {
     try {
       const msg = {
         to: email,

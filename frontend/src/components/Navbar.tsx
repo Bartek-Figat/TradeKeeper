@@ -1,10 +1,13 @@
-import { FC, useState, type MouseEvent, useEffect } from "react";
+import { FC, useState, useEffect, type MouseEvent } from "react";
 import { NavLink } from "react-router-dom";
 import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import { Button, buttonVariants } from "./common/button";
 import Logo from "./Logo";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { signOut, checkAuth } from "../slice/authSlice";
 
 enum NavigationLinks {
   Home = "home",
@@ -30,6 +33,12 @@ const Navbar: FC<NavbarProps> = ({
 }) => {
   const [mobileNavLinksVisible, setMobileNavLinksVisible] = useState(false);
   const isScrolled = useScroll(10, 300);
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   const smoothScrollToSection = (
     e: MouseEvent<HTMLAnchorElement>,
@@ -45,22 +54,12 @@ const Navbar: FC<NavbarProps> = ({
     } else {
       console.error(`Element with ID ${targetId} not found.`);
     }
-    setMobileNavLinksVisible(false); // Close mobile menu after navigation
+    setMobileNavLinksVisible(false);
   };
 
-  // Effect to handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileNavLinksVisible(false); // Hide mobile menu on larger screens
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const handleSignOut = () => {
+    dispatch(signOut());
+  };
 
   return (
     <div
@@ -126,32 +125,50 @@ const Navbar: FC<NavbarProps> = ({
         {/* end of nav links */}
         {/* mobile menu + outer navigation */}
         <div className="flex items-center space-x-1">
-          <NavLink
-            to="/sign-in"
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "text-base font-bold",
-              })
-            )}
-            aria-label="Sign in"
-          >
-            Sign in
-          </NavLink>
-          <NavLink
-            to="/sign-up"
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "text-base font-bold",
-              })
-            )}
-            aria-label="Sign up"
-          >
-            Sign up
-          </NavLink>
+          {!isAuthenticated ? (
+            <>
+              <NavLink
+                to="/sign-in"
+                className={cn(
+                  buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                    className: "text-base font-bold",
+                  })
+                )}
+                aria-label="Sign in"
+              >
+                Sign in
+              </NavLink>
+              <NavLink
+                to="/sign-up"
+                className={cn(
+                  buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                    className: "text-base font-bold",
+                  })
+                )}
+                aria-label="Sign up"
+              >
+                Sign up
+              </NavLink>
+            </>
+          ) : (
+            <Button
+              onClick={handleSignOut}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                  size: "sm",
+                  className: "text-base font-bold",
+                })
+              )}
+              aria-label="Sign out"
+            >
+              Sign out
+            </Button>
+          )}
           <Button
             className="md:hidden"
             variant="ghost"

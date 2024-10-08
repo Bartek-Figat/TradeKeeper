@@ -1,3 +1,5 @@
+
+
 let msg = "👋🚀⚡🔥🚀  TradeKeeper  👋🚀⚡🔥🚀";
 let symbols = ` 
 $ - Dollar Symbol (USD)

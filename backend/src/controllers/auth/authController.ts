@@ -15,7 +15,7 @@ import {
 } from "../../middlewares/middleware";
 
 
-@Route("custom-auth")
+@Route("auth")
 export class CustomAuthController extends Controller {
   private authService = new AuthService();
 
@@ -27,8 +27,9 @@ export class CustomAuthController extends Controller {
 
   @Post("login")
   @Middlewares(validateIncomingFields)
-  async login(@Body() req: any): Promise<{ token: string }> {
-    return this.authService.login(req);
+  async login(@Body() req: any): Promise<{ token: string; refreshToken: string }> {
+    const { accessToken, refreshToken } = await this.authService.login(req);
+    return { token: accessToken, refreshToken };
   }
 
   @Security("jwt")
@@ -43,10 +44,9 @@ export class CustomAuthController extends Controller {
     return this.authService.logoutFromAllDevices(req);
   }
 
-
-  @Get("/activate-email/{token}")
-  async sendWelcomeEmail(@Path() token: string) {
-    return this.authService.sendWelcomeEmail(token);
+  @Get("/confirm-email/{authToken}")
+  async emailConfirmation(@Path() authToken: string): Promise<void> {
+    return this.authService.emailConfirmation({ authToken });
   }
 
 }

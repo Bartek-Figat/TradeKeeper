@@ -1,10 +1,13 @@
 import { ReactNode, memo, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import ImageSlider from "./ImageSlider";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import Navbar from "../components/Navbar";
+
+
 
 const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -76,8 +79,14 @@ const HomePage: React.FC = () => {
   return (
     <div className="bg-background text-foreground min-h-screen antialiased">
       <Navbar {...sectionQuery} />
+
       <SectionWrapper id="home" {...sectionQuery}>
-        <div className="w-full h-auto bg-[#111c43] px-5 @lg:px-12 lg:px-20 py-10">
+        <motion.div
+          className="w-full h-auto bg-[#111c43] px-5 @lg:px-12 lg:px-20 py-10"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           {/* Home Section */}
           <section className="flex flex-col lg:flex-row h-auto w-full my-20">
             <div className="w-full lg:w-1/2">
@@ -146,7 +155,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           </section>
-        </div>
+        </motion.div>
       </SectionWrapper>
       {/* About Us Section */}
       <SectionWrapper id="about" {...sectionQuery}>
