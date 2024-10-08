@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { JwtPayload, verify, sign } from "jsonwebtoken";
+import { JwtPayload, verify } from "jsonwebtoken";
 import { Database } from "../config/db/database";
 import { ApiError } from "../error/apiError";
 
@@ -24,44 +24,40 @@ export async function expressAuthentication(
 
   const database = new Database();
   const collection = database.getCollection("user");
-  const authorizationTokenExists = await collection.findOne(
-    { authorizationToken: token },
-    { projection: { _id: 0 } }
-  );
-
-  if (!authorizationTokenExists) {
-    throw new ApiError("Unauthorized", 401, "Unauthorized");
-  }
 
   try {
     const secret: any = process.env.JWT_SECRET;
     const decoded = verify(token, secret) as string | JwtPayload;
     return { decoded, authHeader: token };
   } catch (err) {
-    // If the token is invalid, check for a refresh token
-    const refreshToken = req.headers.authorization;
-    if (!refreshToken) {
-      throw new ApiError("Unauthorized", 401, "Unauthorized");
-    }
+    
+      // If the token is expired, check for a refresh token
+      const refreshTokenHeader = req.headers.authorization; 
+      const refreshSecret: any = process.env.JWTREFRESHSECRET;
 
-    const refreshTokenExists = await collection.findOne(
-      { refreshToken },
-      { projection: { _id: 0, userId: 1 } }
-    );
+      if (!refreshTokenHeader) {
+        throw new ApiError("Unauthorized", 401, "Refresh token missing");
+      }
 
-    if (!refreshTokenExists) {
-      throw new ApiError("Unauthorized", 401, "Unauthorized");
-    }
+      const [bearer, refreshToken] = refreshTokenHeader.split(" ");
+      if (bearer !== "Bearer" || !refreshToken) {
+        throw new ApiError("Unauthorized", 401, "Invalid refresh token format");
+      }
 
-    // new access token
-    const newAccessToken = sign(
-      { userId: refreshTokenExists.userId },
-      "secret",
-      { expiresIn: "1h" }
-    );
-    return {
-      decoded: { userId: refreshTokenExists.userId },
-      authHeader: newAccessToken,
-    };
+      const refreshTokenExists = await collection.findOne(
+        { refreshToken },
+        { projection: { _id: 0, userId: 1 } }
+      );
+
+      if (!refreshTokenExists) {
+        throw new ApiError("Unauthorized", 401, "Refresh token not found");
+      }
+
+      try {
+        const decoded =  verify(refreshToken, refreshSecret) as string | JwtPayload;
+        return { decoded, authHeader: refreshToken };
+      } catch (refreshErr) {
+        throw new ApiError("Unauthorized", 401, "Unauthorized");
+      }
   }
 }

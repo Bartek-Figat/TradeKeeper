@@ -5,14 +5,15 @@ import { ApiError } from "../../error/apiError";
 import { ObjectId } from "mongodb";
 
 export class CalculateTradeMetricsRepository {
-  private readonly trades: string = "trades"; 
+  private readonly trades: string = "trades";
   private db = new Database().getCollection(this.trades);
-
 
   // Fetches a single trade by ID and calculates its performance metrics
   async getTradeById(tradeId: string): Promise<TradeDto> {
     try {
-      const trade = await this.db.findOne<ITrade>({ _id: new ObjectId(tradeId) });
+      const trade = await this.db.findOne<ITrade>({
+        _id: new ObjectId(tradeId),
+      });
       if (!trade) {
         throw new ApiError("Trade not found", 404);
       }
@@ -25,13 +26,17 @@ export class CalculateTradeMetricsRepository {
   }
 
   // Fetches all trades and calculates performance metrics for each trade
-  async getAllTrades(page: number = 1, limit: number = 10): Promise<TradeDto[]> {
+  async getAllTrades(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<TradeDto[]> {
     try {
       const skip = (page - 1) * limit;
-      const trades = await this.db.find<ITrade>({})
-                                  .skip(skip)
-                                  .limit(limit)
-                                  .toArray();
+      const trades = await this.db
+        .find<ITrade>({})
+        .skip(skip)
+        .limit(limit)
+        .toArray();
       return trades.map((trade) => this.calculateMetrics(trade, trades));
     } catch (error) {
       console.error("Error fetching trades:", error);
@@ -44,7 +49,8 @@ export class CalculateTradeMetricsRepository {
     try {
       // Validate trade type
       if (!["stock", "forex", "crypto"].includes(newTrade.tradeType)) {
-        throw new Error("Invalid trade type");
+        console.error("Invalid trade type:    stock, forex, crypto");
+        throw new ApiError("Invalid trade type", 400);
       }
 
       const result = await this.db.insertOne(newTrade);
@@ -56,11 +62,13 @@ export class CalculateTradeMetricsRepository {
           exitDate: newTrade.exitDate,
         } as TradeDto;
       } else {
-        throw new Error("Failed to insert trade");
+        console.error("Failed to insert trade");
+        throw new ApiError("Failed to insert trade", 400);
       }
     } catch (error) {
       console.error("Error creating trade:", error);
-      throw new Error("Failed to create trade");
+      console.error("Failed to insert trade");
+      throw new ApiError("Failed to create trade", 500);
     }
   }
 
@@ -105,10 +113,13 @@ export class CalculateTradeMetricsRepository {
   }
 
   // Filters trades based on provided criteria
-  async filterTrades(filter: TradeFilter, page: number = 1, limit: number = 10): Promise<TradeDto[]> {
+  async filterTrades(
+    filter: TradeFilter,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<TradeDto[]> {
     try {
       const query: any = {};
-
 
       if (filter.userId) query.userId = filter.userId;
       if (filter.tradeType) query.tradeType = filter.tradeType;
@@ -121,10 +132,11 @@ export class CalculateTradeMetricsRepository {
 
       // pagination
       const skip = (page - 1) * limit;
-      const trades = await this.db.find(query)
-                                  .skip(skip)
-                                  .limit(limit)
-                                  .toArray();
+      const trades = await this.db
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .toArray();
 
       const tradesWithMetrics = trades.map((trade) => {
         const iTrade: ITrade = {
