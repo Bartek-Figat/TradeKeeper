@@ -9,7 +9,7 @@ import { ObjectId } from "mongodb";
 import { JsonWebTokenError, sign, verify } from "jsonwebtoken";
 
 export class AuthService {
-  private readonly userDB: string = "user"; 
+  private readonly userDB: string = "user";
   private database: Database = new Database();
   private tokenService: TokenService = new TokenService();
   private emailHandler: EmailHandler = new EmailHandler();
@@ -49,7 +49,9 @@ export class AuthService {
 
   async emailConfirmation({ authToken }: { authToken: string }): Promise<void> {
     try {
-      const decoded = verify(authToken, `${process.env.JWT_SECRET}`) as { data: string };
+      const decoded = verify(authToken, `${process.env.JWT_SECRET}`) as {
+        data: string;
+      };
       const email = decoded.data;
       const user = await this.userCollection.findOne({ email });
 
@@ -70,31 +72,39 @@ export class AuthService {
       if (error instanceof JsonWebTokenError) {
         throw new ApiError("Invalid token", 400, "Bad Request");
       }
-      throw new ApiError("Email confirmation failed", 500, "Internal Server Error");
+      throw new ApiError(
+        "Email confirmation failed",
+        500,
+        "Internal Server Error"
+      );
     }
   }
 
-  async login({ email, password }: LoginDto): Promise<{ accessToken: string, refreshToken: string }> {
-    const user = await this.userCollection.findOne({ email });
-    if (!user) {
-      throw new ApiError("User not found", 404);
+  async login({ email, password }: LoginDto): Promise<{ token: string }> {
+    try {
+      const user = await this.userCollection.findOne({ email });
+      if (!user) throw new ApiError("User not found", 404);
+
+      const isMatch = await compare(password, user.password);
+      if (!isMatch) throw new ApiError("Invalid credentials", 401);
+
+      const userIdAsString = user._id.toString();
+      const token = this.tokenService.generateAccessToken(userIdAsString);
+      await this.userCollection.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            isLogin: true,
+            lastLoggedIn: new Date(),
+            authorizationToken: token,
+          },
+        }
+      );
+
+      return { token };
+    } catch (error: any) {
+      throw new ApiError("Login failed", 500, error.message);
     }
-
-    const isMatch = await compare(password, user.password);
-    if (!isMatch) {
-      throw new ApiError("Invalid credentials", 401);
-    }
-
-    const userIdAsString = user._id.toString();
-    const accessToken = this.tokenService.generateAccessToken(userIdAsString);
-    const refreshToken = this.tokenService.generateRefreshToken(userIdAsString);
-
-    await this.userCollection.updateOne(
-      { _id: user._id },
-      { $set: { isLogin: true, lastLoggedIn: new Date(), refreshToken } }
-    );
-
-    return { accessToken, refreshToken };
   }
 
   async logout(dto: LogoutDto): Promise<void> {
@@ -106,7 +116,7 @@ export class AuthService {
       } = dto;
       await this.userCollection.updateOne(
         { _id: new ObjectId(token) },
-        { $set: { isLogin: false, logOutDate: new Date(), refreshToken: null } }
+        { $set: { isLogin: false, logOutDate: new Date() } }
       );
     } catch (error: any) {
       throw new ApiError("Logout failed", 500, error.message);
@@ -122,7 +132,7 @@ export class AuthService {
       } = dto;
       await this.userCollection.updateOne(
         { _id: new ObjectId(token) },
-        { $set: { authorizationToken: [], refreshToken: null } }
+        { $set: { authorizationToken: [] } }
       );
     } catch (error: any) {
       throw new ApiError("Logout failed", 500, error.message);

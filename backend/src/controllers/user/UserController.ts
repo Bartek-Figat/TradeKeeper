@@ -7,6 +7,7 @@ import {
   Body,
   Path,
   Security,
+  Request,
 } from "tsoa";
 
 interface UpdateProfileRequest {}
@@ -15,7 +16,8 @@ interface UpdateProfileRequest {}
 export class UserController extends Controller {
   @Security("jwt")
   @Get("user-profile-info")
-  async getUser() {
+  async getUser(@Request() req: any) {
+    console.log(req.user);
     return { data: "User Profile Info" };
   }
 

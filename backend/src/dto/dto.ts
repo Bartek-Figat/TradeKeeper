@@ -7,14 +7,14 @@ import {
   IsArray,
   IsBoolean,
 } from "class-validator";
-import { Match, IsMatch } from "./match.decorator";
+import { IsMatch } from "./match.decorator"; //Match
 import { ObjectId } from "mongodb";
 
 export class RegisterDto {
   @IsNotEmpty()
   password!: string;
   @IsEmail()
-  email!: string | undefined; 
+  email!: string | undefined;
   @IsMatch("password", { message: "Does not match" })
   matchPassword!: string;
   @IsNotEmpty()
@@ -25,9 +25,7 @@ export class LoginDto {
   @IsNotEmpty()
   password!: string;
   @IsEmail()
-  email?: string;
-  @Match("password", { message: "Does not match" })
-  matchPassword!: string;
+  email!: string;
 }
 export type LogoutDto = {
   user: { decoded: { token: string }; authHeader: string };

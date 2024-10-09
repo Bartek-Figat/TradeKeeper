@@ -8,14 +8,13 @@ import {
   Get,
   Request,
   Path,
+  Tags,
 } from "tsoa";
 import { AuthService } from "../../services/authService/authService";
-import {
-  validateIncomingFields,
-} from "../../middlewares/middleware";
-
+import { validateIncomingFields } from "../../middlewares/middleware";
 
 @Route("auth")
+@Tags("Auth")
 export class CustomAuthController extends Controller {
   private authService = new AuthService();
 
@@ -27,9 +26,8 @@ export class CustomAuthController extends Controller {
 
   @Post("login")
   @Middlewares(validateIncomingFields)
-  async login(@Body() req: any): Promise<{ token: string; refreshToken: string }> {
-    const { accessToken, refreshToken } = await this.authService.login(req);
-    return { token: accessToken, refreshToken };
+  async login(@Body() req: any): Promise<{ token: string }> {
+    return this.authService.login(req);
   }
 
   @Security("jwt")
@@ -48,6 +46,4 @@ export class CustomAuthController extends Controller {
   async emailConfirmation(@Path() authToken: string): Promise<void> {
     return this.authService.emailConfirmation({ authToken });
   }
-
 }
-

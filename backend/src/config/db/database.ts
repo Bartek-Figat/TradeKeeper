@@ -8,7 +8,7 @@ export class Database {
   private readonly uri: string;
 
   constructor() {
-    this.uri = process.env.MONGODB_URI || `mongodb://localhost:${27018}`;// mongodb://localhost:27017
+    this.uri = process.env.MONGODB_URI || `mongodb://localhost:${27017}`; // mongodb://localhost:27017
     this.client = new MongoClient(this.uri);
     this.db = this.client.db("tradekeeper");
     this.retryCount = 0;
@@ -29,7 +29,7 @@ export class Database {
         await new Promise((resolve) =>
           setTimeout(resolve, 2000 * this.retryCount)
         );
-        await this.connectWithRetry(); 
+        await this.connectWithRetry();
       } else {
         console.error(
           "Database connection failed after multiple retries",
@@ -44,4 +44,3 @@ export class Database {
     return this.db.collection(collectionName);
   }
 }
-

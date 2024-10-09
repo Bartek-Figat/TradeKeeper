@@ -8,8 +8,6 @@ import { UserController } from './../src/controllers/user/UserController';
 import { CustomTradeController } from './../src/controllers/trade/TraedController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CustomAuthController } from './../src/controllers/auth/authController';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { NotesController } from './../src/controllers/ai/ai.controller';
 import { expressAuthentication } from './../src/authentication/authGate';
 // @ts-ignore - no great way to install types from subpackage
 import type { RequestHandler, Router } from 'express';
@@ -24,41 +22,39 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ObjectId": {
-        "dataType": "refAlias",
-        "type": {"dataType":"string","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TradeDto": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"union","subSchemas":[{"ref":"ObjectId"},{"dataType":"undefined"}],"required":true},
-<<<<<<< HEAD
-            "createdAt": {"dataType":"datetime","default":"2024-09-07T04:04:59.987Z"},
-=======
-            "createdAt": {"dataType":"datetime","default":"2024-07-05T00:57:41.521Z"},
->>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
-            "entry": {"dataType":"double","required":true},
-            "entryQty": {"dataType":"double","required":true},
-            "entryTotal": {"dataType":"double","required":true},
-            "executions": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "exit": {"dataType":"double","required":true},
-            "exitQty": {"dataType":"double","required":true},
-            "exitTotal": {"dataType":"double","required":true},
-            "holdTime": {"dataType":"double","required":true},
-            "lastTransactionAt": {"dataType":"datetime","required":true},
-            "market": {"dataType":"string","required":true},
-            "openDate": {"dataType":"datetime","required":true},
-            "position": {"dataType":"double","required":true},
-            "positionType": {"dataType":"string","required":true},
-            "rMultiple": {"dataType":"double","required":true},
-            "urnAmnt": {"dataType":"double","required":true},
-            "returnPercent": {"dataType":"double","required":true},
-            "status": {"dataType":"string","required":true},
+            "_id": {"dataType":"string","required":true},
+            "entryDate": {"dataType":"datetime","required":true},
+            "exitDate": {"dataType":"datetime","required":true},
+            "userId": {"dataType":"string","required":true},
             "symbol": {"dataType":"string","required":true},
+            "entryPrice": {"dataType":"double","required":true},
+            "exitPrice": {"dataType":"double","required":true},
+            "risk": {"dataType":"double","required":true},
+            "reward": {"dataType":"double","required":true},
             "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "winRate": {"dataType":"double"},
+            "avgProfitLoss": {"dataType":"double"},
+            "riskRewardRatio": {"dataType":"double"},
+            "maxDrawdown": {"dataType":"double"},
+            "profitFactor": {"dataType":"double"},
+            "sharpeRatio": {"dataType":"double"},
+            "volatility": {"dataType":"double"},
+            "sortinoRatio": {"dataType":"double"},
+            "avgHoldingPeriod": {"dataType":"double"},
+            "improvementSuggestions": {"dataType":"array","array":{"dataType":"string"}},
+            "stopLossLevel": {"dataType":"double"},
+            "positionSize": {"dataType":"double"},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ObjectId": {
+        "dataType": "refAlias",
+        "type": {"dataType":"string","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_Document.Exclude_keyofDocument._id__": {
@@ -102,32 +98,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "InferIdType_Document_": {
-        "dataType": "refAlias",
-        "type": {"ref":"InferIdType_Document_","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UpdateResult": {
-        "dataType": "refObject",
-        "properties": {
-            "acknowledged": {"dataType":"boolean","required":true},
-            "matchedCount": {"dataType":"double","required":true},
-            "modifiedCount": {"dataType":"double","required":true},
-            "upsertedCount": {"dataType":"double","required":true},
-            "upsertedId": {"dataType":"union","subSchemas":[{"ref":"InferIdType_Document_"},{"dataType":"enum","enums":[null]}],"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DeleteResult": {
-        "dataType": "refObject",
-        "properties": {
-            "acknowledged": {"dataType":"boolean","required":true},
-            "deletedCount": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -145,6 +115,7 @@ export function RegisterRoutes(app: Router) {
 
             function UserController_getUser(request: any, response: any, next: any) {
             const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -266,7 +237,33 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-trades',
+        app.get('/custom-trades/get-trade/:tradeId',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getTradeById)),
+
+            function CustomTradeController_getTradeById(request: any, response: any, next: any) {
+            const args = {
+                    tradeId: {"in":"path","name":"tradeId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CustomTradeController();
+
+
+              const promise = controller.getTradeById.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/custom-trades/get-all-trades',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getAllTrades)),
@@ -291,67 +288,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-trades/user-trades',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
-            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getAllUserTrades)),
-
-            function CustomTradeController_getAllUserTrades(request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new CustomTradeController();
-
-
-              const promise = controller.getAllUserTrades.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-trades/trade/:tradeId',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
-            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getTradeById)),
-
-            function CustomTradeController_getTradeById(request: any, response: any, next: any) {
-            const args = {
-                    tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new CustomTradeController();
-
-
-              const promise = controller.getTradeById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/custom-trades/create-new-trade',
+        app.post('/custom-trades/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.createTrade)),
 
             function CustomTradeController_createTrade(request: any, response: any, next: any) {
             const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    newTrade: {"in":"body","name":"newTrade","required":true,"ref":"Trade"},
+                    newTrade: {"in":"body","name":"newTrade","required":true,"dataType":"any"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -397,14 +341,16 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/custom-trades/remove-trade/:tradeId',
+        app.get('/custom-trades/filter-trades',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
-            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.deleteTrade)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.filterTrades)),
 
-            function CustomTradeController_deleteTrade(request: any, response: any, next: any) {
+            function CustomTradeController_filterTrades(request: any, response: any, next: any) {
             const args = {
-                    tradeId: {"in":"request","name":"tradeId","required":true,"dataType":"object"},
+                    filter: {"in":"request","name":"filter","required":true,"dataType":"object"},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -416,7 +362,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CustomTradeController();
 
 
-              const promise = controller.deleteTrade.apply(controller, validatedArgs as any);
+              const promise = controller.filterTrades.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -449,7 +395,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/custom-auth/register',
+        app.post('/auth/register',
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.registration)),
 
@@ -474,7 +420,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/custom-auth/login',
+        app.post('/auth/login',
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.login)),
 
@@ -499,7 +445,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-auth/logout',
+        app.get('/auth/logout',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.logout)),
@@ -525,7 +471,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-auth/logout-all',
+        app.get('/auth/logout-all',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.logoutFromAllDevices)),
@@ -551,13 +497,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/custom-auth/activate-email/:token',
+        app.get('/auth/confirm-email/:authToken',
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
-            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.sendWelcomeEmail)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.emailConfirmation)),
 
-            function CustomAuthController_sendWelcomeEmail(request: any, response: any, next: any) {
+            function CustomAuthController_emailConfirmation(request: any, response: any, next: any) {
             const args = {
-                    token: {"in":"path","name":"token","required":true,"dataType":"string"},
+                    authToken: {"in":"path","name":"authToken","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -569,31 +515,7 @@ export function RegisterRoutes(app: Router) {
                 const controller = new CustomAuthController();
 
 
-              const promise = controller.sendWelcomeEmail.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/notes/ai-notes',
-            ...(fetchMiddlewares<RequestHandler>(NotesController)),
-            ...(fetchMiddlewares<RequestHandler>(NotesController.prototype.generateNotes)),
-
-            function NotesController_generateNotes(request: any, response: any, next: any) {
-            const args = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new NotesController();
-
-
-              const promise = controller.generateNotes.apply(controller, validatedArgs as any);
+              const promise = controller.emailConfirmation.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

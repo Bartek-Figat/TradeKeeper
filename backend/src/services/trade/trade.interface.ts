@@ -21,13 +21,11 @@ export interface ITrade {
   sortinoRatio?: number;
   avgHoldingPeriod?: number;
   improvementSuggestions?: string[];
-  // Add risk management fields
   stopLossLevel?: number;
   positionSize?: number;
 }
 
 export interface ICreateTrade {
-  userId: string;
   symbol: string;
   entryPrice: number;
   exitPrice: number;

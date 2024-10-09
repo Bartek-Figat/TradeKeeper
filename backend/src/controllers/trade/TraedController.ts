@@ -8,15 +8,13 @@ import {
   Body,
   Security,
   Query,
+  Request,
 } from "tsoa";
 import { CompanyProfileTradeRepository } from "../../services/trade/tradeService";
 import { Trade } from "../../utils/tradeTypes";
 import { CalculateTradeMetricsRepository } from "../../services/trade/calculateMetrics";
 import { TradeDto } from "../../services/trade/trade.dto";
-import {
-  ICreateTrade,
-  TradeFilter,
-} from "../../services/trade/trade.interface";
+import { TradeFilter } from "../../services/trade/trade.interface";
 
 @Route("custom-trades")
 export class CustomTradeController extends Controller {
@@ -26,9 +24,8 @@ export class CustomTradeController extends Controller {
     new CalculateTradeMetricsRepository();
 
   @Security("jwt")
-  @Security("jwt")
   @Get("/get-trade/{tradeId}")
-  public async getTradeById(@Path() tradeId: string): Promise<TradeDto> {
+  public async getTradeById(@Path() tradeId: string) {
     try {
       return await this.calculateTradeMetricsRepository.getTradeById(tradeId);
     } catch (error) {
@@ -37,6 +34,7 @@ export class CustomTradeController extends Controller {
     }
   }
 
+  @Security("jwt")
   @Get("/get-all-trades")
   public async getAllTrades(): Promise<TradeDto[]> {
     return this.calculateTradeMetricsRepository.getAllTrades();
@@ -44,7 +42,7 @@ export class CustomTradeController extends Controller {
 
   @Security("jwt")
   @Post("/create")
-  public async createTrade(@Body() newTrade: ICreateTrade): Promise<TradeDto> {
+  public async createTrade(@Body() newTrade: any) {
     try {
       const createdTrade =
         await this.calculateTradeMetricsRepository.createTrade(newTrade);
@@ -71,7 +69,7 @@ export class CustomTradeController extends Controller {
   @Security("jwt")
   @Get("/filter-trades")
   public async filterTrades(
-    @Body() filter: TradeFilter,
+    @Request() filter: TradeFilter,
     @Query() page: number = 1,
     @Query() limit: number = 10
   ): Promise<TradeDto[]> {

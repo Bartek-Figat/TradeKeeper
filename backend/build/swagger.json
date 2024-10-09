@@ -12,124 +12,121 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ObjectId": {
-				"type": "string",
-				"description": "A class representation of the BSON ObjectId type."
-			},
 			"TradeDto": {
 				"properties": {
-					"id": {
-						"$ref": "#/components/schemas/ObjectId"
+					"_id": {
+						"type": "string"
 					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time",
-<<<<<<< HEAD
-						"default": "2024-09-07T04:04:59.987Z"
-=======
-						"default": "2024-07-05T00:57:41.521Z"
->>>>>>> b02d96a6bbd3d2228f9375dc22de3c0886186fd2
-					},
-					"entry": {
-						"type": "number",
-						"format": "double"
-					},
-					"entryQty": {
-						"type": "number",
-						"format": "double"
-					},
-					"entryTotal": {
-						"type": "number",
-						"format": "double"
-					},
-					"executions": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"exit": {
-						"type": "number",
-						"format": "double"
-					},
-					"exitQty": {
-						"type": "number",
-						"format": "double"
-					},
-					"exitTotal": {
-						"type": "number",
-						"format": "double"
-					},
-					"holdTime": {
-						"type": "number",
-						"format": "double"
-					},
-					"lastTransactionAt": {
+					"entryDate": {
 						"type": "string",
 						"format": "date-time"
 					},
-					"market": {
-						"type": "string"
-					},
-					"openDate": {
+					"exitDate": {
 						"type": "string",
 						"format": "date-time"
 					},
-					"position": {
-						"type": "number",
-						"format": "double"
-					},
-					"positionType": {
-						"type": "string"
-					},
-					"rMultiple": {
-						"type": "number",
-						"format": "double"
-					},
-					"urnAmnt": {
-						"type": "number",
-						"format": "double"
-					},
-					"returnPercent": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
+					"userId": {
 						"type": "string"
 					},
 					"symbol": {
 						"type": "string"
+					},
+					"entryPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"exitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"risk": {
+						"type": "number",
+						"format": "double"
+					},
+					"reward": {
+						"type": "number",
+						"format": "double"
 					},
 					"tags": {
 						"items": {
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"winRate": {
+						"type": "number",
+						"format": "double"
+					},
+					"avgProfitLoss": {
+						"type": "number",
+						"format": "double"
+					},
+					"riskRewardRatio": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxDrawdown": {
+						"type": "number",
+						"format": "double"
+					},
+					"profitFactor": {
+						"type": "number",
+						"format": "double"
+					},
+					"sharpeRatio": {
+						"type": "number",
+						"format": "double"
+					},
+					"volatility": {
+						"type": "number",
+						"format": "double"
+					},
+					"sortinoRatio": {
+						"type": "number",
+						"format": "double"
+					},
+					"avgHoldingPeriod": {
+						"type": "number",
+						"format": "double"
+					},
+					"improvementSuggestions": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"stopLossLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"positionSize": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"entry",
-					"entryQty",
-					"entryTotal",
-					"executions",
-					"exit",
-					"exitQty",
-					"exitTotal",
-					"holdTime",
-					"lastTransactionAt",
-					"market",
-					"openDate",
-					"position",
-					"positionType",
-					"rMultiple",
-					"urnAmnt",
-					"returnPercent",
-					"status",
+					"_id",
+					"entryDate",
+					"exitDate",
+					"userId",
 					"symbol",
-					"tags"
+					"entryPrice",
+					"exitPrice",
+					"risk",
+					"reward",
+					"tags",
+					"createdAt"
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ObjectId": {
+				"type": "string",
+				"description": "A class representation of the BSON ObjectId type."
 			},
 			"Pick_Document.Exclude_keyofDocument._id__": {
 				"properties": {},
@@ -258,70 +255,6 @@
 					"status",
 					"symbol",
 					"tags"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InferIdType_Document_": {
-				"$ref": "#/components/schemas/InferIdType_Document_",
-				"description": "Given an object shaped type, return the type of the _id field or default to ObjectId"
-			},
-			"UpdateResult": {
-				"properties": {
-					"acknowledged": {
-						"type": "boolean",
-						"description": "Indicates whether this write result was acknowledged. If not, then all other members of this result will be undefined"
-					},
-					"matchedCount": {
-						"type": "number",
-						"format": "double",
-						"description": "The number of documents that matched the filter"
-					},
-					"modifiedCount": {
-						"type": "number",
-						"format": "double",
-						"description": "The number of documents that were modified"
-					},
-					"upsertedCount": {
-						"type": "number",
-						"format": "double",
-						"description": "The number of documents that were upserted"
-					},
-					"upsertedId": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/InferIdType_Document_"
-							}
-						],
-						"nullable": true,
-						"description": "The identifier of the inserted document if an upsert took place"
-					}
-				},
-				"required": [
-					"acknowledged",
-					"matchedCount",
-					"modifiedCount",
-					"upsertedCount",
-					"upsertedId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"DeleteResult": {
-				"properties": {
-					"acknowledged": {
-						"type": "boolean",
-						"description": "Indicates whether this write result was acknowledged. If not, then all other members of this result will be undefined."
-					},
-					"deletedCount": {
-						"type": "number",
-						"format": "double",
-						"description": "The number of documents that were deleted"
-					}
-				},
-				"required": [
-					"acknowledged",
-					"deletedCount"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -538,7 +471,39 @@
 				]
 			}
 		},
-		"/custom-trades": {
+		"/custom-trades/get-trade/{tradeId}": {
+			"get": {
+				"operationId": "GetTradeById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TradeDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "tradeId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/custom-trades/get-all-trades": {
 			"get": {
 				"operationId": "GetAllTrades",
 				"responses": {
@@ -564,56 +529,7 @@
 				"parameters": []
 			}
 		},
-		"/custom-trades/user-trades": {
-			"get": {
-				"operationId": "GetAllUserTrades",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/TradeDto"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/custom-trades/trade/{tradeId}": {
-			"get": {
-				"operationId": "GetTradeById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TradeDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/custom-trades/create-new-trade": {
+		"/custom-trades/create": {
 			"post": {
 				"operationId": "CreateTrade",
 				"responses": {
@@ -621,7 +537,76 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"tradeType": {
+											"type": "string",
+											"enum": [
+												"stock",
+												"forex",
+												"crypto"
+											]
+										},
+										"positionSize": {
+											"type": "number",
+											"format": "double"
+										},
+										"stopLossLevel": {
+											"type": "number",
+											"format": "double"
+										},
+										"createdAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"tags": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"reward": {
+											"type": "number",
+											"format": "double"
+										},
+										"risk": {
+											"type": "number",
+											"format": "double"
+										},
+										"exitPrice": {
+											"type": "number",
+											"format": "double"
+										},
+										"entryPrice": {
+											"type": "number",
+											"format": "double"
+										},
+										"symbol": {
+											"type": "string"
+										},
+										"exitDate": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"entryDate": {
+											"type": "string",
+											"format": "date-time"
+										}
+									},
+									"required": [
+										"tradeType",
+										"createdAt",
+										"tags",
+										"reward",
+										"risk",
+										"exitPrice",
+										"entryPrice",
+										"symbol",
+										"exitDate",
+										"entryDate"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
@@ -636,9 +621,7 @@
 					"required": true,
 					"content": {
 						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Trade"
-							}
+							"schema": {}
 						}
 					}
 				}
@@ -653,7 +636,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UpdateResult"
+									"$ref": "#/components/schemas/TradeDto"
 								}
 							}
 						}
@@ -686,16 +669,19 @@
 				}
 			}
 		},
-		"/custom-trades/remove-trade/{tradeId}": {
-			"delete": {
-				"operationId": "DeleteTrade",
+		"/custom-trades/filter-trades": {
+			"get": {
+				"operationId": "FilterTrades",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DeleteResult"
+									"items": {
+										"$ref": "#/components/schemas/TradeDto"
+									},
+									"type": "array"
 								}
 							}
 						}
@@ -706,7 +692,28 @@
 						"jwt": []
 					}
 				],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/custom-trades/company/{symbol}": {
@@ -739,7 +746,7 @@
 				]
 			}
 		},
-		"/custom-auth/register": {
+		"/auth/register": {
 			"post": {
 				"operationId": "Registration",
 				"responses": {
@@ -747,6 +754,9 @@
 						"description": "No content"
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -759,7 +769,7 @@
 				}
 			}
 		},
-		"/custom-auth/login": {
+		"/auth/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
@@ -782,6 +792,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -794,7 +807,7 @@
 				}
 			}
 		},
-		"/custom-auth/logout": {
+		"/auth/logout": {
 			"get": {
 				"operationId": "Logout",
 				"responses": {
@@ -802,6 +815,9 @@
 						"description": "No content"
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [
 					{
 						"jwt": []
@@ -810,7 +826,7 @@
 				"parameters": []
 			}
 		},
-		"/custom-auth/logout-all": {
+		"/auth/logout-all": {
 			"get": {
 				"operationId": "LogoutFromAllDevices",
 				"responses": {
@@ -818,6 +834,9 @@
 						"description": "No content"
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [
 					{
 						"jwt": []
@@ -826,42 +845,28 @@
 				"parameters": []
 			}
 		},
-		"/custom-auth/activate-email/{token}": {
+		"/auth/confirm-email/{authToken}": {
 			"get": {
-				"operationId": "SendWelcomeEmail",
+				"operationId": "EmailConfirmation",
 				"responses": {
 					"204": {
 						"description": "No content"
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "token",
+						"name": "authToken",
 						"required": true,
 						"schema": {
 							"type": "string"
 						}
 					}
 				]
-			}
-		},
-		"/notes/ai-notes": {
-			"get": {
-				"operationId": "GenerateNotes",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": []
 			}
 		}
 	},

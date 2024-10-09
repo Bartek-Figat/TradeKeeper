@@ -9,7 +9,6 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    // Redirect to the dashboard or home page if the user is already authenticated
     return <Navigate to="/dashboard" state={{ from: location }} replace />;
   }
 

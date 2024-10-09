@@ -13,51 +13,37 @@ export async function expressAuthentication(
   }
 
   const authHeader = req.headers.authorization;
+  console.log(authHeader);
   if (!authHeader) {
-    throw new ApiError("Unauthorized", 401, "Unauthorized");
+    throw new ApiError("Unauthorized", 401, "No token provided");
   }
 
   const [bearer, token] = authHeader.split(" ");
   if (bearer !== "Bearer" || !token) {
+    console.log("Unauthorized 23");
     throw new ApiError("Unauthorized", 401, "Unauthorized");
   }
 
+  console.log("token", token);
+
   const database = new Database();
   const collection = database.getCollection("user");
+  const authorizationTokenExists = await collection.findOne(
+    { authorizationToken: token },
+    { projection: { _id: 0 } }
+  );
+
+  console.log(authorizationTokenExists);
+
+  if (!authorizationTokenExists) {
+    throw new ApiError("Unauthorized", 401, "Unauthorized");
+  }
 
   try {
     const secret: any = process.env.JWT_SECRET;
     const decoded = verify(token, secret) as string | JwtPayload;
     return { decoded, authHeader: token };
   } catch (err) {
-    
-      // If the token is expired, check for a refresh token
-      const refreshTokenHeader = req.headers.authorization; 
-      const refreshSecret: any = process.env.JWTREFRESHSECRET;
-
-      if (!refreshTokenHeader) {
-        throw new ApiError("Unauthorized", 401, "Refresh token missing");
-      }
-
-      const [bearer, refreshToken] = refreshTokenHeader.split(" ");
-      if (bearer !== "Bearer" || !refreshToken) {
-        throw new ApiError("Unauthorized", 401, "Invalid refresh token format");
-      }
-
-      const refreshTokenExists = await collection.findOne(
-        { refreshToken },
-        { projection: { _id: 0, userId: 1 } }
-      );
-
-      if (!refreshTokenExists) {
-        throw new ApiError("Unauthorized", 401, "Refresh token not found");
-      }
-
-      try {
-        const decoded =  verify(refreshToken, refreshSecret) as string | JwtPayload;
-        return { decoded, authHeader: refreshToken };
-      } catch (refreshErr) {
-        throw new ApiError("Unauthorized", 401, "Unauthorized");
-      }
+    throw new ApiError("Unauthorized", 401, "Invalid token");
   }
 }

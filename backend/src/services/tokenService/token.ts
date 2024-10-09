@@ -2,14 +2,10 @@ import { config } from "dotenv";
 import { sign } from "jsonwebtoken";
 
 config();
-const { JWTSECRET, JWTREFRESHSECRET  } = process.env;
+const { JWT_SECRET } = process.env;
 
 export class TokenService {
   generateAccessToken(userId: string): string {
-    return sign({ userId }, `${JWTSECRET}`, { expiresIn: '15m' });
-  }
-
-  generateRefreshToken(userId: string): string {
-    return sign({ userId }, `${JWTREFRESHSECRET}`, { expiresIn: '7d' });
+    return sign({ userId }, `${JWT_SECRET}`);
   }
 }

@@ -8,7 +8,6 @@ export class CalculateTradeMetricsRepository {
   private readonly trades: string = "trades";
   private db = new Database().getCollection(this.trades);
 
-  // Fetches a single trade by ID and calculates its performance metrics
   async getTradeById(tradeId: string): Promise<TradeDto> {
     try {
       const trade = await this.db.findOne<ITrade>({
@@ -25,7 +24,6 @@ export class CalculateTradeMetricsRepository {
     }
   }
 
-  // Fetches all trades and calculates performance metrics for each trade
   async getAllTrades(
     page: number = 1,
     limit: number = 10
@@ -37,19 +35,17 @@ export class CalculateTradeMetricsRepository {
         .skip(skip)
         .limit(limit)
         .toArray();
-      return trades.map((trade) => this.calculateMetrics(trade, trades));
+      const allTrades = await this.db.find<ITrade>({}).toArray();
+      return trades.map((trade) => this.calculateMetrics(trade, allTrades));
     } catch (error) {
       console.error("Error fetching trades:", error);
-      throw new ApiError("Error fetching trades:", 500);
+      throw new ApiError("Error fetching trades", 500);
     }
   }
 
-  // Creates a new trade and returns it with calculated metrics
-  async createTrade(newTrade: ICreateTrade): Promise<TradeDto> {
+  async createTrade(newTrade: ICreateTrade) {
     try {
-      // Validate trade type
       if (!["stock", "forex", "crypto"].includes(newTrade.tradeType)) {
-        console.error("Invalid trade type:    stock, forex, crypto");
         throw new ApiError("Invalid trade type", 400);
       }
 
@@ -57,33 +53,28 @@ export class CalculateTradeMetricsRepository {
       if (result.insertedId) {
         return {
           ...newTrade,
-          _id: result.insertedId.toString(),
           entryDate: newTrade.entryDate,
           exitDate: newTrade.exitDate,
-        } as TradeDto;
+        };
       } else {
-        console.error("Failed to insert trade");
         throw new ApiError("Failed to insert trade", 400);
       }
     } catch (error) {
       console.error("Error creating trade:", error);
-      console.error("Failed to insert trade");
       throw new ApiError("Failed to create trade", 500);
     }
   }
 
-  // Updates an existing trade and returns it with calculated metrics
   async updateTrade(
     tradeId: string,
     updatedTradeData: Partial<ICreateTrade>
   ): Promise<TradeDto> {
     try {
-      // Validate trade type if it's being updated
       if (
         updatedTradeData.tradeType &&
         !["stock", "forex", "crypto"].includes(updatedTradeData.tradeType)
       ) {
-        throw new ApiError("Invalid trade type", 404);
+        throw new ApiError("Invalid trade type", 400);
       }
 
       const result = await this.db.updateOne(
@@ -95,24 +86,23 @@ export class CalculateTradeMetricsRepository {
         throw new ApiError("Trade not found", 404);
       }
 
-      const updatedTrade = await this.db.findOne({
+      const updatedTrade = await this.db.findOne<ITrade>({
         _id: new ObjectId(tradeId),
       });
       if (!updatedTrade) {
         throw new ApiError("Failed to retrieve updated trade", 500);
       }
 
-      return {
-        ...updatedTrade,
-        _id: updatedTrade._id.toString(),
-      } as TradeDto;
+      return this.calculateMetrics(
+        updatedTrade,
+        await this.db.find<ITrade>({}).toArray()
+      );
     } catch (error) {
       console.error("Error updating trade:", error);
       throw new ApiError("Failed to update trade", 500);
     }
   }
 
-  // Filters trades based on provided criteria
   async filterTrades(
     filter: TradeFilter,
     page: number = 1,
@@ -130,53 +120,18 @@ export class CalculateTradeMetricsRepository {
         if (filter.endDate) query.createdAt.$lte = new Date(filter.endDate);
       }
 
-      // pagination
       const skip = (page - 1) * limit;
       const trades = await this.db
         .find(query)
         .skip(skip)
         .limit(limit)
         .toArray();
+      const allTrades = await this.db.find<ITrade>({}).toArray();
 
-      const tradesWithMetrics = trades.map((trade) => {
-        const iTrade: ITrade = {
-          _id: trade._id.toString(),
-          entryDate: trade.entryDate,
-          exitDate: trade.exitDate,
-          userId: trade.userId,
-          symbol: trade.symbol,
-          entryPrice: trade.entryPrice,
-          exitPrice: trade.exitPrice,
-          risk: trade.risk,
-          stopLossLevel: trade.stopLossLevel,
-          createdAt: trade.createdAt,
-          reward: trade.reward || 0,
-          tags: trade.tags || [],
-          maxDrawdown: trade.maxDrawdown || 0,
-          profitFactor: trade.profitFactor || 0,
-          volatility: trade.volatility || 0,
-        };
+      const tradesWithMetrics = trades.map((trade) =>
+        this.calculateMetrics(trade as unknown as ITrade, allTrades)
+      );
 
-        const typedTrades: ITrade[] = trades.map((trade) => ({
-          _id: trade._id.toString(),
-          entryDate: trade.entryDate,
-          exitDate: trade.exitDate,
-          userId: trade.userId,
-          symbol: trade.symbol,
-          entryPrice: trade.entryPrice,
-          exitPrice: trade.exitPrice,
-          risk: trade.risk,
-          reward: trade.reward,
-          tags: trade.tags,
-          createdAt: trade.createdAt,
-          maxDrawdown: trade.maxDrawdown,
-          profitFactor: trade.profitFactor,
-          volatility: trade.volatility,
-        }));
-        return this.calculateMetrics(iTrade, typedTrades);
-      });
-
-      // Filter trades based on performance metrics
       return tradesWithMetrics.filter((trade) => {
         if (
           filter.minWinRate !== undefined &&
@@ -210,9 +165,6 @@ export class CalculateTradeMetricsRepository {
     }
   }
 
-  // Private Helper Methods
-
-  // Calculates various performance metrics for a given trade
   private calculateMetrics(trade: ITrade, allTrades: ITrade[]): TradeDto {
     const userTrades = allTrades.filter((t) => t.userId === trade.userId);
     trade.winRate = this.calculateWinRate(userTrades);
@@ -228,7 +180,6 @@ export class CalculateTradeMetricsRepository {
     return trade as TradeDto;
   }
 
-  // Calculates the win rate for a user's trades
   private calculateWinRate(trades: ITrade[]): number {
     const wins = trades.filter(
       (trade) => trade.exitPrice > trade.entryPrice
@@ -236,7 +187,6 @@ export class CalculateTradeMetricsRepository {
     return trades.length ? (wins / trades.length) * 100 : 0;
   }
 
-  // Calculates the average profit or loss per trade for a user
   private calculateAvgProfitLoss(trades: ITrade[]): number {
     const totalProfitLoss = trades.reduce(
       (acc, trade) => acc + (trade.exitPrice - trade.entryPrice),
@@ -245,14 +195,12 @@ export class CalculateTradeMetricsRepository {
     return trades.length ? totalProfitLoss / trades.length : 0;
   }
 
-  // Calculates the risk/reward ratio for a single trade
   private calculateRiskRewardRatio(trade: ITrade): number {
     const risk = trade.entryPrice - (trade.stopLossLevel || trade.entryPrice);
     const reward = trade.exitPrice - trade.entryPrice;
     return risk !== 0 ? reward / risk : 0;
   }
 
-  // Calculates the maximum drawdown for a user's trades
   private calculateMaxDrawdown(trades: ITrade[]): number {
     let peak = -Infinity;
     let maxDrawdown = 0;
@@ -267,7 +215,6 @@ export class CalculateTradeMetricsRepository {
     return maxDrawdown;
   }
 
-  // Calculates the Sharpe ratio for a user's trades
   private calculateSharpeRatio(trades: ITrade[]): number {
     const returns = trades.map((trade) => trade.exitPrice - trade.entryPrice);
     const avgReturn = returns.reduce((acc, r) => acc + r, 0) / returns.length;
@@ -280,7 +227,6 @@ export class CalculateTradeMetricsRepository {
     return stdDev !== 0 ? (avgReturn - riskFreeRate) / stdDev : 0;
   }
 
-  // Calculates the profit factor for a user's trades
   private calculateProfitFactor(trades: ITrade[]): number {
     const grossProfit = trades
       .filter((trade) => trade.exitPrice > trade.entryPrice)
@@ -291,7 +237,6 @@ export class CalculateTradeMetricsRepository {
     return grossLoss !== 0 ? grossProfit / Math.abs(grossLoss) : 0;
   }
 
-  // Calculates the volatility of a user's trades
   private calculateVolatility(trades: ITrade[]): number {
     const returns = trades.map((trade) => trade.exitPrice - trade.entryPrice);
     const avgReturn = returns.reduce((acc, r) => acc + r, 0) / returns.length;
@@ -302,7 +247,6 @@ export class CalculateTradeMetricsRepository {
     );
   }
 
-  // Calculates the Sortino ratio for a user's trades
   private calculateSortinoRatio(trades: ITrade[]): number {
     const returns = trades.map((trade) => trade.exitPrice - trade.entryPrice);
     const avgReturn = returns.reduce((acc, r) => acc + r, 0) / returns.length;
@@ -318,17 +262,16 @@ export class CalculateTradeMetricsRepository {
       : 0;
   }
 
-  // Calculates the average holding period for a user's trades
   private calculateAvgHoldingPeriod(trades: ITrade[]): number {
-    const totalHoldingPeriod = trades.reduce(
-      (acc, trade) =>
-        acc + (trade.exitDate.getTime() - trade.entryDate.getTime()),
-      0
-    );
+    const totalHoldingPeriod = trades.reduce((acc, trade) => {
+      if (trade.entryDate && trade.exitDate) {
+        return acc + (trade.exitDate.getTime() - trade.entryDate.getTime());
+      }
+      return acc;
+    }, 0);
     return trades.length ? totalHoldingPeriod / trades.length : 0;
   }
 
-  // Suggests improvements based on calculated metrics
   private suggestImprovements(trade: ITrade): string[] {
     const suggestions: string[] = [];
 

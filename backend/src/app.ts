@@ -36,6 +36,7 @@ app.use(
       "Content-Type",
       "Accept",
       "Authorization",
+      "x-refresh-token",
     ],
     credentials: true,
   })

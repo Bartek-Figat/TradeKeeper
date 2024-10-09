@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { RegisterDto, VerifyEmail } from "../dto/dto";
+import { LoginDto, VerifyEmail } from "../dto/dto";
 import { validate } from "class-validator";
 
 export async function validateIncomingFields(
@@ -8,8 +8,7 @@ export async function validateIncomingFields(
   res: Response,
   next: NextFunction
 ) {
-  
-  const userRegisterValidation = new RegisterDto();
+  const userRegisterValidation = new LoginDto();
   Object.assign(userRegisterValidation, req.body);
 
   const validationErrors = await validate(userRegisterValidation);
