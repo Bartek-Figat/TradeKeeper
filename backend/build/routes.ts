@@ -445,6 +445,31 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/auth/validate-token',
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomAuthController.prototype.validateToken)),
+
+            function CustomAuthController_validateToken(request: any, response: any, next: any) {
+            const args = {
+                    token: {"in":"body","name":"token","required":true,"dataType":"any"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CustomAuthController();
+
+
+              const promise = controller.validateToken.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/auth/logout',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomAuthController)),

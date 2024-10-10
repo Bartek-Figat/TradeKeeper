@@ -15,7 +15,7 @@ export async function expressAuthentication(
   const authHeader = req.headers.authorization;
   console.log(authHeader);
   if (!authHeader) {
-    throw new ApiError("Unauthorized", 401, "No token provided");
+    throw new ApiError("Unauthorized", 401, "Unauthorized");
   }
 
   const [bearer, token] = authHeader.split(" ");

@@ -807,6 +807,36 @@
 				}
 			}
 		},
+		"/auth/validate-token": {
+			"post": {
+				"operationId": "ValidateToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {}
+						}
+					}
+				}
+			}
+		},
 		"/auth/logout": {
 			"get": {
 				"operationId": "Logout",

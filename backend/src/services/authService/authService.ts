@@ -93,10 +93,10 @@ export class AuthService {
       await this.userCollection.updateOne(
         { _id: user._id },
         {
+          $push: { authorizationToken: token },
           $set: {
             isLogin: true,
             lastLoggedIn: new Date(),
-            authorizationToken: token,
           },
         }
       );
@@ -111,15 +111,53 @@ export class AuthService {
     try {
       const {
         user: {
-          decoded: { token },
+          authHeader,
+          decoded: { userId },
         },
       } = dto;
+
+      console.log("=========================", authHeader);
+      console.log("=========================", userId);
+
       await this.userCollection.updateOne(
-        { _id: new ObjectId(token) },
-        { $set: { isLogin: false, logOutDate: new Date() } }
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            isLogin: false,
+            logOutDate: new Date(),
+          },
+          $pull: {
+            authorizationToken: {
+              $in: [authHeader],
+            },
+          },
+        }
       );
     } catch (error: any) {
       throw new ApiError("Logout failed", 500, error.message);
+    }
+  }
+
+  async validateToken({ token }: any): Promise<boolean> {
+    console.log(token);
+    try {
+      const user = await this.userCollection.findOne(
+        { authorizationToken: token },
+        { projection: { _id: 1 } }
+      );
+
+      // If no user is found, throw an unauthorized error
+      if (!user) {
+        throw new ApiError(
+          "Unauthorized: Token is invalid or does not exist",
+          401
+        );
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error("Error validating token:", error); // Log the error for debugging
+      throw new ApiError("Unauthorized: Token validation failed", 500);
     }
   }
 
@@ -127,11 +165,11 @@ export class AuthService {
     try {
       const {
         user: {
-          decoded: { token },
+          decoded: { userId },
         },
       } = dto;
       await this.userCollection.updateOne(
-        { _id: new ObjectId(token) },
+        { _id: new ObjectId(userId) },
         { $set: { authorizationToken: [] } }
       );
     } catch (error: any) {

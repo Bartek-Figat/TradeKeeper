@@ -30,6 +30,11 @@ export class CustomAuthController extends Controller {
     return this.authService.login(req);
   }
 
+  @Post("validate-token")
+  async validateToken(@Body() token: any) {
+    return this.authService.validateToken(token);
+  }
+
   @Security("jwt")
   @Get("logout")
   async logout(@Request() req: any) {

@@ -15,21 +15,22 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     signIn: (state, action: PayloadAction<string>) => {
+      console.log(action);
       state.isAuthenticated = true;
       state.token = action.payload;
       localStorage.setItem("token", action.payload);
     },
     signOut: (state) => {
+      console.log("State action sinOut", state);
       state.isAuthenticated = false;
       state.token = null;
       localStorage.removeItem("token");
     },
     checkAuth: (state) => {
       const token = localStorage.getItem("token");
-      if (token) {
-        state.isAuthenticated = true;
-        state.token = token;
-      }
+      console.log("Checking token from localStorage:", token);
+      state.isAuthenticated = true;
+      state.token = token;
     },
   },
 });

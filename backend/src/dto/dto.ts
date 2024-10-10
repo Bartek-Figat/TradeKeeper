@@ -28,7 +28,7 @@ export class LoginDto {
   email!: string;
 }
 export type LogoutDto = {
-  user: { decoded: { token: string }; authHeader: string };
+  user: { decoded: { userId: string }; authHeader: string };
 };
 
 export type TokenDto = {
