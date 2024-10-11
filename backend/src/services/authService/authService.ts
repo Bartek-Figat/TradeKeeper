@@ -81,6 +81,7 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginDto): Promise<{ token: string }> {
+    console.log(email, password);
     try {
       const user = await this.userCollection.findOne({ email });
       if (!user) throw new ApiError("User not found", 404);
