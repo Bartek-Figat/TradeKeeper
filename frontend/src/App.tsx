@@ -13,10 +13,19 @@ import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
+import NotFoundPage from "./pages/NotFoundPage";
+import ChangeLogPage from "./pages/ChangeLog";
 
 export const App = () => {
   const element = useRoutes([
-    { path: "/", element: <HomePage /> },
+    {
+      path: "/",
+      element: !localStorage.getItem("token") ? (
+        <HomePage />
+      ) : (
+        <Navigate to="/dashboard" />
+      ),
+    },
     {
       element: <AuthLayout />,
       children: [
@@ -60,9 +69,14 @@ export const App = () => {
             { path: "analytics", element: <AnalyticsPage /> },
             { path: "lightweigh", element: <Lightweigh /> },
             { path: "create-trade", element: <CreateTrade /> },
+            { path: "change-log", element: <ChangeLogPage /> },
           ],
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFoundPage />, // Render a NotFoundPage component for unmatched routes
     },
   ]);
 

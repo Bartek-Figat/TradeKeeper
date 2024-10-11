@@ -38,8 +38,8 @@ const ResetPasswordPage: FC = () => {
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
 
   return (
-    <div className="col-span-7 flex flex-col items-center justify-center max-[1200px]:col-span-12 bg-gray-50 min-h-screen">
-      <div className="p-12 max-[375px]:p-4 bg-white shadow-lg rounded-lg">
+    <div className="col-span-7 flex min-h-screen flex-col items-center justify-center bg-gray-50 max-[1200px]:col-span-12">
+      <div className="rounded-lg bg-white p-12 shadow-lg max-[375px]:p-4">
         <Logo />
         <div className="my-4 text-center">
           <p className="text-2xl font-semibold text-gray-800">Reset Password</p>
@@ -57,7 +57,7 @@ const ResetPasswordPage: FC = () => {
               confirmPassword,
               rememberPassword,
             }: ResetPasswordValues,
-            { resetForm }
+            { resetForm },
           ) => {
             try {
               // Simulate a successful password reset process
@@ -100,7 +100,7 @@ const ResetPasswordPage: FC = () => {
                     onClick={() =>
                       handlePasswordDisplay(setDisplayCurrentPassword)
                     }
-                    className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md"
+                    className="flex cursor-pointer rounded-r-md bg-gray-100 px-3 py-2"
                   >
                     <img
                       className="w-4"
@@ -141,7 +141,7 @@ const ResetPasswordPage: FC = () => {
                   />
                   <div
                     onClick={() => handlePasswordDisplay(setDisplayNewPassword)}
-                    className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md"
+                    className="flex cursor-pointer rounded-r-md bg-gray-100 px-3 py-2"
                   >
                     <img
                       className="w-4"
@@ -182,7 +182,7 @@ const ResetPasswordPage: FC = () => {
                     onClick={() =>
                       handlePasswordDisplay(setDisplayConfirmPassword)
                     }
-                    className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md"
+                    className="flex cursor-pointer rounded-r-md bg-gray-100 px-3 py-2"
                   >
                     <img
                       className="w-4"
@@ -201,24 +201,10 @@ const ResetPasswordPage: FC = () => {
                 <ErrorMessage name="confirmPassword">
                   {(msg) => <div className="input-error-message">{msg}</div>}
                 </ErrorMessage>
-                <div className="flex items-center mt-2">
-                  <Field
-                    id="rememberPassword"
-                    name="rememberPassword"
-                    type="checkbox"
-                    className="authentication-checkbox"
-                  />
-                  <label
-                    htmlFor="rememberPassword"
-                    className="text-sm text-gray-500 pl-2 cursor-pointer"
-                  >
-                    Remember password?
-                  </label>
-                </div>
               </div>
               <button
                 type="submit"
-                className="authentication-button bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+                className="authentication-button bg-blue-500 text-white transition duration-300 hover:bg-blue-600"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Resetting..." : "Reset"}
@@ -226,7 +212,7 @@ const ResetPasswordPage: FC = () => {
             </Form>
           )}
         </Formik>
-        <p className="text-gray-500 text-xs text-center mt-5">
+        <p className="mt-5 text-center text-xs text-gray-500">
           Already have an account?{" "}
           <Link to="/sign-in" className="text-blue-500 hover:underline">
             Sign In

@@ -20,12 +20,12 @@ const Logo = () => {
   return (
     <button onClick={handleClick} className="flex items-center space-x-1">
       <MdInsertChart
-        className={cn("size-9 p-1 rounded", {
-          "fill-primary-foreground": !isScrolled,
+        className={cn("size-9 rounded p-1", {
+          "": !isScrolled,
           "fill-primary dark:fill-primary-foreground": isScrolled,
         })}
       />
-      <span className="font-bold text-lg tracking-tight hidden md:block">
+      <span className="hidden text-lg font-bold tracking-tight md:block">
         Trade Keeper
       </span>
     </button>

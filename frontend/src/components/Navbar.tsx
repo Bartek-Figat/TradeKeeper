@@ -1,13 +1,10 @@
-import { FC, useState, useEffect, type MouseEvent } from "react";
+import { FC, useState, type MouseEvent } from "react";
 import { NavLink } from "react-router-dom";
 import { useScroll } from "../lib/hooks/useScroll";
 import { capitalizeString, cn } from "../lib/utils";
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import { Button, buttonVariants } from "./common/button";
 import Logo from "./Logo";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { signOut, checkAuth } from "../slice/authSlice";
 
 enum NavigationLinks {
   Home = "home",
@@ -31,18 +28,13 @@ const Navbar: FC<NavbarProps> = ({
   setSearchParams,
   activeSection,
 }) => {
+  //const navigate = useNavigate();
   const [mobileNavLinksVisible, setMobileNavLinksVisible] = useState(false);
   const isScrolled = useScroll(10, 300);
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-  useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
 
   const smoothScrollToSection = (
     e: MouseEvent<HTMLAnchorElement>,
-    targetId: string
+    targetId: string,
   ) => {
     e.preventDefault();
     const target = document.getElementById(targetId);
@@ -57,38 +49,34 @@ const Navbar: FC<NavbarProps> = ({
     setMobileNavLinksVisible(false);
   };
 
-  const handleSignOut = () => {
-    dispatch(signOut());
-  };
-
   return (
     <div
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 ease-in-out",
+        "fixed top-0 z-50 w-full transition-all duration-300 ease-in-out",
         {
           "bg-background shadow-md": isScrolled,
           "#000": !isScrolled,
-        }
+        },
       )}
     >
       <nav
         className={cn(
-          "max-w-screen-xl px-4 py-5 mx-auto flex justify-between items-center",
+          "mx-auto flex max-w-screen-xl items-center justify-between px-4 py-5",
           {
             "text-primary-foreground": !isScrolled,
             "text-primary dark:text-primary-foreground": isScrolled,
-          }
+          },
         )}
       >
         <Logo />
         {/* nav links */}
         <div
           className={cn(
-            "fixed top-0 bottom-0 right-0 w-2/3 p-4 space-y-6 backdrop-blur-md border-l border-border/50 md:static md:border-none md:p-0 md:space-y-0 md:w-auto md:translate-x-0 transition-transform ease-in-out duration-300",
+            "fixed bottom-0 right-0 top-0 w-2/3 space-y-6 border-l border-border/50 p-4 backdrop-blur-md transition-transform duration-300 ease-in-out md:static md:w-auto md:translate-x-0 md:space-y-0 md:border-none md:p-0",
             {
               "translate-x-full": !mobileNavLinksVisible,
               "#000": mobileNavLinksVisible,
-            }
+            },
           )}
         >
           <div className="md:hidden">
@@ -101,15 +89,15 @@ const Navbar: FC<NavbarProps> = ({
               <MdOutlineClose className="size-6 flex-shrink-0" />
             </Button>
           </div>
-          <ul className="text-base font-bold tracking-wide flex flex-col text-center space-y-6 md:flex-row md:space-x-4 lg:space-x-8 md:space-y-0">
+          <ul className="flex flex-col space-y-6 text-center text-base font-bold tracking-wide md:flex-row md:space-x-4 md:space-y-0 lg:space-x-8">
             {Object.values(NavigationLinks).map((link) => (
               <li key={link}>
                 <a
                   onClick={(e) => smoothScrollToSection(e, link)}
                   className={cn("cursor-pointer", {
-                    "text-primary-foreground/70 hover:text-inherit transition-colors duration-300":
+                    "text-primary-foreground/70 transition-colors duration-300 hover:text-inherit":
                       !isScrolled,
-                    "text-foreground/50 hover:text-inherit transition-colors duration-300 dark:hover:text-primary-foreground":
+                    "text-foreground/50 transition-colors duration-300 hover:text-inherit dark:hover:text-primary-foreground":
                       isScrolled,
                     "text-inherit dark:hover:text-primary-foreground":
                       activeSection === link,
@@ -125,50 +113,33 @@ const Navbar: FC<NavbarProps> = ({
         {/* end of nav links */}
         {/* mobile menu + outer navigation */}
         <div className="flex items-center space-x-1">
-          {!isAuthenticated ? (
-            <>
-              <NavLink
-                to="/sign-in"
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                    className: "text-base font-bold",
-                  })
-                )}
-                aria-label="Sign in"
-              >
-                Sign in
-              </NavLink>
-              <NavLink
-                to="/sign-up"
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                    className: "text-base font-bold",
-                  })
-                )}
-                aria-label="Sign up"
-              >
-                Sign up
-              </NavLink>
-            </>
-          ) : (
-            <Button
-              onClick={handleSignOut}
-              className={cn(
-                buttonVariants({
-                  variant: "ghost",
-                  size: "sm",
-                  className: "text-base font-bold",
-                })
-              )}
-              aria-label="Sign out"
-            >
-              Sign out
-            </Button>
-          )}
+          <NavLink
+            to="/sign-in"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "text-base font-bold",
+              }),
+            )}
+            aria-label="Sign in"
+          >
+            Sign in
+          </NavLink>
+          <NavLink
+            to="/sign-up"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "text-base font-bold",
+              }),
+            )}
+            aria-label="Sign up"
+          >
+            Sign up
+          </NavLink>
+
           <Button
             className="md:hidden"
             variant="ghost"

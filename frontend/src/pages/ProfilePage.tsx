@@ -1,192 +1,231 @@
 import React, { useState } from "react";
 
 const ProfilePage: React.FC = () => {
-  const [name, setName] = useState("John Doe");
-  const [job, setJob] = useState("Web Developer");
-  const [bio, setBio] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-  );
-  const [location, setLocation] = useState("City, Country");
-  const [email, setEmail] = useState("john.doe@example.com");
+  const [firstName, setFirstName] = useState("John");
+  const [lastName, setLastName] = useState("Doe");
+  const [company, setCompany] = useState("Flowbite");
   const [phone, setPhone] = useState("123-456-7890");
+  const [website, setWebsite] = useState("flowbite.com");
+  const [visitors, setVisitors] = useState("");
+  const [email, setEmail] = useState("john.doe@example.com");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
     alert("Profile Updated!");
   };
 
   return (
-    <section className="py-10 my-auto dark:bg-gray-900">
-      <div className="lg:w-[80%] md:w-[90%] xs:w-[96%] mx-auto flex gap-4">
-        <div className="lg:w-[88%] md:w-[80%] sm:w-[88%] xs:w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
-          <div className="">
-            <form onSubmit={handleSubmit}>
-              {/* Cover Image */}
-              <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1583752028088-91e3e9880b46?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-no-repeat items-center">
-                {/* Profile Image */}
-                <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full bg-[url('https://plus.unsplash.com/premium_photo-1689539137236-b68e436248de?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-no-repeat">
-                  <div className="bg-white/90 rounded-full w-6 h-6 text-center ml-28 mt-4">
-                    <input
-                      type="file"
-                      name="profile"
-                      id="upload_profile"
-                      hidden
-                      required
-                    />
-                    <label htmlFor="upload_profile">
-                      <svg
-                        data-slot="icon"
-                        className="w-6 h-5 text-blue-700"
-                        fill="none"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                        ></path>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                        ></path>
-                      </svg>
-                    </label>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <input
-                    type="file"
-                    name="profile"
-                    id="upload_cover"
-                    hidden
-                    required
-                  />
-                  <div className="bg-white flex items-center gap-1 rounded-tl-md px-2 text-center font-semibold">
-                    <label
-                      htmlFor="upload_cover"
-                      className="inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      Cover
-                      <svg
-                        data-slot="icon"
-                        className="w-6 h-5 text-blue-700"
-                        fill="none"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                        ></path>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                        ></path>
-                      </svg>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <h2 className="text-center mt-1 font-semibold dark:text-gray-300">
-                Upload Profile and Cover Image
-              </h2>
-              <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
-                <div className="w-full mb-4 mt-6">
-                  <label htmlFor="name" className="mb-2 dark:text-gray-300">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                    placeholder="Name"
-                  />
-                </div>
-                <div className="w-full mb-4 lg:mt-6">
-                  <label htmlFor="job" className="dark:text-gray-300">
-                    Job
-                  </label>
-                  <input
-                    type="text"
-                    id="job"
-                    value={job}
-                    onChange={(e) => setJob(e.target.value)}
-                    className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                    placeholder="Job"
-                  />
-                </div>
-              </div>
-              <div className="w-full mb-4">
-                <label htmlFor="bio" className="dark:text-gray-300">
-                  Bio
-                </label>
-                <textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                  placeholder="Bio"
-                />
-              </div>
-              <div className="w-full mb-4">
-                <label htmlFor="location" className="dark:text-gray-300">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  id="location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                  placeholder="Location"
-                />
-              </div>
-              <div className="w-full mb-4">
-                <label htmlFor="email" className="dark:text-gray-300">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                  placeholder="Email"
-                />
-              </div>
-              <div className="w-full mb-4">
-                <label htmlFor="phone" className="dark:text-gray-300">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="mt-2 p-4 w-full border-2 rounded-lg dark:text-gray-200 dark:border-gray-600 dark:bg-gray-800"
-                  placeholder="Phone"
-                />
-              </div>
-              <div className="w-full rounded-lg bg-blue-500 mt-4 text-white text-lg font-semibold">
-                <button type="submit" className="w-full p-4">
-                  Submit
-                </button>
-              </div>
-            </form>
+    <section className="my-auto py-10 dark:bg-gray-900">
+      <div className="mx-auto max-w-4xl bg-white p-16">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6 grid gap-6 lg:grid-cols-2">
+            <div>
+              <label
+                htmlFor="first_name"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                First name
+              </label>
+              <input
+                type="text"
+                id="first_name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="last_name"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Last name
+              </label>
+              <input
+                type="text"
+                id="last_name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Doe"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="company"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Company
+              </label>
+              <input
+                type="text"
+                id="company"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Flowbite"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="phone"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Phone number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="123-456-7890"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="website"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Website URL
+              </label>
+              <input
+                type="url"
+                id="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="flowbite.com"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="visitors"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Unique visitors (per month)
+              </label>
+              <input
+                type="number"
+                id="visitors"
+                value={visitors}
+                onChange={(e) => setVisitors(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder=""
+                required
+              />
+            </div>
           </div>
-        </div>
+          <div className="mb-6">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Email address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="john.doe@company.com"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="•••••••••"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              htmlFor="confirm_password"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Confirm password
+            </label>
+            <input
+              type="password"
+              id="confirm_password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="•••••••••"
+              required
+            />
+          </div>
+          <div className="mb-6 flex items-start">
+            <div className="flex h-5 items-center">
+              <input
+                id="remember"
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                className="focus:ring-3 h-4 w-4 rounded border border-gray-300 bg-gray-50 focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                required
+              />
+            </div>
+            <label
+              htmlFor="remember"
+              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+            >
+              I agree with the{" "}
+              <a
+                href="#"
+                className="text-blue-600 hover:underline dark:text-blue-500"
+              >
+                terms and conditions
+              </a>
+              .
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+          >
+            Submit
+          </button>
+        </form>
+        <p className="mt-5">
+          These input field components are part of a larger, open-source library
+          of Tailwind CSS components. Learn more by going to the official{" "}
+          <a
+            className="text-blue-600 hover:underline"
+            href="https://flowbite.com/docs/getting-started/introduction/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Flowbite Documentation
+          </a>
+          .
+        </p>
       </div>
     </section>
   );

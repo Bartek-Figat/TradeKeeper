@@ -40,8 +40,8 @@ const SignInPage: FC = () => {
   };
 
   return (
-    <div className="col-span-7 flex flex-col items-center justify-center max-[1200px]:col-span-12 bg-gray-50 min-h-screen">
-      <div className="p-12 max-[375px]:p-4 bg-white shadow-lg rounded-lg">
+    <div className="col-span-7 flex min-h-screen flex-col items-center justify-center bg-gray-50 max-[1200px]:col-span-12">
+      <div className="rounded-lg bg-white p-12 shadow-lg max-[375px]:p-4">
         <Logo />
         <div className="my-4 text-center">
           <p className="text-2xl font-semibold text-gray-800">Sign In</p>
@@ -71,7 +71,7 @@ const SignInPage: FC = () => {
             } catch (error) {
               console.error("Login failed:", error);
               alert(
-                "Login failed. Please check your credentials and try again."
+                "Login failed. Please check your credentials and try again.",
               );
               navigate("/sign-in"); // Navigate back to sign-in on error
             }
@@ -100,7 +100,7 @@ const SignInPage: FC = () => {
                 </ErrorMessage>
               </div>
               <div className="flex flex-col">
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   <label htmlFor="password" className="authentication-label">
                     Password
                   </label>
@@ -126,7 +126,7 @@ const SignInPage: FC = () => {
                     />
                     <div
                       onClick={() => handlePasswordDisplay(setDisplayPassword)}
-                      className="flex bg-gray-100 py-2 px-3 cursor-pointer rounded-r-md"
+                      className="flex cursor-pointer rounded-r-md bg-gray-100 px-3 py-2"
                     >
                       <img
                         className="w-4"
@@ -145,25 +145,11 @@ const SignInPage: FC = () => {
                       <div className="input-error-message mb-2">{msg}</div>
                     )}
                   </ErrorMessage>
-                  <div className="flex items-center mt-2">
-                    <Field
-                      id="rememberPassword"
-                      name="rememberPassword"
-                      type="checkbox"
-                      className="authentication-checkbox"
-                    />
-                    <label
-                      htmlFor="rememberPassword"
-                      className="text-sm text-gray-500 pl-2 cursor-pointer"
-                    >
-                      Remember password?
-                    </label>
-                  </div>
                 </div>
               </div>
               <button
                 type="submit"
-                className="authentication-button bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+                className="authentication-button bg-blue-500 text-white transition duration-300 hover:bg-blue-600"
                 disabled={isSubmitting || isLoading}
               >
                 {isSubmitting || isLoading ? "Signing In..." : "Sign In"}
@@ -171,7 +157,7 @@ const SignInPage: FC = () => {
             </Form>
           )}
         </Formik>
-        <p className="text-gray-500 text-xs text-center mt-5">
+        <p className="mt-5 text-center text-xs text-gray-500">
           Don't have an account?{" "}
           <Link to="/sign-up" className="text-blue-500 hover:underline">
             Sign Up

@@ -144,69 +144,76 @@ const DashboardPage = () => {
 
       {/* Transaction History  */}
       <div className="flex flex-col gap-4 lg:flex-row">
-        <div className="flex-1 rounded-lg bg-white p-4 shadow-lg">
+        <div className="custom-scrollbar flex-1 rounded-lg bg-white p-4 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold">Transaction History</h3>
-          <table className="min-w-full text-left text-sm text-gray-500">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Date
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Type
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Amount
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {transactionHistory.map((transaction) => (
-                <tr key={transaction.id} className="cursor-pointer border-b">
-                  <td className="px-6 py-4">{transaction.date}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`rounded-full px-2 py-1 text-white ${
-                        transaction.type === "Buy"
-                          ? "bg-[#2aa0698f]"
-                          : transaction.type === "Sell"
-                            ? "bg-[#a02a2ab0]"
-                            : "bg-gray-500"
-                      }`}
+          <div className="flex flex-col">
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-left text-sm text-gray-500">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Date
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Type
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Amount
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {transactionHistory.map((transaction) => (
+                    <tr
+                      key={transaction.id}
+                      className="cursor-pointer border-b"
                     >
-                      {transaction.type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">{transaction.amount}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`rounded-full px-2 py-1 text-white ${
-                        transaction.status === "Completed"
-                          ? "bg-green-500"
-                          : transaction.status === "Pending"
-                            ? "bg-yellow-500"
-                            : "bg-gray-500"
-                      }`}
-                    >
-                      {transaction.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
-                      onClick={() => openModal(transaction)}
-                    >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <td className="px-6 py-4">{transaction.date}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`rounded-full px-2 py-1 text-white ${
+                            transaction.type === "Buy"
+                              ? "bg-[#2aa0698f]"
+                              : transaction.type === "Sell"
+                                ? "bg-[#a02a2ab0]"
+                                : "bg-gray-500"
+                          }`}
+                        >
+                          {transaction.type}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">{transaction.amount}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`rounded-full px-2 py-1 text-white ${
+                            transaction.status === "Completed"
+                              ? "bg-green-500"
+                              : transaction.status === "Pending"
+                                ? "bg-yellow-500"
+                                : "bg-gray-500"
+                          }`}
+                        >
+                          {transaction.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
+                          onClick={() => openModal(transaction)}
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <Modal

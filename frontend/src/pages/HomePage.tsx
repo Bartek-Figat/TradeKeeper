@@ -161,6 +161,7 @@ const HomePage: React.FC = () => {
         </motion.div>
       </SectionWrapper>
       {/* About Us Section */}
+
       <AnimatedGroup
         variants={{
           container: {

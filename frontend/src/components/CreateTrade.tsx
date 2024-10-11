@@ -1,3 +1,4 @@
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 
@@ -24,7 +25,7 @@ interface MyFormValues {
   market: string;
 }
 
-const CreateTrade = () => {
+const CreateTrade: React.FC = () => {
   const initialValues: MyFormValues = {
     tradeSymbol: "",
     limitPrice: "",
@@ -36,27 +37,19 @@ const CreateTrade = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-slate-800 p-0 sm:p-12 flex items-center justify-center">
-      <div className="relative mx-auto max-w-lg px-4 py-4 bg-white border-2 border-indigo-500 rounded-lg shadow-lg">
-        <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-indigo-500 rounded-lg"></span>
-        <div className="relative p-6 bg-white border-2 border-indigo-500 rounded-lg">
-          <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
-            Create Trade
-          </h1>
-          <p className="mb-6 text-center text-gray-600">
-            Fill in the details below to create a new trade. Ensure all fields
-            are completed accurately to avoid any issues.
-          </p>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={tradeSchema}
-            onSubmit={(values, { resetForm }) => {
-              alert(`Trade Created: ${JSON.stringify(values, null, 2)}`);
-              resetForm();
-            }}
-          >
-            {({ errors, touched, isSubmitting }) => (
-              <Form className="space-y-6">
+    <section className="my-auto py-10 dark:bg-gray-900">
+      <div className="mx-auto max-w-4xl bg-white p-16">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={tradeSchema}
+          onSubmit={(values, { resetForm }) => {
+            alert(`Trade Created: ${JSON.stringify(values, null, 2)}`);
+            resetForm();
+          }}
+        >
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <div className="mb-6 grid gap-6 lg:grid-cols-2">
                 {[
                   { id: "tradeSymbol", label: "Trade Symbol", type: "text" },
                   { id: "limitPrice", label: "Limit Price", type: "number" },
@@ -69,72 +62,70 @@ const CreateTrade = () => {
                   { id: "paidPrice", label: "Paid Price", type: "number" },
                   { id: "fee", label: "Fee", type: "number" },
                 ].map(({ id, label, type }) => (
-                  <div key={id} className="relative z-0 w-full mb-5">
+                  <div key={id}>
+                    <label
+                      htmlFor={id}
+                      className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      {label}
+                    </label>
                     <Field
                       id={id}
                       name={id}
                       type={type}
-                      placeholder=" "
-                      className={`pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 ${
-                        errors[id] && touched[id]
-                          ? "border-red-600"
-                          : "border-gray-200"
+                      className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                        errors[id] && touched[id] ? "border-red-600" : ""
                       }`}
+                      placeholder={label}
                     />
-                    <label
-                      htmlFor={id}
-                      className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                    >
-                      {label}
-                    </label>
                     <ErrorMessage name={id}>
                       {(msg) => (
-                        <div className="text-red-600 text-sm mt-1">{msg}</div>
+                        <div className="mt-1 text-sm text-red-600">{msg}</div>
                       )}
                     </ErrorMessage>
                   </div>
                 ))}
-                <div className="relative z-0 w-full mb-5">
+                <div>
+                  <label
+                    htmlFor="market"
+                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Market
+                  </label>
                   <Field
                     as="select"
                     id="market"
                     name="market"
-                    className={`pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 ${
-                      errors.market && touched.market
-                        ? "border-red-600"
-                        : "border-gray-200"
+                    className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                      errors.market && touched.market ? "border-red-600" : ""
                     }`}
                   >
-                    <option value="" disabled hidden></option>
+                    <option value="" disabled hidden>
+                      Select Market
+                    </option>
                     <option value="stock">Stock</option>
                     <option value="forex">Forex</option>
                     <option value="crypto">Crypto</option>
                   </Field>
-                  <label
-                    htmlFor="market"
-                    className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                  >
-                    Market
-                  </label>
                   <ErrorMessage name="market">
                     {(msg) => (
-                      <div className="text-red-600 text-sm mt-1">{msg}</div>
+                      <div className="mt-1 text-sm text-red-600">{msg}</div>
                     )}
                   </ErrorMessage>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 hover:shadow-lg focus:outline-none"
-                  disabled={isSubmitting}
-                >
-                  Submit
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+                disabled={isSubmitting}
+              >
+                Submit
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
-    </div>
+    </section>
   );
 };
 

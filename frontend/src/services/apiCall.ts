@@ -16,7 +16,6 @@ export const userApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-
           console.log("Data", data);
           dispatch(signIn(data));
         } catch (error) {
@@ -39,7 +38,24 @@ export const userApi = createApi({
         }
       },
     }),
+    validateToken: builder.query({
+      query: (token) => ({
+        url: "validate-token",
+        method: "POST",
+        body: { token },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log("Token validation result:", data);
+          // Handle the validation result as needed
+        } catch (error) {
+          console.error("Token validation failed", error);
+        }
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = userApi;
+export const { useLoginMutation, useRegisterMutation, useValidateTokenQuery } =
+  userApi;

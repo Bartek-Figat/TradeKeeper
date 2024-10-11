@@ -112,40 +112,31 @@ body {
 }
 
 .authentication-type {
-  @apply text-[1.25rem] font-semibold text-secondary-foreground mb-1.5;
+  @apply mb-1.5 text-[1.25rem] font-semibold text-secondary-foreground;
 }
 
 .authentication-span-with-gradient {
-  @apply relative my-12 text-xs text-secondary-foreground text-center block
-  after:w-[45%] before:content-[''] before:w-[45%] before:h-1 before:rounded 
-  before:absolute before:top-1/2 before:left-0 before:translate-x-0 
-  before:translate-y-[-50%] before:bg-gradient-to-r after:content-[''] 
-  after:h-1 after:rounded after:absolute after:top-1/2 after:right-0
-  after:translate-x-0 after:translate-y-[-50%] after:bg-gradient-to-l 
-  from-white to-gray-100;
+  @apply relative my-12 block from-white to-gray-100 text-center text-xs text-secondary-foreground before:absolute before:left-0 before:top-1/2 before:h-1 before:w-[45%] before:translate-x-0 before:translate-y-[-50%] before:rounded before:bg-gradient-to-r before:content-[''] after:absolute after:right-0 after:top-1/2 after:h-1 after:w-[45%] after:translate-x-0 after:translate-y-[-50%] after:rounded after:bg-gradient-to-l after:content-[''];
 }
 
 .authentication-input {
-  @apply text-sm text-secondary-foreground  w-full outline-none 
-  border-input transition-colors focus:border-primary focus:ring-0 
-  placeholder:text-[#8c9097];
+  @apply w-full border-input text-sm text-secondary-foreground outline-none transition-colors placeholder:text-[#8c9097] focus:border-primary focus:ring-0;
 }
 
 .authentication-checkbox {
-  @apply size-3.5 border-slate-300 rounded checked:bg-primary focus:border-primary 
-  focus:checked:bg-primary focus:ring-0 hover:checked:bg-primary cursor-pointer;
+  @apply size-3.5 cursor-pointer rounded border-slate-300 checked:bg-primary hover:checked:bg-primary focus:border-primary focus:ring-0 focus:checked:bg-primary;
 }
 
 .authentication-label {
-  @apply block text-[.8rem] text-secondary-foreground font-semibold;
+  @apply block text-[.8rem] font-semibold text-secondary-foreground;
 }
 
 .authentication-button {
-  @apply font-semibold text-white bg-primary rounded-lg py-[0.65rem] px-[1rem] mt-6;
+  @apply mt-6 rounded-lg bg-primary px-[1rem] py-[0.65rem] font-semibold text-white;
 }
 
 .swiper-pagination {
-  @apply static flex justify-center mt-8;
+  @apply static mt-8 flex justify-center;
 }
 
 .swiper-pagination-bullet-active.custom-bullet {
@@ -157,7 +148,7 @@ body {
 }
 
 .custom-bullet {
-  @apply w-5 h-[4px] bg-gray-500 rounded-md;
+  @apply h-[4px] w-5 rounded-md bg-gray-500;
 }
 
 @keyframes scroll {
@@ -172,4 +163,33 @@ body {
 .animate-scroll {
   animation: scroll 30s linear infinite;
   will-change: transform; /* Hint to the browser for optimization */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Custom scrollbar for Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.custom-ease {
+  transition-timing-function: cubic-bezier(0.75, 0.05, 0.5, 0.77);
 }

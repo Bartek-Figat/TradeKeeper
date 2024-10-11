@@ -1,23 +1,18 @@
-import { useState, useEffect } from "react"; // Import useState and useEffect
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
-import {
-  FaBars,
-  FaTimes,
-  FaHome,
-  FaUser,
-  FaCog,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import axios from "axios";
+import { navItems } from "../common/NavigationItems";
+import React from "react";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isFullScreen, setIsFullScreen] = useState(false);
-
   const [loading, setLoading] = useState(true);
 
   const API_URL = "http://localhost:8080/auth";
@@ -96,96 +91,25 @@ const DashboardLayout = () => {
         <>
           <div
             className={`fixed inset-0 bg-[#111c43] transition-all duration-300 ${
-              isFullScreen ? "opacity-100" : "pointer-events-none opacity-0"
+              isFullScreen ? "opacity-1" : "pointer-events-none opacity-0"
             } z-50`}
           >
-            <nav className="flex h-16 items-center justify-around">
-              {" "}
-              {/* Adjusted height */}
-              <NavLink
-                to="/dashboard"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaHome className="text-2xl" />
-                <span className="text-xs">Home</span>
-              </NavLink>
-              <NavLink
-                to="/dashboard/profile"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaUser className="text-2xl" />
-                <span className="text-xs">Profile</span>
-              </NavLink>
-              <NavLink
-                to="/dashboard/project"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaCog className="text-2xl" />
-                <span className="text-xs">Project</span>
-              </NavLink>
-              <NavLink
-                to="/dashboard/analytics"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaCog className="text-2xl" />
-                <span className="text-xs">Analytics</span>
-              </NavLink>
-              <NavLink
-                to="/dashboard/create-trade"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaCog className="text-2xl" />
-                <span className="text-xs">Create Trade</span>
-              </NavLink>
-              <NavLink
-                to="/logout"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
-                    isActive
-                      ? "border-b-2 border-blue-500"
-                      : "border-transparent"
-                  }`
-                }
-              >
-                <FaSignOutAlt className="text-2xl" />
-                <span className="text-xs">Logout</span>
-              </NavLink>
+            <nav className="flex h-full flex-col space-y-4 bg-[#111c43] p-10 text-white">
+              {navItems.map(({ to, icon, label }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `flex items-center space-x-2 rounded-md border-l-4 border-transparent p-2 pr-6 text-gray-200 transition duration-200 hover:border-indigo-500 hover:bg-[#333b5166] hover:text-gray-200 focus:outline-none ${
+                      isActive ? "hover:bg-[#333b5166]" : ""
+                    }`
+                  }
+                >
+                  {React.cloneElement(icon, { className: "w-5 h-5" })}
+                  <span className="text-sm">{label}</span>
+                </NavLink>
+              ))}
             </nav>
           </div>
           <div className="absolute right-0 top-0 z-50 p-4">
@@ -200,12 +124,12 @@ const DashboardLayout = () => {
               )}
             </div>
           </div>
-          <div>
+          <div className="flex flex-1 flex-col">
             <Outlet />
+            <footer>
+              <Footer />
+            </footer>
           </div>
-          <footer>
-            <Footer />
-          </footer>
         </>
       ) : (
         <div className="relative flex flex-1">
@@ -217,17 +141,19 @@ const DashboardLayout = () => {
             }`}
           >
             <div>
-              <div
-                className="absolute right-[-30px] top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition duration-300"
+              <motion.div
+                className="absolute right-[-50px] top-[5px] z-20 flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#111c43] shadow-lg transition duration-300 hover:bg-[#243369]"
                 onClick={toggleSidebar}
+                whileHover={{ scale: 1.0 }}
+                whileTap={{ scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 {isOpen ? (
-                  <FaTimes className="text-lg text-black" />
+                  <FaTimes className="text-xl text-white" />
                 ) : (
-                  <FaBars className="text-lg text-black" />
+                  <FaBars className="text-xl text-white" />
                 )}
-              </div>
-
+              </motion.div>
               <div>
                 <Sidebar />
               </div>
@@ -238,7 +164,7 @@ const DashboardLayout = () => {
               !isOpen ? "ml-[-240px] justify-between" : "ml-0"
             }`}
           >
-            <div>
+            <div className="flex flex-1 flex-col">
               <Outlet />
             </div>
             <footer>
