@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
-import { useRoutes } from "react-router-dom";
+import { useRoutes, Navigate } from "react-router-dom"; // Import Navigate for redirection
 import DasboardLayout from "./layouts/DashboardLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import ProfilePage from "./pages/ProfilePage";
@@ -13,7 +13,6 @@ import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
-import PublicRoute from "./layouts/PublicRoute"; // Import the PublicRoute component
 
 export const App = () => {
   const element = useRoutes([
@@ -23,47 +22,49 @@ export const App = () => {
       children: [
         {
           path: "/sign-in",
-          element: (
-            <PublicRoute>
-              <SignInPage />
-            </PublicRoute>
+          element: !localStorage.getItem("token") ? (
+            <SignInPage />
+          ) : (
+            <Navigate to="/dashboard" />
           ),
         },
         {
           path: "/sign-up",
-          element: (
-            <PublicRoute>
-              <SignUpPage />
-            </PublicRoute>
+          element: !localStorage.getItem("token") ? (
+            <SignUpPage />
+          ) : (
+            <Navigate to="/dashboard" />
           ),
         },
         {
           path: "/reset-password",
-          element: (
-            <PublicRoute>
-              <ResetPasswordPage />
-            </PublicRoute>
+          element: !localStorage.getItem("token") ? (
+            <ResetPasswordPage />
+          ) : (
+            <Navigate to="/dashboard" />
           ),
         },
       ],
     },
-    // Protect the dashboard routes
     {
       path: `/dashboard`,
-      element: (
-        <ProtectedRoute>
-          <DasboardLayout />
-        </ProtectedRoute>
-      ),
+      element: <ProtectedRoute />,
       children: [
-        { index: true, element: <DashboardPage /> },
-        { path: "profile", element: <ProfilePage /> },
-        { path: "project", element: <ProjectPage /> },
-        { path: "analytics", element: <AnalyticsPage /> },
-        { path: "lightweigh", element: <Lightweigh /> },
-        { path: "create-trade", element: <CreateTrade /> },
+        {
+          path: `/dashboard`,
+          element: <DasboardLayout />,
+          children: [
+            { index: true, element: <DashboardPage /> },
+            { path: "profile", element: <ProfilePage /> },
+            { path: "project", element: <ProjectPage /> },
+            { path: "analytics", element: <AnalyticsPage /> },
+            { path: "lightweigh", element: <Lightweigh /> },
+            { path: "create-trade", element: <CreateTrade /> },
+          ],
+        },
       ],
     },
   ]);
+
   return element;
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"; // Import useState and useEffect
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 import {
@@ -10,11 +10,76 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
+import axios from "axios";
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = "http://localhost:8080/auth";
+
+  const validateToken = async (token: string) => {
+    try {
+      const { data } = await axios.post(`${API_URL}/validate-token`, { token });
+      return data;
+    } catch (error) {
+      console.error("Token validation error:");
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const checkToken = async () => {
+      if (token) {
+        try {
+          setLoading(true);
+          const isValid = await validateToken(token);
+          if (!isValid) {
+            localStorage.removeItem("token");
+            navigate("/sign-in");
+          }
+        } catch (error) {
+          localStorage.removeItem("token");
+          navigate("/sign-in");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        console.log("No token found");
+        navigate("/sign-in");
+      }
+    };
+
+    checkToken();
+  }, [navigate]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-16 w-16 animate-spin rounded-full border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -25,32 +90,23 @@ const DashboardLayout = () => {
     setIsFullScreen(false);
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex min-h-screen w-full flex-col">
       {isMobile ? (
         <>
           <div
             className={`fixed inset-0 bg-[#111c43] transition-all duration-300 ${
-              isFullScreen ? "opacity-100" : "opacity-0 pointer-events-none"
+              isFullScreen ? "opacity-100" : "pointer-events-none opacity-0"
             } z-50`}
           >
-            <nav className="flex items-center justify-around h-16">
+            <nav className="flex h-16 items-center justify-around">
               {" "}
               {/* Adjusted height */}
               <NavLink
                 to="/dashboard"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -64,7 +120,7 @@ const DashboardLayout = () => {
                 to="/dashboard/profile"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -78,7 +134,7 @@ const DashboardLayout = () => {
                 to="/dashboard/project"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -92,7 +148,7 @@ const DashboardLayout = () => {
                 to="/dashboard/analytics"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -106,7 +162,7 @@ const DashboardLayout = () => {
                 to="/dashboard/create-trade"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -120,7 +176,7 @@ const DashboardLayout = () => {
                 to="/logout"
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `flex flex-col items-center text-lg text-white transition duration-200 mx-2 ${
+                  `mx-2 flex flex-col items-center text-lg text-white transition duration-200 ${
                     isActive
                       ? "border-b-2 border-blue-500"
                       : "border-transparent"
@@ -132,15 +188,15 @@ const DashboardLayout = () => {
               </NavLink>
             </nav>
           </div>
-          <div className="absolute top-0 right-0 p-4 z-50">
+          <div className="absolute right-0 top-0 z-50 p-4">
             <div
               className="cursor-pointer"
               onClick={() => setIsFullScreen(!isFullScreen)}
             >
               {isFullScreen ? (
-                <FaTimes className="text-white text-lg animate-pulse" />
+                <FaTimes className="animate-pulse text-lg text-white" />
               ) : (
-                <FaBars className="text-black text-lg animate-pulse" />
+                <FaBars className="animate-pulse text-lg text-black" />
               )}
             </div>
           </div>
@@ -152,23 +208,23 @@ const DashboardLayout = () => {
           </footer>
         </>
       ) : (
-        <div className="flex flex-1 relative">
+        <div className="relative flex flex-1">
           <aside
-            className={`bg-[#111c43] self-start sticky top-0 h-screen transition-transform duration-300 ease-in-out ${
+            className={`sticky top-0 h-screen self-start bg-[#111c43] transition-transform duration-300 ease-in-out ${
               isOpen
                 ? "translate-x-0 opacity-100"
-                : "translate-x-[-240px] opacity-1"
+                : "opacity-1 translate-x-[-240px]"
             }`}
           >
             <div>
               <div
-                className="absolute top-0 right-[-30px] cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition duration-300"
+                className="absolute right-[-30px] top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition duration-300"
                 onClick={toggleSidebar}
               >
                 {isOpen ? (
-                  <FaTimes className="text-black text-lg" />
+                  <FaTimes className="text-lg text-black" />
                 ) : (
-                  <FaBars className="text-black text-lg" />
+                  <FaBars className="text-lg text-black" />
                 )}
               </div>
 
@@ -178,7 +234,7 @@ const DashboardLayout = () => {
             </div>
           </aside>
           <div
-            className={`flex flex-auto flex-col min-h-screen min-w-0 w-full transition-all duration-300 ease-in-out ${
+            className={`flex min-h-screen w-full min-w-0 flex-auto flex-col transition-all duration-300 ease-in-out ${
               !isOpen ? "ml-[-240px] justify-between" : "ml-0"
             }`}
           >

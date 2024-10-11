@@ -1,5 +1,5 @@
 import Modal from "./Modal";
-import PortfolioOverview from "./PortfolioOverview"
+import PortfolioOverview from "./PortfolioOverview";
 import PriceTicker from "./PriceTicker";
 import { FaArrowRight } from "react-icons/fa";
 import ChartComponent from "../components/chart/chartContentPage";
@@ -21,6 +21,7 @@ const DashboardPage = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const myStocks = [
     { name: "Apple Inc.", quantity: 10, currentValue: "$1,116.90" },
     { name: "Twitter Inc.", quantity: 15, currentValue: "$993.21" },
@@ -99,7 +100,7 @@ const DashboardPage = () => {
     <div className="flex w-full flex-col justify-center gap-6 p-10">
       <PriceTicker />
       {/* Portfolio Overview */}
-      <PortfolioOverview/>
+      <PortfolioOverview />
 
       {/* Investment Summary */}
       <div className="grid grid-cols-12 gap-6">
@@ -109,24 +110,27 @@ const DashboardPage = () => {
           { label: "Portfolio Value", value: "$34,000" },
           { label: "Returns Rate", value: "7.5%" },
         ].map((item, index) => (
-          <div key={index} className="col-span-12 sm:col-span-6 lg:col-span-3 bg-white p-4 rounded shadow">
+          <div
+            key={index}
+            className="col-span-12 rounded bg-white p-4 shadow sm:col-span-6 lg:col-span-3"
+          >
             <h2 className="text-xl font-semibold">{item.label}</h2>
             <p className="text-gray-600">{item.value}</p>
           </div>
         ))}
       </div>
       {/* Chart and My Stocks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="md:col-span-2 lg:col-span-2 p-2 rounded-lg shadow-md bg-white">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="rounded-lg bg-white p-2 shadow-md md:col-span-2 lg:col-span-2">
           <ChartComponent data={staticData} />
         </div>
-        <div className="p-2 rounded-lg shadow-md bg-white">
-          <h3 className="text-lg font-semibold mb-2">My Stocks</h3>
+        <div className="rounded-lg bg-white p-2 shadow-md">
+          <h3 className="mb-2 text-lg font-semibold">My Stocks</h3>
           <div className="space-y-2">
             {myStocks.map((stock, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center p-2 rounded-md text-color-[#333]"
+                className="text-color-[#333] flex items-center justify-between rounded-md p-2"
               >
                 <div>
                   <h4 className="font-semibold text-blue-600">{stock.name}</h4>
@@ -139,11 +143,11 @@ const DashboardPage = () => {
       </div>
 
       {/* Transaction History  */}
-      <div className="flex flex-col lg:flex-row gap-4">
-        <div className="flex-1 shadow-lg p-4 rounded-lg bg-white">
-          <h3 className="text-lg font-semibold mb-4">Transaction History</h3>
-          <table className="min-w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+      <div className="flex flex-col gap-4 lg:flex-row">
+        <div className="flex-1 rounded-lg bg-white p-4 shadow-lg">
+          <h3 className="mb-4 text-lg font-semibold">Transaction History</h3>
+          <table className="min-w-full text-left text-sm text-gray-500">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Date
@@ -160,18 +164,18 @@ const DashboardPage = () => {
                 <th scope="col" className="px-6 py-3"></th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 bg-white">
               {transactionHistory.map((transaction) => (
-                <tr key={transaction.id} className="border-b cursor-pointer">
+                <tr key={transaction.id} className="cursor-pointer border-b">
                   <td className="px-6 py-4">{transaction.date}</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 rounded-full text-white ${
+                      className={`rounded-full px-2 py-1 text-white ${
                         transaction.type === "Buy"
                           ? "bg-[#2aa0698f]"
                           : transaction.type === "Sell"
-                          ? "bg-[#a02a2ab0]"
-                          : "bg-gray-500"
+                            ? "bg-[#a02a2ab0]"
+                            : "bg-gray-500"
                       }`}
                     >
                       {transaction.type}
@@ -180,12 +184,12 @@ const DashboardPage = () => {
                   <td className="px-6 py-4">{transaction.amount}</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 rounded-full text-white ${
+                      className={`rounded-full px-2 py-1 text-white ${
                         transaction.status === "Completed"
                           ? "bg-green-500"
                           : transaction.status === "Pending"
-                          ? "bg-yellow-500"
-                          : "bg-gray-500"
+                            ? "bg-yellow-500"
+                            : "bg-gray-500"
                       }`}
                     >
                       {transaction.status}
@@ -193,7 +197,7 @@ const DashboardPage = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
                       onClick={() => openModal(transaction)}
                     >
                       View Details
@@ -212,13 +216,13 @@ const DashboardPage = () => {
         />
 
         {/* Recent Transactions */}
-        <div className="flex-1 shadow-lg p-4 rounded-lg bg-white">
-          <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
+        <div className="flex-1 rounded-lg bg-white p-4 shadow-lg">
+          <h3 className="mb-4 text-lg font-semibold">Recent Transactions</h3>
           <ul className="space-y-2">
             {transactionHistory.map((transaction) => (
               <li
                 key={transaction.id}
-                className="flex justify-between items-center p-2 border-b"
+                className="flex items-center justify-between border-b p-2"
               >
                 <div>
                   <span
@@ -226,8 +230,8 @@ const DashboardPage = () => {
                       transaction.type === "Buy"
                         ? "text-green-500"
                         : transaction.type === "Sell"
-                        ? "text-red-500"
-                        : "text-gray-500"
+                          ? "text-red-500"
+                          : "text-gray-500"
                     }`}
                   >
                     {transaction.type}
@@ -236,7 +240,7 @@ const DashboardPage = () => {
                     {transaction.date}
                   </span>
                 </div>
-                <span className="text-gray-800 font-bold">
+                <span className="font-bold text-gray-800">
                   {transaction.amount}
                 </span>
               </li>
@@ -245,33 +249,33 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mt-6">
-        <div className="flex-1 shadow-lg p-4 rounded-lg bg-white">
-          <h3 className="text-lg font-semibold mb-4">Market Movers</h3>
+      <div className="mt-6 flex flex-col gap-4 md:flex-row">
+        <div className="flex-1 rounded-lg bg-white p-4 shadow-lg">
+          <h3 className="mb-4 text-lg font-semibold">Market Movers</h3>
           <ul className="space-y-2">
             {topGainers.map((gainer, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center p-2 border-b"
+                className="flex items-center justify-between border-b p-2"
               >
                 <div>
-                  <span className="block text-gray-700 font-semibold">
+                  <span className="block font-semibold text-gray-700">
                     {gainer.name}
                   </span>
                   <span className="text-sm text-gray-500">{gainer.type}</span>
                 </div>
-                <span className="text-gray-800 font-bold">{gainer.price}</span>
+                <span className="font-bold text-gray-800">{gainer.price}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
       {/* Recent News Section */}
-      <div className="shadow-lg p-4 rounded-lg bg-white">
+      <div className="rounded-lg bg-white p-4 shadow-lg">
         <div className="flex flex-wrap gap-4">
           {/* Stock News */}
-          <div className="flex-1 min-w-[250px]">
-            <h4 className="font-semibold text-md mb-2">Stock News</h4>
+          <div className="min-w-[250px] flex-1">
+            <h4 className="text-md mb-2 font-semibold">Stock News</h4>
             <ul className="space-y-4">
               {[
                 {
@@ -304,16 +308,16 @@ const DashboardPage = () => {
                 },
               ].map((newsItem, index) => (
                 <div key={index} className="border-b pb-4">
-                  <p className="text-gray-500 text-sm">{newsItem.date}</p>
-                  <h4 className="font-semibold text-md">{newsItem.title}</h4>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-sm text-gray-500">{newsItem.date}</p>
+                  <h4 className="text-md font-semibold">{newsItem.title}</h4>
+                  <p className="text-sm text-gray-600">
                     {newsItem.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {newsItem.tags.map((tag, tagIndex) => (
                       <span
                         key={tagIndex}
-                        className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-1 rounded-full"
+                        className="rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700"
                       >
                         {tag}
                       </span>
@@ -321,7 +325,7 @@ const DashboardPage = () => {
                   </div>
                   <a
                     href="#"
-                    className="flex items-center text-blue-500 text-sm mt-2 hover:underline"
+                    className="mt-2 flex items-center text-sm text-blue-500 hover:underline"
                   >
                     Read more <FaArrowRight className="ml-1" />
                   </a>
@@ -331,8 +335,8 @@ const DashboardPage = () => {
           </div>
 
           {/* Forex News */}
-          <div className="flex-1 min-w-[250px]">
-            <h4 className="font-semibold text-md mb-2">Forex News</h4>
+          <div className="min-w-[250px] flex-1">
+            <h4 className="text-md mb-2 font-semibold">Forex News</h4>
             <ul className="space-y-4">
               {[
                 {
@@ -365,16 +369,16 @@ const DashboardPage = () => {
                 },
               ].map((newsItem, index) => (
                 <div key={index} className="border-b pb-4">
-                  <p className="text-gray-500 text-sm">{newsItem.date}</p>
-                  <h4 className="font-semibold text-md">{newsItem.title}</h4>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-sm text-gray-500">{newsItem.date}</p>
+                  <h4 className="text-md font-semibold">{newsItem.title}</h4>
+                  <p className="text-sm text-gray-600">
                     {newsItem.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {newsItem.tags.map((tag, tagIndex) => (
                       <span
                         key={tagIndex}
-                        className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-1 rounded-full"
+                        className="rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700"
                       >
                         {tag}
                       </span>
@@ -382,7 +386,7 @@ const DashboardPage = () => {
                   </div>
                   <a
                     href="#"
-                    className="flex items-center text-blue-500 text-sm mt-2 hover:underline"
+                    className="mt-2 flex items-center text-sm text-blue-500 hover:underline"
                   >
                     Read more <FaArrowRight className="ml-1" />
                   </a>
@@ -392,8 +396,8 @@ const DashboardPage = () => {
           </div>
 
           {/* Crypto News */}
-          <div className="flex-1 min-w-[250px]">
-            <h4 className="font-semibold text-md mb-2">Crypto News</h4>
+          <div className="min-w-[250px] flex-1">
+            <h4 className="text-md mb-2 font-semibold">Crypto News</h4>
             <ul className="space-y-4">
               {[
                 {
@@ -426,16 +430,16 @@ const DashboardPage = () => {
                 },
               ].map((newsItem, index) => (
                 <div key={index} className="border-b pb-4">
-                  <p className="text-gray-500 text-sm">{newsItem.date}</p>
-                  <h4 className="font-semibold text-md">{newsItem.title}</h4>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-sm text-gray-500">{newsItem.date}</p>
+                  <h4 className="text-md font-semibold">{newsItem.title}</h4>
+                  <p className="text-sm text-gray-600">
                     {newsItem.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {newsItem.tags.map((tag, tagIndex) => (
                       <span
                         key={tagIndex}
-                        className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-1 rounded-full"
+                        className="rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700"
                       >
                         {tag}
                       </span>
@@ -443,7 +447,7 @@ const DashboardPage = () => {
                   </div>
                   <a
                     href="#"
-                    className="flex items-center text-blue-500 text-sm mt-2 hover:underline"
+                    className="mt-2 flex items-center text-sm text-blue-500 hover:underline"
                   >
                     Read more <FaArrowRight className="ml-1" />
                   </a>

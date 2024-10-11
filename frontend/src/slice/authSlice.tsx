@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store/store";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -14,11 +15,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    signIn: (state, action: PayloadAction<string>) => {
-      console.log(action);
+    signIn: (state, { payload }) => {
+      console.log("payload.token", payload.token);
       state.isAuthenticated = true;
-      state.token = action.payload;
-      localStorage.setItem("token", action.payload);
+      state.token = payload.token;
+      localStorage.setItem("token", payload.token);
     },
     signOut: (state) => {
       console.log("State action sinOut", state);
@@ -36,4 +37,5 @@ const authSlice = createSlice({
 });
 
 export const { signIn, signOut, checkAuth } = authSlice.actions;
+export const selectCurrentToken = (state: RootState) => state.auth.token;
 export default authSlice.reducer;

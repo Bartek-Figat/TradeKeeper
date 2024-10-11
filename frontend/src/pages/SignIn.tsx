@@ -1,31 +1,43 @@
 import { FC, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
 import Logo from "../components/Logo";
 import { useLoginMutation } from "../services/apiCall";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { signIn } from "../slice/authSlice"; // Import signIn action
 
 const signInSchema = yup.object().shape({
-  username: yup.string().required("Username is required"),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 
 interface SignInFormValues {
-  username: string;
+  email: string;
   password: string;
   rememberPassword: boolean;
 }
 
 const SignInPage: FC = () => {
   const initialValues: SignInFormValues = {
-    username: "",
+    email: "",
     password: "",
     rememberPassword: false,
   };
 
   const [displayPassword, setDisplayPassword] = useState(false);
-  const [login] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const validateToken = (token: string) => {
+    const tokenRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/; // Basic JWT format
+    return token && tokenRegex.test(token);
+  };
 
   return (
     <div className="col-span-7 flex flex-col items-center justify-center max-[1200px]:col-span-12 bg-gray-50 min-h-screen">
@@ -41,17 +53,27 @@ const SignInPage: FC = () => {
           initialValues={initialValues}
           validationSchema={signInSchema}
           onSubmit={async (values, { resetForm }) => {
+            const loginValues = {
+              email: values.email,
+              password: values.password,
+            };
             try {
-              const response = await login(values).unwrap();
-              console.log("Login successful:", response);
-              // Add user feedback for successful login
-              alert("Login successful!");
-            } catch (err) {
-              console.error("Login failed:", err);
-              // Add user feedback for failed login
+              const payload = await login(loginValues).unwrap(); // Await the login call
+              console.log("Login successful:", payload);
+
+              if (validateToken(payload.token)) {
+                dispatch(signIn({ token: payload.token })); // Dispatch signIn action with the token
+                navigate("/dashboard"); // Navigate to dashboard
+              } else {
+                alert("Invalid token format. Please try again.");
+                navigate("/sign-in"); // Navigate back to sign-in if token is invalid
+              }
+            } catch (error) {
+              console.error("Login failed:", error);
               alert(
                 "Login failed. Please check your credentials and try again."
               );
+              navigate("/sign-in"); // Navigate back to sign-in on error
             }
             resetForm();
           }}
@@ -59,21 +81,21 @@ const SignInPage: FC = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form className="grid gap-4">
               <div className="flex flex-col">
-                <label htmlFor="username" className="authentication-label mb-2">
-                  User Name
+                <label htmlFor="email" className="authentication-label mb-2">
+                  Email
                 </label>
                 <Field
-                  id="username"
-                  name="username"
-                  type="text"
-                  placeholder="User name"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
                   className={`authentication-input rounded-md ${
-                    errors.username && touched.username
+                    errors.email && touched.email
                       ? "border-red-500"
                       : "border-gray-300"
                   }`}
                 />
-                <ErrorMessage name="username">
+                <ErrorMessage name="email">
                   {(msg) => <div className="input-error-message">{msg}</div>}
                 </ErrorMessage>
               </div>
@@ -142,9 +164,9 @@ const SignInPage: FC = () => {
               <button
                 type="submit"
                 className="authentication-button bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLoading}
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSubmitting || isLoading ? "Signing In..." : "Sign In"}
               </button>
             </Form>
           )}

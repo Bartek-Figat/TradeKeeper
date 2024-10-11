@@ -1,13 +1,13 @@
 import { ReactNode, memo, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { TextEffect } from "../montion/montionText";
+import { AnimatedGroup } from "../montion/animatedGroup";
 import { NavLink } from "react-router-dom";
 import ImageSlider from "./ImageSlider";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import Navbar from "../components/Navbar";
-
-
 
 const HomePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,67 +77,70 @@ const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className="bg-background text-foreground min-h-screen antialiased">
+    <div className="min-h-screen bg-background text-foreground antialiased">
       <Navbar {...sectionQuery} />
 
       <SectionWrapper id="home" {...sectionQuery}>
         <motion.div
-          className="w-full h-auto bg-[#111c43] px-5 @lg:px-12 lg:px-20 py-10"
+          className="@lg:px-12 h-auto w-full bg-[#111c43] px-5 py-10 lg:px-20"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           {/* Home Section */}
-          <section className="flex flex-col lg:flex-row h-auto w-full my-20">
+          <section className="my-20 flex h-auto w-full flex-col lg:flex-row">
             <div className="w-full lg:w-1/2">
-              <h1 className="text-2xl md:text-3xl lg:text-5xl font-semibold text-white max-w-sm">
+              <h1 className="max-w-sm text-2xl font-semibold text-white md:text-3xl lg:text-5xl">
                 Track Your Trades with Our{" "}
                 <span className="text-lime-500">Trading Journal.</span>
               </h1>
-              <p className="text-gray-300 text-sm lg:text-base mt-5">
+              <TextEffect
+                preset="fade"
+                className="mt-5 text-sm text-gray-300 lg:text-base"
+              >
                 Our trading journal provides you with the tools to analyze your
                 trading performance, identify patterns, and improve your
                 strategies. Start documenting your trades and take control of
                 your trading journey today!
-              </p>
-              <div className="mt-5 h-10 flex items-start  md:items-start justify-start gap-2 flex-col md:flex-row">
-                <button className="px-4 py-1 h-10 text-white bg-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
+              </TextEffect>
+              <div className="mt-5 flex h-10 flex-col items-start justify-start gap-2 md:flex-row md:items-start">
+                <button className="h-10 rounded-lg bg-lime-500 px-4 py-1 text-white transition-all duration-300 hover:opacity-75">
                   Get Started
                 </button>
-                <button className="px-2 py-1 text-white rounded-lg hover:opacity-75 transition-all duration-300">
+                <button className="rounded-lg px-2 py-1 text-white transition-all duration-300 hover:opacity-75">
                   Learn More
                 </button>
               </div>
-              <div className="hidden lg:grid lg:grid-cols-3 mt-10 w-full h-auto gap-2 lg:divide-x-[1px] place-content-center">
-                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+              <div className="mt-10 hidden h-auto w-full place-content-center gap-2 lg:grid lg:grid-cols-3 lg:divide-x-[1px]">
+                <div className="flex h-20 w-full items-center justify-center px-5 lg:block">
                   <h2 className="text-5xl font-bold text-lime-500">
                     10<span className="text-white">K</span>
                   </h2>
-                  <h3 className="text-gray-300 text-sm mt-2">Traders</h3>
+                  <h3 className="mt-2 text-sm text-gray-300">Traders</h3>
                 </div>
-                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+                <div className="flex h-20 w-full items-center justify-center px-5 lg:block">
                   <h2 className="text-5xl font-bold text-lime-500">
                     5<span className="text-white">K</span>
                   </h2>
-                  <h3 className="text-gray-300 text-sm mt-2">Strategies</h3>
+                  <h3 className="mt-2 text-sm text-gray-300">Strategies</h3>
                 </div>
-                <div className="w-full h-20 px-5 flex lg:block items-center justify-center">
+                <div className="flex h-20 w-full items-center justify-center px-5 lg:block">
                   <h2 className="text-5xl font-bold text-lime-500">
                     1<span className="text-white">M</span>
                   </h2>
-                  <h3 className="text-gray-300 text-sm mt-2">Trades Logged</h3>
+                  <h3 className="mt-2 text-sm text-gray-300">Trades Logged</h3>
                 </div>
               </div>
             </div>
-            <div className="relative w-full lg:w-1/2 lg:px-10 flex justify-center mt-5">
+            <div className="relative mt-5 flex w-full justify-center lg:w-1/2 lg:px-10">
               <div className="absolute left-10 top-20 h-[30%] w-[30%] bg-emerald-300 blur-[130px]"></div>
               <img
                 src="https://media.istockphoto.com/id/1645926305/photo/stock-exchange-chart-on-the-screen.jpg?s=2048x2048&w=is&k=20&c=rWefVXE5ixXNDrJh0TU9zi-Sq2V1iCXuIa6ZN_5sXXg="
                 alt=""
-                className="h-auto w-full md:w-[70%] rounded-3xl hidden md:block"
+                className="hidden h-auto w-full rounded-3xl md:block md:w-[70%]"
               />
-              <div className="absolute w-[50%] bg-slate-900 border-t border-lime-500 rounded-xl bottom-0 translate-y-1/2 right-10 z-10 h-auto p-5">
-                <div className="flex items-center justify-between mb-5">
+              <div className="absolute bottom-0 right-10 z-10 h-auto w-[50%] translate-y-1/2 rounded-xl border-t border-lime-500 bg-slate-900 p-5">
+                <div className="mb-5 flex items-center justify-between">
                   <div>
                     <p className="text-sm text-lime-500">Stock</p>
                     <p className="text-sm text-white">NASDAQ: MSFT</p>
@@ -148,7 +151,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
                 <NavLink to="/sign-up">
-                  <button className="px-3 py-1.5 w-full text-lime-500 border border-lime-500 rounded-lg hover:opacity-75 transition-all duration-300">
+                  <button className="w-full rounded-lg border border-lime-500 px-3 py-1.5 text-lime-500 transition-all duration-300 hover:opacity-75">
                     Sign up
                   </button>
                 </NavLink>
@@ -158,131 +161,162 @@ const HomePage: React.FC = () => {
         </motion.div>
       </SectionWrapper>
       {/* About Us Section */}
-      <SectionWrapper id="about" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 w-full px-6 py-6 min-h-[800px] rounded-lg">
-          <div className="max-w-screen-xl mx-auto">
-            <div className="flex flex-col mb-10 md:flex-row">
-              <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-                <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-indigo-500 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      Empowering Traders
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-indigo-500 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      We believe in empowering traders with the tools they need
-                      to succeed. Our platform is built on the principles of
-                      simplicity, efficiency, and transparency.
-                    </p>
+      <AnimatedGroup
+        variants={{
+          container: {
+            visible: {
+              transition: {
+                staggerChildren: 0.05,
+              },
+            },
+          },
+          item: {
+            hidden: {
+              opacity: 0,
+              filter: "blur(12px)",
+              y: -60,
+              rotateX: 90,
+            },
+            visible: {
+              opacity: 1,
+              filter: "blur(0px)",
+              y: 0,
+              rotateX: 0,
+              transition: {
+                type: "spring",
+                bounce: 0.3,
+                duration: 1,
+              },
+            },
+          },
+        }}
+      >
+        <SectionWrapper id="about" {...sectionQuery}>
+          <section className="min-h-[800px] w-full rounded-lg bg-blue-50 px-6 py-6 dark:bg-slate-800">
+            <div className="mx-auto max-w-screen-xl">
+              <div className="mb-10 flex flex-col md:flex-row">
+                <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+                  <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-indigo-500"></span>
+                    <div className="relative h-full rounded-lg border-2 border-indigo-500 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        Empowering Traders
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-indigo-500">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        We believe in empowering traders with the tools they
+                        need to succeed. Our platform is built on the principles
+                        of simplicity, efficiency, and transparency.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full sm:w-1/2">
+                  <div className="relative ml-0 h-full md:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-purple-500"></span>
+                    <div className="relative h-full rounded-lg border-2 border-purple-500 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        Continuous Innovation
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-purple-500">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        Our mission is to provide a seamless and intuitive
+                        experience for traders worldwide. We continuously
+                        innovate and improve our platform to ensure it remains
+                        at the forefront of trading technology.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="w-full sm:w-1/2">
-                <div className="relative h-full ml-0 md:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-purple-500 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-purple-500 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      Continuous Innovation
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-purple-500 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      Our mission is to provide a seamless and intuitive
-                      experience for traders worldwide. We continuously innovate
-                      and improve our platform to ensure it remains at the
-                      forefront of trading technology.
-                    </p>
+              <div className="mb-5 flex flex-col md:flex-row">
+                <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+                  <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-blue-400"></span>
+                    <div className="relative h-full rounded-lg border-2 border-blue-400 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        Tailored Experience
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-blue-400">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        Join thousands of traders who trust us to help them
+                        achieve their trading goals. Whether you're a beginner
+                        or a seasoned trader, our journal is tailored to meet
+                        your needs.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full sm:w-1/2">
+                  <div className="relative ml-0 h-full md:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-yellow-400"></span>
+                    <div className="relative h-full rounded-lg border-2 border-yellow-400 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        User-Friendly Interface
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-yellow-400">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        With a user-friendly interface and comprehensive
+                        analytics, you can track your trades, analyze
+                        performance, and make informed decisions.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Additional Cards */}
+              <div className="mb-5 flex flex-col md:flex-row">
+                <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+                  <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-green-500"></span>
+                    <div className="relative h-full rounded-lg border-2 border-green-500 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        Real-Time Notifications
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-green-500">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        Stay updated with real-time notifications on market
+                        changes, trade executions, and important events to make
+                        timely decisions.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full sm:w-1/2">
+                  <div className="relative ml-0 h-full md:mr-10">
+                    <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-red-500"></span>
+                    <div className="relative h-full rounded-lg border-2 border-red-500 bg-white p-5">
+                      <h3 className="my-2 text-lg font-bold text-gray-800">
+                        Comprehensive Support
+                      </h3>
+                      <p className="mb-1 mt-3 text-xs font-medium uppercase text-red-500">
+                        ------------
+                      </p>
+                      <p className="mb-2 text-gray-600">
+                        We offer 24/7 support through various channels to ensure
+                        you have the assistance you need whenever you need it.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col mb-5 md:flex-row">
-              <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-                <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-blue-400 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-blue-400 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      Tailored Experience
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-blue-400 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      Join thousands of traders who trust us to help them
-                      achieve their trading goals. Whether you're a beginner or
-                      a seasoned trader, our journal is tailored to meet your
-                      needs.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full sm:w-1/2">
-                <div className="relative h-full ml-0 md:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-yellow-400 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-yellow-400 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      User-Friendly Interface
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-yellow-400 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      With a user-friendly interface and comprehensive
-                      analytics, you can track your trades, analyze performance,
-                      and make informed decisions.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Additional Cards */}
-            <div className="flex flex-col mb-5 md:flex-row">
-              <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-                <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-green-500 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-green-500 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      Real-Time Notifications
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-green-500 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      Stay updated with real-time notifications on market
-                      changes, trade executions, and important events to make
-                      timely decisions.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full sm:w-1/2">
-                <div className="relative h-full ml-0 md:mr-10">
-                  <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-red-500 rounded-lg"></span>
-                  <div className="relative h-full p-5 bg-white border-2 border-red-500 rounded-lg">
-                    <h3 className="my-2 text-lg font-bold text-gray-800">
-                      Comprehensive Support
-                    </h3>
-                    <p className="mt-3 mb-1 text-xs font-medium text-red-500 uppercase">
-                      ------------
-                    </p>
-                    <p className="mb-2 text-gray-600">
-                      We offer 24/7 support through various channels to ensure
-                      you have the assistance you need whenever you need it.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </SectionWrapper>
+          </section>
+        </SectionWrapper>
+      </AnimatedGroup>
       {/*  */}
-      <section id="new-features" className="py-8 bg-white sm:py-10 lg:py-16">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <section id="new-features" className="bg-white py-8 sm:py-10 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl xl:text-5xl">
               Boost Your Productivity
@@ -291,10 +325,10 @@ const HomePage: React.FC = () => {
               Enhance your workflow with advanced features
             </p>
           </div>
-          <div className="grid grid-cols-1 mt-10 text-center sm:mt-16 sm:grid-cols-2 sm:gap-x-12 gap-y-12 md:grid-cols-3 md:gap-0 xl:mt-24">
+          <div className="mt-10 grid grid-cols-1 gap-y-12 text-center sm:mt-16 sm:grid-cols-2 sm:gap-x-12 md:grid-cols-3 md:gap-0 xl:mt-24">
             {/* Feature 1 */}
-            <div className="md:p-8 lg:p-14 flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-purple-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-200">
                 <i className="fa-solid fa-chart-column text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -307,8 +341,8 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Feature 2 */}
-            <div className="md:p-8 lg:p-14 md:border-l md:border-gray-200 flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-teal-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:border-l md:border-gray-200 md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-200">
                 <i className="fa-solid fa-truck-fast text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -321,8 +355,8 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Feature 3 */}
-            <div className="md:p-8 lg:p-14 md:border-l md:border-gray-200 flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-yellow-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:border-l md:border-gray-200 md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-200">
                 <i className="fa-solid fa-shield text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -335,8 +369,8 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Feature 4 */}
-            <div className="md:p-8 lg:p-14 md:border-t md:border-gray-200 flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-red-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:border-t md:border-gray-200 md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-200">
                 <i className="fa-solid fa-cloud text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -349,8 +383,8 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Feature 5 */}
-            <div className="md:p-8 lg:p-14 md:border-l md:border-gray-200 md:border-t flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-green-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:border-l md:border-t md:border-gray-200 md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-200">
                 <i className="fa-solid fa-pen-nib text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -363,8 +397,8 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Feature 6 */}
-            <div className="md:p-8 lg:p-14 md:border-l md:border-gray-200 md:border-t flex flex-col justify-center items-center">
-              <div className="w-14 h-14 rounded-full bg-orange-200 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center md:border-l md:border-t md:border-gray-200 md:p-8 lg:p-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-200">
                 <i className="fa-solid fa-bolt text-3xl text-gray-900"></i>
               </div>
               <h3 className="mt-12 text-xl font-bold text-gray-900">
@@ -381,18 +415,18 @@ const HomePage: React.FC = () => {
       {/* Features Section */}
       {/*  */}
       <SectionWrapper id="snapshot" {...sectionQuery}>
-        <section className="relative pt-16 bg-gray-50">
-          <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        <section className="relative bg-gray-50 pt-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h2 className="mb-8 text-center text-3xl font-bold text-gray-800">
               Application Snapshot
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+            <div className="grid grid-cols-1 gap-4 pb-4 md:grid-cols-2 lg:grid-cols-3">
               {/* Card 1 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1645923179/photo/stock-market-and-exchange-chart-and-numbers.jpg?s=2048x2048&w=is&k=20&c=NNl980Aeq9GSKCHUbZXua52QvKpXh3dh2YIsRosUo-Q="
                   alt="Feature 1"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -407,11 +441,11 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Card 2 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1796395298/photo/close-up-on-a-computer-screen-with-real-time-stock-market-analytics-graphs-and-reports-stock.jpg?s=2048x2048&w=is&k=20&c=6g04dq_ZM-2WzBAumjFUzqXSM1VtIjm6OSONuXqCvMo="
                   alt="Feature 2"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -426,11 +460,11 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Card 3 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1358050858/photo/financial-analyst-working-on-a-computer-with-multi-monitor-workstation-with-real-time-stocks.jpg?s=2048x2048&w=is&k=20&c=hQVVYYT4Jk082rxBujsy8KQ3u7Yj0jDGcTu4l9zywiI="
                   alt="Feature 3"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -445,11 +479,11 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Card 4 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1455038781/photo/business-woman-hand-using-smart-phone-with-cafe-shop-stock-market-charts-on-phone-and-laptop.jpg?s=2048x2048&w=is&k=20&c=brCcH1vktDyr3Qt3v9PYgnG93n91JQ_BGbocVfPIRLU="
                   alt="Feature 4"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -464,11 +498,11 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Card 5 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1796395298/photo/close-up-on-a-computer-screen-with-real-time-stock-market-analytics-graphs-and-reports-stock.jpg?s=2048x2048&w=is&k=20&c=6g04dq_ZM-2WzBAumjFUzqXSM1VtIjm6OSONuXqCvMo="
                   alt="Feature 5"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -483,11 +517,11 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Card 6 */}
-              <div className="bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+              <div className="transform rounded-lg bg-white shadow-lg transition-transform hover:scale-105">
                 <img
                   src="https://media.istockphoto.com/id/1358050858/photo/financial-analyst-working-on-a-computer-with-multi-monitor-workstation-with-real-time-stocks.jpg?s=2048x2048&w=is&k=20&c=hQVVYYT4Jk082rxBujsy8KQ3u7Yj0jDGcTu4l9zywiI="
                   alt="Feature 6"
-                  className="rounded-t-lg h-48 w-full object-cover"
+                  className="h-48 w-full rounded-t-lg object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold text-gray-800">
@@ -506,22 +540,22 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/*  */}
       <SectionWrapper id="features" {...sectionQuery}>
-        <section className="max-w-screen-xl px-6 py-6 mx-auto min-h-[800px] rounded-lg">
-          <h2 className="text-4xl font-bold mb-4 text-center text-primary-foreground">
+        <section className="mx-auto min-h-[800px] max-w-screen-xl rounded-lg px-6 py-6">
+          <h2 className="mb-4 text-center text-4xl font-bold text-primary-foreground">
             Features
           </h2>
-          <p className="mb-12 text-lg text-center text-gray-500">
+          <p className="mb-12 text-center text-lg text-gray-500">
             Here are some of the awesome features we provide.
           </p>
-          <div className="flex flex-col w-full mb-10 sm:flex-row">
-            <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-              <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-indigo-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
+          <div className="mb-10 flex w-full flex-col sm:flex-row">
+            <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+              <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-indigo-500"></span>
+                <div className="relative h-full rounded-lg border-2 border-indigo-500 bg-white p-5">
                   <h3 className="my-2 text-lg font-bold text-gray-800">
                     Comprehensive Analytics
                   </h3>
-                  <p className="mt-3 mb-1 text-xs font-medium text-indigo-500 uppercase">
+                  <p className="mb-1 mt-3 text-xs font-medium uppercase text-indigo-500">
                     ------------
                   </p>
                   <p className="mb-2 text-gray-600">
@@ -533,13 +567,13 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="w-full sm:w-1/2">
-              <div className="relative h-full ml-0 md:mr-10">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-purple-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-purple-500 rounded-lg">
+              <div className="relative ml-0 h-full md:mr-10">
+                <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-purple-500"></span>
+                <div className="relative h-full rounded-lg border-2 border-purple-500 bg-white p-5">
                   <h3 className="my-2 text-lg font-bold text-gray-800">
                     User-Friendly Interface
                   </h3>
-                  <p className="mt-3 mb-1 text-xs font-medium text-purple-500 uppercase">
+                  <p className="mb-1 mt-3 text-xs font-medium uppercase text-purple-500">
                     ------------
                   </p>
                   <p className="mb-2 text-gray-600">
@@ -551,15 +585,15 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-full mb-5 sm:flex-row">
-            <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-              <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-blue-400 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-blue-400 rounded-lg">
+          <div className="mb-5 flex w-full flex-col sm:flex-row">
+            <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+              <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-blue-400"></span>
+                <div className="relative h-full rounded-lg border-2 border-blue-400 bg-white p-5">
                   <h3 className="my-2 text-lg font-bold text-gray-800">
                     Secure and Reliable
                   </h3>
-                  <p className="mt-3 mb-1 text-xs font-medium text-blue-400 uppercase">
+                  <p className="mb-1 mt-3 text-xs font-medium uppercase text-blue-400">
                     ------------
                   </p>
                   <p className="mb-2 text-gray-600">
@@ -570,14 +604,14 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full mb-10 sm:mb-0 sm:w-1/2">
-              <div className="relative h-full ml-0 mr-0 sm:mr-10">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-yellow-400 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-yellow-400 rounded-lg">
+            <div className="mb-10 w-full sm:mb-0 sm:w-1/2">
+              <div className="relative ml-0 mr-0 h-full sm:mr-10">
+                <span className="absolute left-0 top-0 ml-1 mt-1 h-full w-full rounded-lg bg-yellow-400"></span>
+                <div className="relative h-full rounded-lg border-2 border-yellow-400 bg-white p-5">
                   <h3 className="my-2 text-lg font-bold text-gray-800">
                     Real-Time Notifications
                   </h3>
-                  <p className="mt-3 mb-1 text-xs font-medium text-yellow-400 uppercase">
+                  <p className="mb-1 mt-3 text-xs font-medium uppercase text-yellow-400">
                     ------------
                   </p>
                   <p className="mb-2 text-gray-600">
@@ -600,15 +634,15 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/* Testimonials Section */}
       <SectionWrapper id="testimonials" {...sectionQuery}>
-        <section className="max-w-screen-xl px-6 py-16 mx-auto rounded-lg">
-          <h2 className="text-4xl font-bold mb-4 text-center">Testimonials</h2>
-          <p className="mb-12 text-lg text-center text-gray-500">
+        <section className="mx-auto max-w-screen-xl rounded-lg px-6 py-16">
+          <h2 className="mb-4 text-center text-4xl font-bold">Testimonials</h2>
+          <p className="mb-12 text-center text-lg text-gray-500">
             Here's what our users have to say about us.
           </p>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8 overflow-y-auto max-h-[400px]">
+          <div className="flex max-h-[400px] flex-col items-center justify-center gap-8 overflow-y-auto md:flex-row">
             {/* Testimonial 1 */}
-            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
-              <div className="flex justify-center items-start flex-col p-5 flex-grow">
+            <div className="flex w-full flex-col rounded-lg border bg-white hover:shadow-lg md:w-1/2 lg:w-1/3">
+              <div className="flex flex-grow flex-col items-start justify-center p-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -624,25 +658,25 @@ const HomePage: React.FC = () => {
                   <path stroke="none" d="M0 0h24v24H0z"></path>
                   <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
                 </svg>
-                <div className="flex justify-center items-start flex-col text-left gap-5">
-                  <p className="italic text-sm md:text-base">
+                <div className="flex flex-col items-start justify-center gap-5 text-left">
+                  <p className="text-sm italic md:text-base">
                     "I love how easy it is to track my trades and analyze my
                     performance. The insights I've gained have been invaluable."
                   </p>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
+                    <h3 className="text-xl font-semibold md:text-2xl">
                       Maria Garcia
                     </h3>
                     <p className="text-xs md:text-sm">Trader</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
+              <div className="rounded-b-lg bg-sky-500 p-0.5"></div>
             </div>
 
             {/* Testimonial 2 */}
-            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
-              <div className="flex justify-center items-start flex-col p-5 flex-grow">
+            <div className="flex w-full flex-col rounded-lg border bg-white hover:shadow-lg md:w-1/2 lg:w-1/3">
+              <div className="flex flex-grow flex-col items-start justify-center p-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -658,25 +692,25 @@ const HomePage: React.FC = () => {
                   <path stroke="none" d="M0 0h24v24H0z"></path>
                   <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
                 </svg>
-                <div className="flex justify-center items-start flex-col text-left gap-5">
-                  <p className="italic text-sm md:text-base">
+                <div className="flex flex-col items-start justify-center gap-5 text-left">
+                  <p className="text-sm italic md:text-base">
                     "The best trading journal I've ever used. It's helped me
                     stay organized and make better trading decisions."
                   </p>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
+                    <h3 className="text-xl font-semibold md:text-2xl">
                       David Lee
                     </h3>
                     <p className="text-xs md:text-sm">Trader</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
+              <div className="rounded-b-lg bg-sky-500 p-0.5"></div>
             </div>
 
             {/* Testimonial 3 */}
-            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
-              <div className="flex justify-center items-start flex-col p-5 flex-grow">
+            <div className="flex w-full flex-col rounded-lg border bg-white hover:shadow-lg md:w-1/2 lg:w-1/3">
+              <div className="flex flex-grow flex-col items-start justify-center p-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -692,24 +726,24 @@ const HomePage: React.FC = () => {
                   <path stroke="none" d="M0 0h24v24H0z"></path>
                   <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
                 </svg>
-                <div className="flex justify-center items-start flex-col text-left gap-5">
-                  <p className="italic text-sm md:text-base">
+                <div className="flex flex-col items-start justify-center gap-5 text-left">
+                  <p className="text-sm italic md:text-base">
                     "Highly recommend Trading Journal to any trader looking to
                     improve their strategy and performance."
                   </p>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
+                    <h3 className="text-xl font-semibold md:text-2xl">
                       Sarah Brown
                     </h3>
                     <p className="text-xs md:text-sm">Trader</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
+              <div className="rounded-b-lg bg-sky-500 p-0.5"></div>
             </div>
             {/* Testimonial 4 */}
-            <div className="w-full md:w-1/2 lg:w-1/3 hover:shadow-lg rounded-lg border bg-white flex flex-col">
-              <div className="flex justify-center items-start flex-col p-5 flex-grow">
+            <div className="flex w-full flex-col rounded-lg border bg-white hover:shadow-lg md:w-1/2 lg:w-1/3">
+              <div className="flex flex-grow flex-col items-start justify-center p-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -725,20 +759,20 @@ const HomePage: React.FC = () => {
                   <path stroke="none" d="M0 0h24v24H0z"></path>
                   <path d="M10 11H6a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5M19 11h-4a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 011 1v6c0 2.667-1.333 4.333-4 5"></path>
                 </svg>
-                <div className="flex justify-center items-start flex-col text-left gap-5">
-                  <p className="italic text-sm md:text-base">
+                <div className="flex flex-col items-start justify-center gap-5 text-left">
+                  <p className="text-sm italic md:text-base">
                     "This trading journal has transformed my trading experience.
                     The insights I gained have been invaluable!"
                   </p>
                   <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
+                    <h3 className="text-xl font-semibold md:text-2xl">
                       John Doe
                     </h3>
                     <p className="text-xs md:text-sm">Professional Trader</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-sky-500 p-0.5 rounded-b-lg"></div>
+              <div className="rounded-b-lg bg-sky-500 p-0.5"></div>
             </div>
           </div>
         </section>
@@ -747,64 +781,64 @@ const HomePage: React.FC = () => {
       <SectionWrapper id="pricing" {...sectionQuery}>
         <SectionWrapper id="pricing" {...sectionQuery}>
           <section className="bg-blue-50 py-10">
-            <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <h2 className="mb-6 text-3xl font-bold text-gray-900 md:text-4xl">
                 Choose Your Trading Plan
               </h2>
-              <p className="text-gray-600 mb-10">
+              <p className="mb-10 text-gray-600">
                 Select a plan that fits your trading needs and start maximizing
                 your potential today!
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {/* Basic Plan */}
-                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                <div className="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105">
+                  <h3 className="mb-2 text-xl font-semibold text-lime-500">
                     Basic Plan
                   </h3>
-                  <p className="text-2xl text-gray-900 mb-4">$10/month</p>
+                  <p className="mb-4 text-2xl text-gray-900">$10/month</p>
 
-                  <ul className="text-gray-700 mb-6">
+                  <ul className="mb-6 text-gray-700">
                     <li>Track up to 200 trades</li>
                     <li>Advanced analytics and insights</li>
                     <li>Priority email support</li>
                     <li>Access to trading community</li>
                   </ul>
-                  <button className="self-end w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                  <button className="w-full self-end rounded-lg bg-lime-500 py-2 text-white transition duration-300 hover:opacity-75">
                     Choose Pro
                   </button>
                 </div>
 
                 {/* Pro Plan */}
-                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                <div className="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105">
+                  <h3 className="mb-2 text-xl font-semibold text-lime-500">
                     Pro Plan
                   </h3>
-                  <p className="text-2xl text-gray-900 mb-4">$25/month</p>
-                  <ul className="text-gray-700 mb-6">
+                  <p className="mb-4 text-2xl text-gray-900">$25/month</p>
+                  <ul className="mb-6 text-gray-700">
                     <li>Track up to 200 trades</li>
                     <li>Advanced analytics and insights</li>
                     <li>Priority email support</li>
                     <li>Access to trading community</li>
                   </ul>
-                  <button className="w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                  <button className="w-full rounded-lg bg-lime-500 py-2 text-white transition duration-300 hover:opacity-75">
                     Choose Pro
                   </button>
                 </div>
 
                 {/* Premium Plan */}
-                <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                  <h3 className="text-xl font-semibold text-lime-500 mb-2">
+                <div className="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105">
+                  <h3 className="mb-2 text-xl font-semibold text-lime-500">
                     Premium Plan
                   </h3>
-                  <p className="text-2xl text-gray-900 mb-4">$50/month</p>
-                  <ul className="text-gray-700 mb-6">
+                  <p className="mb-4 text-2xl text-gray-900">$50/month</p>
+                  <ul className="mb-6 text-gray-700">
                     <li>Unlimited trade tracking</li>
                     <li>Comprehensive analytics and insights</li>
                     <li>24/7 support via chat</li>
                     <li>Personalized trading strategies</li>
                   </ul>
-                  <button className="w-full bg-lime-500 text-white py-2 rounded-lg hover:opacity-75 transition duration-300">
+                  <button className="w-full rounded-lg bg-lime-500 py-2 text-white transition duration-300 hover:opacity-75">
                     Choose Premium
                   </button>
                 </div>
@@ -815,26 +849,26 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/* FAQs Section */}
       <SectionWrapper id="faqs" {...sectionQuery}>
-        <div className="py-4 max-w-screen-lg mx-auto">
-          <div className="text-center mb-16">
-            <p className="mt-4 text-sm leading-7 text-gray-500 font-regular">
+        <div className="mx-auto max-w-screen-lg py-4">
+          <div className="mb-16 text-center">
+            <p className="font-regular mt-4 text-sm leading-7 text-gray-500">
               F.A.Q
             </p>
-            <h3 className="text-3xl sm:text-4xl leading-normal font-extrabold tracking-tight text-gray-900">
+            <h3 className="text-3xl font-extrabold leading-normal tracking-tight text-gray-900 sm:text-4xl">
               Frequently Asked{" "}
               <span className="text-indigo-600">Questions</span>
             </h3>
           </div>
 
           {/* Technical Section */}
-          <div className="px-10 sm:px-16 sm:flex items-start mb-10">
-            <h3 className="py-3 font-bold text-lg text-gray-900 w-3/12">
+          <div className="mb-10 items-start px-10 sm:flex sm:px-16">
+            <h3 className="w-3/12 py-3 text-lg font-bold text-gray-900">
               Technical
             </h3>
             <div className="w-9/12">
               {faqData.slice(0, 5).map((faq, index) => (
-                <div className="flex items-start mb-8" key={index}>
-                  <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-indigo-500 text-white border-4 border-white text-xl font-semibold">
+                <div className="mb-8 flex items-start" key={index}>
+                  <div className="mr-3 hidden items-center justify-center rounded-full border-4 border-white bg-indigo-500 p-3 text-xl font-semibold text-white sm:flex">
                     {/* SVG Icon */}
                     <svg
                       width="24px"
@@ -859,7 +893,7 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="text-md flex-grow">
                     <h1
-                      className="text-gray-900 font-semibold mb-2 flex items-center cursor-pointer transition duration-300 ease-in-out hover:text-indigo-600"
+                      className="mb-2 flex cursor-pointer items-center font-semibold text-gray-900 transition duration-300 ease-in-out hover:text-indigo-600"
                       onClick={() => toggleAnswer(index)}
                     >
                       {expandedFAQIndex === index ? (
@@ -870,14 +904,14 @@ const HomePage: React.FC = () => {
                       {faq.question}
                     </h1>
                     <div
-                      className={`transition-all duration-500 ease-in-out transform ${
+                      className={`transform transition-all duration-500 ease-in-out ${
                         expandedFAQIndex === index
-                          ? "scale-100 max-h-40"
-                          : "scale-0 max-h-0"
+                          ? "max-h-40 scale-100"
+                          : "max-h-0 scale-0"
                       } overflow-hidden`}
                     >
                       {expandedFAQIndex === index && (
-                        <p className="text-gray-500 text-sm">{faq.answer}</p>
+                        <p className="text-sm text-gray-500">{faq.answer}</p>
                       )}
                     </div>
                   </div>
@@ -887,14 +921,14 @@ const HomePage: React.FC = () => {
           </div>
 
           {/* Billing Section */}
-          <div className="px-10 sm:px-16 sm:flex items-start mb-10">
-            <h3 className="py-3 font-bold text-lg text-gray-900 w-3/12">
+          <div className="mb-10 items-start px-10 sm:flex sm:px-16">
+            <h3 className="w-3/12 py-3 text-lg font-bold text-gray-900">
               Billing
             </h3>
             <div className="w-9/12">
               {faqData.slice(5).map((faq, index) => (
-                <div className="flex items-start mb-8" key={index + 5}>
-                  <div className="hidden sm:flex items-center justify-center p-3 mr-3 rounded-full bg-indigo-500 text-white border-4 border-white text-xl font-semibold">
+                <div className="mb-8 flex items-start" key={index + 5}>
+                  <div className="mr-3 hidden items-center justify-center rounded-full border-4 border-white bg-indigo-500 p-3 text-xl font-semibold text-white sm:flex">
                     {/* SVG Icon */}
                     <svg
                       width="24px"
@@ -919,7 +953,7 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="text-md flex-grow">
                     <h1
-                      className="text-gray-900 font-semibold mb-2 flex items-center cursor-pointer transition duration-300 ease-in-out hover:text-indigo-600"
+                      className="mb-2 flex cursor-pointer items-center font-semibold text-gray-900 transition duration-300 ease-in-out hover:text-indigo-600"
                       onClick={() => toggleAnswer(index + 5)}
                     >
                       {expandedFAQIndex === index + 5 ? (
@@ -930,14 +964,14 @@ const HomePage: React.FC = () => {
                       {faq.question}
                     </h1>
                     <div
-                      className={`transition-all duration-500 ease-in-out transform ${
+                      className={`transform transition-all duration-500 ease-in-out ${
                         expandedFAQIndex === index + 5
-                          ? "scale-100 max-h-40"
-                          : "scale-0 max-h-0"
+                          ? "max-h-40 scale-100"
+                          : "max-h-0 scale-0"
                       } overflow-hidden`}
                     >
                       {expandedFAQIndex === index + 5 && (
-                        <p className="text-gray-500 text-sm">{faq.answer}</p>
+                        <p className="text-sm text-gray-500">{faq.answer}</p>
                       )}
                     </div>
                   </div>
@@ -949,8 +983,8 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/* Contact Section */}
       <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6">
-          <div className="max-w-7xl mx-auto">
+        <section className="bg-blue-50 px-6 dark:bg-slate-800">
+          <div className="mx-auto max-w-7xl">
             <div className="mb-4 text-center">
               {/* Contact Section Content */}
             </div>
@@ -959,27 +993,27 @@ const HomePage: React.FC = () => {
       </SectionWrapper>
       {/* Contact Section */}
       <SectionWrapper id="contact" {...sectionQuery}>
-        <section className="bg-blue-50 dark:bg-slate-800 px-6 py-16 lg:py-20">
-          <div className="max-w-7xl mx-auto">
+        <section className="bg-blue-50 px-6 py-16 dark:bg-slate-800 lg:py-20">
+          <div className="mx-auto max-w-7xl">
             <div className="mb-4 text-center">
               <p className="text-base font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-200">
                 Contact
               </p>
-              <h2 className="font-heading mb-4 font-bold tracking-tight text-gray-900 dark:text-white text-3xl sm:text-5xl">
+              <h2 className="font-heading mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
                 Get in Touch
               </h2>
-              <p className="mt-4 max-w-3xl mx-auto text-xl text-gray-600 dark:text-slate-400">
+              <p className="mx-auto mt-4 max-w-3xl text-xl text-gray-600 dark:text-slate-400">
                 We are here to assist you with any inquiries or support you may
                 need.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid gap-8 md:grid-cols-2">
               <div className="h-full pr-6">
-                <p className="mt-3 mb-12 text-lg text-gray-600 dark:text-slate-400">
+                <p className="mb-12 mt-3 text-lg text-gray-600 dark:text-slate-400">
                   Feel free to reach out to us through the following channels:
                 </p>
                 <ul className="mb-6">
-                  <li className="flex mb-4">
+                  <li className="mb-4 flex">
                     <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1009,7 +1043,7 @@ const HomePage: React.FC = () => {
                       </p>
                     </div>
                   </li>
-                  <li className="flex mb-4">
+                  <li className="mb-4 flex">
                     <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1040,7 +1074,7 @@ const HomePage: React.FC = () => {
                       </p>
                     </div>
                   </li>
-                  <li className="flex mb-4">
+                  <li className="mb-4 flex">
                     <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1122,7 +1156,7 @@ const HomePage: React.FC = () => {
                   <div className="text-center">
                     <button
                       type="submit"
-                      className="w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0"
+                      className="font-xl w-full rounded-md bg-blue-800 px-6 py-3 text-white sm:mb-0"
                     >
                       Send Message
                     </button>
@@ -1440,5 +1474,5 @@ const SectionWrapper = memo(
         {children}
       </div>
     );
-  }
+  },
 );

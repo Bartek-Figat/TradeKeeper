@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Login, Register } from "./type";
+import { Register } from "./type";
 import { signIn } from "../slice/authSlice";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/api/auth/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/auth/" }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    login: builder.mutation<void, Login>({
+    login: builder.mutation({
       query: (credential) => ({
         url: "login",
         method: "POST",
@@ -15,9 +15,10 @@ export const userApi = createApi({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
-          const response = await queryFulfilled;
-          const { data } = response;
-          dispatch(signIn(`${data}`));
+          const { data } = await queryFulfilled;
+
+          console.log("Data", data);
+          dispatch(signIn(data));
         } catch (error) {
           console.error("Login failed", error);
         }
