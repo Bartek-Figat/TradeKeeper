@@ -5,8 +5,10 @@ import * as yup from "yup";
 import { handlePasswordDisplay } from "../lib/utils";
 import Logo from "../components/Logo";
 import { useLoginMutation } from "../services/apiCall";
-import { useDispatch } from "react-redux"; // Import useDispatch
-import { signIn } from "../slice/authSlice"; // Import signIn action
+import { useDispatch } from "react-redux";
+import { signIn } from "../slice/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const signInSchema = yup.object().shape({
   email: yup
@@ -41,6 +43,18 @@ const SignInPage: FC = () => {
 
   return (
     <div className="col-span-7 flex min-h-screen flex-col items-center justify-center bg-gray-50 max-[1200px]:col-span-12">
+      <ToastContainer
+        position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="rounded-lg bg-white p-12 shadow-lg max-[375px]:p-4">
         <Logo />
         <div className="my-4 text-center">
@@ -58,22 +72,22 @@ const SignInPage: FC = () => {
               password: values.password,
             };
             try {
-              const payload = await login(loginValues).unwrap(); // Await the login call
-              console.log("Login successful:", payload);
-
+              const payload = await login(loginValues).unwrap();
               if (validateToken(payload.token)) {
-                dispatch(signIn({ token: payload.token })); // Dispatch signIn action with the token
-                navigate("/dashboard"); // Navigate to dashboard
+                dispatch(signIn({ token: payload.token }));
+                navigate("/dashboard");
+                toast.success("Login successful!");
               } else {
-                alert("Invalid token format. Please try again.");
-                navigate("/sign-in"); // Navigate back to sign-in if token is invalid
+                toast.error(
+                  "Login failed. Please check your credentials and try again.",
+                );
+                navigate("/sign-in");
               }
             } catch (error) {
-              console.error("Login failed:", error);
-              alert(
+              toast.error(
                 "Login failed. Please check your credentials and try again.",
               );
-              navigate("/sign-in"); // Navigate back to sign-in on error
+              navigate("/sign-in");
             }
             resetForm();
           }}

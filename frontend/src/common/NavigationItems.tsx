@@ -5,12 +5,18 @@ import {
   UserIcon,
   BriefcaseIcon,
   ChartPieIcon,
-  ArrowTrendingDownIcon,
   PresentationChartLineIcon,
+  RectangleGroupIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/20/solid";
 
 export const navItems = [
   { to: "/dashboard", icon: <HomeIcon />, label: "Dashboard" },
+  {
+    to: "/dashboard/transactions",
+    icon: <RectangleGroupIcon />,
+    label: "Transactions",
+  },
   { to: "/dashboard/profile", icon: <UserIcon />, label: "Profile" },
   { to: "/dashboard/project", icon: <BriefcaseIcon />, label: "Project" },
   { to: "/dashboard/analytics", icon: <ChartPieIcon />, label: "Analytics" },
@@ -21,7 +27,7 @@ export const navItems = [
   },
   {
     to: "/dashboard/create-trade",
-    icon: <ArrowTrendingDownIcon />,
+    icon: <PlusCircleIcon />,
     label: "Create Trade",
   },
   {

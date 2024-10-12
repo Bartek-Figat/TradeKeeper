@@ -15,6 +15,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import NotFoundPage from "./pages/NotFoundPage";
 import ChangeLogPage from "./pages/ChangeLog";
+import TransactionTable from "./pages/Transactions";
 
 export const App = () => {
   const element = useRoutes([
@@ -64,6 +65,7 @@ export const App = () => {
           element: <DasboardLayout />,
           children: [
             { index: true, element: <DashboardPage /> },
+            { path: "transactions", element: <TransactionTable /> },
             { path: "profile", element: <ProfilePage /> },
             { path: "project", element: <ProjectPage /> },
             { path: "analytics", element: <AnalyticsPage /> },

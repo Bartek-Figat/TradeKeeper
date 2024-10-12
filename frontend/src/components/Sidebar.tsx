@@ -29,10 +29,10 @@ const Sidebar: React.FC = () => {
     <aside className="w-full bg-[#111c43] p-6 text-gray-50 sm:w-60">
       <nav className="space-y-8 text-sm">
         <div className="space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-widest dark:text-gray-600">
+          {/* <h2 className="text-sm font-semibold uppercase tracking-widest dark:text-gray-600">
             Dashboard
-          </h2>
-          <div className="flex flex-col space-y-1">
+          </h2> */}
+          <div className="flex flex-col space-y-1 justify-start">
             {navItems.map(({ to, icon, label }) => (
               <SidebarItem key={to} title={label} path={to} Icon={icon} />
             ))}
