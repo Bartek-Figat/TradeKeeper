@@ -26,6 +26,11 @@ export interface ITrade {
 }
 
 export interface ICreateTrade {
+  riskPercentage: number;
+  positionType?: string;
+  leverage: undefined;
+  costBasis?: number;
+  profitLoss?: number;
   symbol: string;
   entryPrice: number;
   exitPrice: number;
@@ -35,9 +40,15 @@ export interface ICreateTrade {
   createdAt: Date;
   stopLossLevel?: number;
   positionSize?: number;
-  tradeType: "stock" | "forex" | "crypto";
+  tradeType: "stock" | "forex" | "crypto" | "option";
   entryDate: Date;
   exitDate: Date;
+  quantity?: number; // For stock and crypto
+  optionType?: "call" | "put"; // For options
+  strikePrice?: number; // For options
+  optionPremium?: number; // For options
+  units?: number; // For forex
+  usdExchangeRate?: number; // For forex
 }
 
 export interface TradeFilter {

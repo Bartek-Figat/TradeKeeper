@@ -44,10 +44,77 @@ export class CalculateTradeMetricsRepository {
   }
 
   async createTrade(newTrade: ICreateTrade) {
+    /**
+     * This method creates a new trade and calculates the profit/loss based on the trade type.
+     * - For "stock" trades, profit/loss is calculated as (exitPrice - entryPrice) * quantity.
+     * - For "option" trades, profit/loss is determined by the option type (call/put) and involves
+     *   strikePrice and optionPremium.
+     * - For "forex" trades, profit/loss is calculated as (exitPrice - entryPrice) * units * usdExchangeRate.
+     * - For "crypto" trades, profit/loss is calculated as (exitPrice - entryPrice) * quantity * leverage,
+     *   and is reversed for short positions.
+     */
     try {
-      if (!["stock", "forex", "crypto"].includes(newTrade.tradeType)) {
+      if (
+        !["stock", "forex", "crypto", "option"].includes(newTrade.tradeType)
+      ) {
         throw new ApiError("Invalid trade type", 400);
       }
+
+      // Calculate profit/loss based on trade type
+      let profitLoss = 0;
+      switch (newTrade.tradeType) {
+        case "stock":
+          if (newTrade.quantity !== undefined) {
+            profitLoss =
+              (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
+          }
+          break;
+        case "option":
+          if (
+            newTrade.optionType &&
+            newTrade.strikePrice !== undefined &&
+            newTrade.optionPremium !== undefined
+          ) {
+            if (newTrade.optionType === "call") {
+              profitLoss =
+                Math.max(0, newTrade.exitPrice - newTrade.strikePrice) -
+                newTrade.optionPremium;
+            } else if (newTrade.optionType === "put") {
+              profitLoss =
+                Math.max(0, newTrade.strikePrice - newTrade.exitPrice) -
+                newTrade.optionPremium;
+            }
+          }
+          break;
+        case "forex":
+          if (
+            newTrade.units !== undefined &&
+            newTrade.usdExchangeRate !== undefined
+          ) {
+            profitLoss =
+              (newTrade.exitPrice - newTrade.entryPrice) *
+              newTrade.units *
+              newTrade.usdExchangeRate;
+          }
+          break;
+        case "crypto":
+          if (
+            newTrade.quantity !== undefined &&
+            newTrade.leverage !== undefined
+          ) {
+            const baseProfitLoss =
+              (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
+            profitLoss = baseProfitLoss * newTrade.leverage;
+            if (newTrade.positionType === "short") {
+              // Assuming positionType is the correct property
+              profitLoss = -profitLoss; // Reverse profit/loss for short positions
+            }
+          }
+          break;
+      }
+
+      // Add profitLoss to the newTrade object
+      newTrade.profitLoss = profitLoss;
 
       const result = await this.db.insertOne(newTrade);
       if (result.insertedId) {
