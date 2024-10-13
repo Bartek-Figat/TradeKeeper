@@ -14,6 +14,9 @@
 			},
 			"TradeDto": {
 				"properties": {
+					"tradeType": {
+						"type": "string"
+					},
 					"_id": {
 						"type": "string"
 					},
@@ -109,6 +112,7 @@
 					}
 				},
 				"required": [
+					"tradeType",
 					"_id",
 					"entryDate",
 					"exitDate",
@@ -538,119 +542,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"usdExchangeRate": {
-											"type": "number",
-											"format": "double"
-										},
-										"units": {
-											"type": "number",
-											"format": "double"
-										},
-										"optionPremium": {
-											"type": "number",
-											"format": "double"
-										},
-										"strikePrice": {
-											"type": "number",
-											"format": "double"
-										},
-										"optionType": {
-											"type": "string",
-											"enum": [
-												"call",
-												"put"
-											]
-										},
-										"quantity": {
-											"type": "number",
-											"format": "double"
-										},
-										"tradeType": {
-											"type": "string",
-											"enum": [
-												"stock",
-												"forex",
-												"crypto",
-												"option"
-											]
-										},
-										"positionSize": {
-											"type": "number",
-											"format": "double"
-										},
-										"stopLossLevel": {
-											"type": "number",
-											"format": "double"
-										},
-										"createdAt": {
-											"type": "string",
-											"format": "date-time"
-										},
-										"tags": {
-											"items": {
-												"type": "string"
-											},
-											"type": "array"
-										},
-										"reward": {
-											"type": "number",
-											"format": "double"
-										},
-										"risk": {
-											"type": "number",
-											"format": "double"
-										},
-										"exitPrice": {
-											"type": "number",
-											"format": "double"
-										},
-										"entryPrice": {
-											"type": "number",
-											"format": "double"
-										},
-										"symbol": {
-											"type": "string"
-										},
-										"profitLoss": {
-											"type": "number",
-											"format": "double"
-										},
-										"costBasis": {
-											"type": "number",
-											"format": "double"
-										},
-										"leverage": {},
-										"positionType": {
-											"type": "string"
-										},
-										"riskPercentage": {
-											"type": "number",
-											"format": "double"
-										},
-										"exitDate": {
-											"type": "string",
-											"format": "date-time"
-										},
-										"entryDate": {
-											"type": "string",
-											"format": "date-time"
-										}
-									},
-									"required": [
-										"tradeType",
-										"createdAt",
-										"tags",
-										"reward",
-										"risk",
-										"exitPrice",
-										"entryPrice",
-										"symbol",
-										"riskPercentage",
-										"exitDate",
-										"entryDate"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/TradeDto"
 								}
 							}
 						}

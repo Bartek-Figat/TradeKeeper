@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
+import { useSelector } from "react-redux";
 
 type AreaChartProps = {
   data: Array<{ time: string | number; value: number }>;
@@ -8,6 +9,7 @@ type AreaChartProps = {
 const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
+  const darkMode = useSelector((state: { darkMode: boolean }) => state.darkMode);
 
   const initializeChart = useCallback(() => {
     if (!chartContainerRef.current) return;
@@ -16,8 +18,8 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
       width: chartContainerRef.current.clientWidth,
       height: chartContainerRef.current.clientHeight,
       layout: {
-        background: { color: "#ffffff" },
-        textColor: "rgba(33, 56, 77, 1)",
+        background: { color: darkMode ? "#171717" : "#ffffff" },
+        textColor: "#ffffff ",
       },
       grid: {
         vertLines: { visible: false },
@@ -54,7 +56,7 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
       priceLineVisible: true,
     });
 
-    areaSeries.setData(data);
+    areaSeries.setData(data.map(({ time, value }) => ({ time: new Date(time).toISOString().split('T')[0], value })));
     chartRef.current = chart;
   }, [data]);
 

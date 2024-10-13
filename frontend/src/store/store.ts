@@ -2,9 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../slice/authSlice"; // Import the authReducer
 import scrollReducer from "../slice/scrollSlice";
 import { userApi } from "../services/apiCall";
+import darkModeReducer from '../slice/darkModeSlice';
 
 export const store = configureStore({
   reducer: {
+    darkMode: darkModeReducer,
     auth: authReducer, 
     scroll: scrollReducer,
     [userApi.reducerPath]: userApi.reducer,

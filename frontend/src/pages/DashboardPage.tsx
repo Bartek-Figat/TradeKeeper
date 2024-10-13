@@ -1,10 +1,12 @@
 import Modal from "./Modal";
+import { toggleDarkMode } from '../slice/darkModeSlice';
 import PortfolioOverview from "./PortfolioOverview";
 import PriceTicker from "./PriceTicker";
 import { FaArrowRight } from "react-icons/fa";
 import ChartComponent from "../components/chart/chartContentPage";
 import { staticData } from "../components/chart/priceData";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export interface Transaction {
   id: number;
@@ -20,7 +22,13 @@ export interface Transaction {
 const DashboardPage = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const darkMode = useSelector((state: { darkMode: boolean }) => state.darkMode);
+  const dispatch = useDispatch();
+
+  const handleToggleDarkMode = () => {
+    dispatch(toggleDarkMode());
+  };
 
   const myStocks = [
     { name: "Apple Inc.", quantity: 10, currentValue: "$1,116.90" },
@@ -97,7 +105,12 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="flex w-full flex-col justify-center gap-6 p-10">
+    <div className={`${darkMode && "dark"}`}>
+        <button onClick={handleToggleDarkMode}>
+      Toggle Dark Mode
+    </button>
+    <div className="flex w-full flex-col justify-center gap-6 p-10 dark:bg-neutral-900">
+      
       <PriceTicker />
       {/* Portfolio Overview */}
       <PortfolioOverview />
@@ -112,7 +125,7 @@ const DashboardPage = () => {
         ].map((item, index) => (
           <div
             key={index}
-            className="col-span-12 rounded bg-white p-4 shadow sm:col-span-6 lg:col-span-3"
+            className="dark:bg-neutral-900 dark:text-neutral-300 col-span-12 rounded dark:shadow-neutral-100 bg-white p-4 shadow sm:col-span-6 lg:col-span-3"
           >
             <h2 className="text-xl font-semibold">{item.label}</h2>
             <p className="text-gray-600">{item.value}</p>
@@ -120,12 +133,12 @@ const DashboardPage = () => {
         ))}
       </div>
       {/* Chart and My Stocks */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-lg bg-white p-2 shadow-md md:col-span-2 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 ">
+        <div className="rounded-md bg-white p-1  md:col-span-2 lg:col-span-2 dark:bg-neutral-700">
           <ChartComponent data={staticData} />
         </div>
-        <div className="rounded-lg bg-white p-2 shadow-md">
-          <h3 className="mb-2 text-lg font-semibold">My Stocks</h3>
+        <div className="rounded-lg bg-white p-2 shadow-md dark:bg-neutral-900 dark:shadow-neutral-100">
+          <h3 className="dark:text-neutral-300 mb-2 text-lg font-semibold">My Stocks</h3>
           <div className="space-y-2">
             {myStocks.map((stock, index) => (
               <div
@@ -135,7 +148,7 @@ const DashboardPage = () => {
                 <div>
                   <h4 className="font-semibold text-blue-600">{stock.name}</h4>
                 </div>
-                <p className="text-sm text-gray-600">{stock.currentValue}</p>
+                <p className=" dark:text-neutral-300 text-sm text-gray-600">{stock.currentValue}</p>
               </div>
             ))}
           </div>
@@ -143,7 +156,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Transaction History  */}
-      <div className="flex flex-col gap-4 lg:flex-row">
+      <div className="flex flex-col gap-4 lg:flex-row ">
         <div className="custom-scrollbar flex-1 rounded-lg bg-white p-4 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold">Transaction History</h3>
           <div className="flex flex-col">
@@ -256,7 +269,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-4 md:flex-row">
+      <div className="mt-6 flex flex-col gap-4 md:flex-row ">
         <div className="flex-1 rounded-lg bg-white p-4 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold">Market Movers</h3>
           <ul className="space-y-2">
@@ -278,7 +291,7 @@ const DashboardPage = () => {
         </div>
       </div>
       {/* Recent News Section */}
-      <div className="rounded-lg bg-white p-4 shadow-lg">
+      <div className="rounded-lg bg-white p-4 shadow-lg ">
         <div className="flex flex-wrap gap-4">
           {/* Stock News */}
           <div className="min-w-[250px] flex-1">
@@ -464,6 +477,8 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
+   
+    </div>
     </div>
   );
 };

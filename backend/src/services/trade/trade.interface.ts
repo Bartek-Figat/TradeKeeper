@@ -1,4 +1,5 @@
 export interface ITrade {
+  tradeType: string;
   _id: string;
   entryDate: Date;
   exitDate: Date;
@@ -10,7 +11,6 @@ export interface ITrade {
   reward: number;
   tags: string[];
   createdAt: Date;
-  // Add performance metrics
   winRate?: number;
   avgProfitLoss?: number;
   riskRewardRatio?: number;
@@ -26,6 +26,8 @@ export interface ITrade {
 }
 
 export interface ICreateTrade {
+  userId: string;
+  tradeOutcome: string;
   riskPercentage: number;
   positionType?: string;
   leverage: undefined;

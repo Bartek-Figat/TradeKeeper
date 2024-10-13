@@ -58,16 +58,16 @@ function PortfolioOverview() {
             {portfolioItems.map(item => (
               <div
                 key={item.id}
-                className="col-span-12 sm:col-span-6 lg:col-span-4 bg-white p-4 rounded shadow cursor-pointer"
+                className="dark:bg-neutral-900 col-span-12 sm:col-span-6 lg:col-span-4 bg-white p-4 rounded shadow cursor-pointer dark:shadow-neutral-100"
                 onClick={() => openModal(item)}
               >
-                <h2 className="text-xl font-semibold">{item.title}</h2>
-                <p className="text-gray-600">{item.content}</p>
+                <h2 className="dark:text-neutral-300 text-xl font-semibold">{item.title}</h2>
+                <p className="text-gray-600 dark:text-neutral-300">{item.content}</p>
                 <div className="mt-4">
-                  <span className="text-sm font-medium">Performance: </span>
+                  <span className="dark:text-neutral-300 text-sm font-medium">Performance: </span>
                   <span className={`text-lg ${item.performance.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>{item.performance}</span>
                 </div>
-                <div className="mt-2 text-sm text-gray-500">Type: {item.type}</div>
+                <div className="dark:text-neutral-300 mt-2 text-sm text-gray-500">Type: {item.type}</div>
               </div>
             ))}
           </div>
@@ -79,13 +79,13 @@ function PortfolioOverview() {
         isOpen={isModalOpen}
         onClose={closeModal}
         transaction={selectedItem && {
-            id: selectedItem.id,
-            date: 'N/A',
-            type: selectedItem.type,
-            amount: 'N/A',
-            status: 'N/A',
-            description: selectedItem.content,
-          }}
+          id: selectedItem.id,
+          date: 'N/A',
+          type: selectedItem.type as "Buy" | "Sell",
+          amount: 'N/A',
+          status: 'Pending', // Changed from 'N/A' to a valid status
+          description: selectedItem.content,
+        }}
       />
     </div>
   );

@@ -43,20 +43,9 @@ export class CalculateTradeMetricsRepository {
     }
   }
 
-  async createTrade(newTrade: ICreateTrade) {
-    /**
-     * This method creates a new trade and calculates the profit/loss based on the trade type.
-     * - For "stock" trades, profit/loss is calculated as (exitPrice - entryPrice) * quantity.
-     * - For "option" trades, profit/loss is determined by the option type (call/put) and involves
-     *   strikePrice and optionPremium.
-     * - For "forex" trades, profit/loss is calculated as (exitPrice - entryPrice) * units * usdExchangeRate.
-     * - For "crypto" trades, profit/loss is calculated as (exitPrice - entryPrice) * quantity * leverage,
-     *   and is reversed for short positions.
-     */
+  async createTrade(newTrade: ICreateTrade): Promise<TradeDto> {
     try {
-      if (
-        !["stock", "forex", "crypto", "option"].includes(newTrade.tradeType)
-      ) {
+      if (!["stock", "forex", "crypto", "option"].includes(newTrade.tradeType)) {
         throw new ApiError("Invalid trade type", 400);
       }
 
@@ -76,13 +65,31 @@ export class CalculateTradeMetricsRepository {
             newTrade.optionPremium !== undefined
           ) {
             if (newTrade.optionType === "call") {
-              profitLoss =
-                Math.max(0, newTrade.exitPrice - newTrade.strikePrice) -
-                newTrade.optionPremium;
+              const exerciseProfit =
+                newTrade.quantity !== undefined
+                  ? (newTrade.exitPrice - newTrade.strikePrice) *
+                      newTrade.quantity -
+                    newTrade.optionPremium
+                  : 0;
+              const sellProfit =
+                newTrade.quantity !== undefined
+                  ? (newTrade.exitPrice - newTrade.optionPremium) *
+                    newTrade.quantity
+                  : 0;
+              profitLoss = Math.max(exerciseProfit, sellProfit);
             } else if (newTrade.optionType === "put") {
-              profitLoss =
-                Math.max(0, newTrade.strikePrice - newTrade.exitPrice) -
-                newTrade.optionPremium;
+              const exerciseProfit =
+                newTrade.quantity !== undefined
+                  ? (newTrade.strikePrice - newTrade.exitPrice) *
+                      newTrade.quantity -
+                    newTrade.optionPremium
+                  : 0;
+              const sellProfit =
+                newTrade.quantity !== undefined
+                  ? (newTrade.exitPrice - newTrade.optionPremium) *
+                    newTrade.quantity
+                  : 0;
+              profitLoss = Math.max(exerciseProfit, sellProfit);
             }
           }
           break;
@@ -91,10 +98,14 @@ export class CalculateTradeMetricsRepository {
             newTrade.units !== undefined &&
             newTrade.usdExchangeRate !== undefined
           ) {
-            profitLoss =
-              (newTrade.exitPrice - newTrade.entryPrice) *
-              newTrade.units *
-              newTrade.usdExchangeRate;
+            const nominalValue = newTrade.units * newTrade.usdExchangeRate;
+            if (newTrade.positionType === "buy") {
+              profitLoss =
+                (newTrade.exitPrice - newTrade.entryPrice) * nominalValue;
+            } else if (newTrade.positionType === "sell") {
+              profitLoss =
+                (newTrade.entryPrice - newTrade.exitPrice) * nominalValue;
+            }
           }
           break;
         case "crypto":
@@ -106,22 +117,27 @@ export class CalculateTradeMetricsRepository {
               (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
             profitLoss = baseProfitLoss * newTrade.leverage;
             if (newTrade.positionType === "short") {
-              // Assuming positionType is the correct property
               profitLoss = -profitLoss; // Reverse profit/loss for short positions
             }
           }
           break;
       }
 
-      // Add profitLoss to the newTrade object
+      // Determine if the trade is a win or lose
+      const tradeOutcome = profitLoss > 0 ? "win" : "lose";
+
+      // Add profitLoss and tradeOutcome to the newTrade object
       newTrade.profitLoss = profitLoss;
+      newTrade.tradeOutcome = tradeOutcome; // Assuming tradeOutcome is a valid field in ICreateTrade
 
       const result = await this.db.insertOne(newTrade);
       if (result.insertedId) {
         return {
-          ...newTrade,
+          _id: result.insertedId.toString(), 
+          ...newTrade, 
           entryDate: newTrade.entryDate,
           exitDate: newTrade.exitDate,
+          userId: newTrade.userId, 
         };
       } else {
         throw new ApiError("Failed to insert trade", 400);
@@ -139,7 +155,7 @@ export class CalculateTradeMetricsRepository {
     try {
       if (
         updatedTradeData.tradeType &&
-        !["stock", "forex", "crypto"].includes(updatedTradeData.tradeType)
+        !["stock", "forex", "crypto", "option"].includes(updatedTradeData.tradeType)
       ) {
         throw new ApiError("Invalid trade type", 400);
       }
@@ -160,15 +176,18 @@ export class CalculateTradeMetricsRepository {
         throw new ApiError("Failed to retrieve updated trade", 500);
       }
 
-      return this.calculateMetrics(
-        updatedTrade,
-        await this.db.find<ITrade>({}).toArray()
-      );
+      // Ensure all required fields are included in the return object
+      return {
+        ...updatedTrade,
+        entryDate: updatedTrade.entryDate,
+        exitDate: updatedTrade.exitDate,
+        avgProfitLoss: updatedTrade.avgProfitLoss,
+
+      };
     } catch (error) {
       console.error("Error updating trade:", error);
       throw new ApiError("Failed to update trade", 500);
-    }
-  }
+    }}
 
   async filterTrades(
     filter: TradeFilter,
@@ -393,6 +412,24 @@ export class CalculateTradeMetricsRepository {
     if (trade.avgHoldingPeriod !== undefined && trade.avgHoldingPeriod > 30) {
       suggestions.push(
         "Evaluate if shorter holding periods could lead to better returns."
+      );
+    }
+    // New suggestions based on trade type and profit/loss
+    if (trade.tradeType === "option" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+      suggestions.push(
+        "Review your option strategies, consider adjusting strike prices or premiums."
+      );
+    }
+
+    if (trade.tradeType === "forex" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+      suggestions.push(
+        "Consider analyzing currency pair trends and adjusting your entry/exit points."
+      );
+    }
+
+    if (trade.tradeType === "crypto" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+      suggestions.push(
+        "Evaluate the impact of leverage and market volatility on your crypto trades."
       );
     }
 

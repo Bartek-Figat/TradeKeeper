@@ -25,6 +25,7 @@ const models: TsoaRoute.Models = {
     "TradeDto": {
         "dataType": "refObject",
         "properties": {
+            "tradeType": {"dataType":"string","required":true},
             "_id": {"dataType":"string","required":true},
             "entryDate": {"dataType":"datetime","required":true},
             "exitDate": {"dataType":"datetime","required":true},

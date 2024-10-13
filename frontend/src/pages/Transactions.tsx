@@ -10,6 +10,10 @@ const TransactionTable: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [minWinRate, setMinWinRate] = useState<number | null>(null);
+  const [maxWinRate, setMaxWinRate] = useState<number | null>(null);
+  const [minProfitLoss, setMinProfitLoss] = useState<number | null>(null);
+  const [maxProfitLoss, setMaxProfitLoss] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
@@ -382,7 +386,20 @@ const TransactionTable: React.FC = () => {
     const matchesDate = selectedDate
       ? transaction.date === selectedDate.toISOString().split("T")[0]
       : true;
-    return matchesSymbol && matchesType && matchesStatus && matchesDate;
+    const matchesMinWinRate = minWinRate !== null ? transaction.return >= minWinRate : true;
+    const matchesMaxWinRate = maxWinRate !== null ? transaction.return <= maxWinRate : true;
+    const matchesMinProfitLoss = minProfitLoss !== null ? transaction.return >= minProfitLoss : true;
+    const matchesMaxProfitLoss = maxProfitLoss !== null ? transaction.return <= maxProfitLoss : true;
+    return (
+      matchesSymbol &&
+      matchesType &&
+      matchesStatus &&
+      matchesDate &&
+      matchesMinWinRate &&
+      matchesMaxWinRate &&
+      matchesMinProfitLoss &&
+      matchesMaxProfitLoss
+    );
   });
 
   const clearFilters = () => {
@@ -390,6 +407,10 @@ const TransactionTable: React.FC = () => {
     setSelectedType(null);
     setSelectedStatus(null);
     setSelectedDate(null);
+    setMinWinRate(null);
+    setMaxWinRate(null);
+    setMinProfitLoss(null);
+    setMaxProfitLoss(null);
   };
 
   const handlePageChange = (page: number) => {
@@ -398,7 +419,7 @@ const TransactionTable: React.FC = () => {
 
   const paginatedTransactions = filteredTransactions.slice(
     (currentPage - 1) * pageSize,
-    currentPage * pageSize,
+    currentPage * pageSize
   );
 
   return (
@@ -442,6 +463,34 @@ const TransactionTable: React.FC = () => {
             onChange={(date) => setSelectedDate(date)}
             dateFormat="yyyy-MM-dd"
             placeholderText="Filter by date..."
+            className="w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          <input
+            type="number"
+            placeholder="Min Win Rate"
+            value={minWinRate !== null ? minWinRate : ""}
+            onChange={(e) => setMinWinRate(e.target.value ? parseFloat(e.target.value) : null)}
+            className="w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          <input
+            type="number"
+            placeholder="Max Win Rate"
+            value={maxWinRate !== null ? maxWinRate : ""}
+            onChange={(e) => setMaxWinRate(e.target.value ? parseFloat(e.target.value) : null)}
+            className="w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          <input
+            type="number"
+            placeholder="Min Profit/Loss"
+            value={minProfitLoss !== null ? minProfitLoss : ""}
+            onChange={(e) => setMinProfitLoss(e.target.value ? parseFloat(e.target.value) : null)}
+            className="w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          <input
+            type="number"
+            placeholder="Max Profit/Loss"
+            value={maxProfitLoss !== null ? maxProfitLoss : ""}
+            onChange={(e) => setMaxProfitLoss(e.target.value ? parseFloat(e.target.value) : null)}
             className="w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
         </div>

@@ -99,7 +99,7 @@ const CreateTrade: React.FC = () => {
 
   return (
     <section className="my-auto py-10 dark:bg-gray-900">
-      <div className="mx-auto max-w-6xl bg-white p-16">
+      <div className="max-w-8xl mx-auto bg-white p-16">
         <Formik
           initialValues={initialValues}
           validationSchema={tradeSchema}
@@ -110,7 +110,7 @@ const CreateTrade: React.FC = () => {
         >
           {({ errors, touched, isSubmitting, values }) => (
             <div className="flex flex-col lg:flex-row">
-              <Form className="flex-1 lg:pr-8">
+              <Form className="flex-1 lg:pr-12">
                 <div className="mb-6 grid gap-6 lg:grid-cols-2">
                   {[
                     {
@@ -504,7 +504,7 @@ const CreateTrade: React.FC = () => {
                   Submit
                 </button>
               </Form>
-              <div className="mt-6 flex-1 lg:ml-6 lg:mt-0">
+              <div className="mt-6 flex-1 lg:ml-12 lg:mt-0">
                 <div className="rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Trade Type Details
@@ -595,6 +595,80 @@ const CreateTrade: React.FC = () => {
                       </p>
                     </div>
                   )}
+                </div>
+                <div className="mt-6 rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    Input Impact Explanation
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Symbol:</strong> Identifies the asset being traded.
+                    Affects the market data used for calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Entry Price:</strong> The price at which the trade
+                    is entered. Affects the calculation of profit/loss.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Exit Price:</strong> The price at which the trade is
+                    exited. Affects the calculation of profit/loss.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Risk:</strong> The potential loss in the trade.
+                    Helps in determining the risk/reward ratio.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Reward:</strong> The potential gain in the trade.
+                    Helps in determining the risk/reward ratio.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Tags:</strong> Keywords associated with the trade.
+                    Useful for categorizing and filtering trades.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Trade Type:</strong> Determines the type of trade
+                    (stock, forex, crypto, option) and affects the applicable
+                    calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Entry Date:</strong> The date the trade was entered.
+                    Useful for tracking and analyzing trade duration.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Exit Date:</strong> The date the trade was exited.
+                    Useful for tracking and analyzing trade duration.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Quantity:</strong> The number of units traded.
+                    Affects the calculation of profit/loss.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Leverage:</strong> Used in crypto trades to amplify
+                    potential profit/loss.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Position Type:</strong> Indicates if the position is
+                    long or short, affecting profit/loss calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Option Type:</strong> Determines if the option is a
+                    call or put, affecting profit/loss calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Strike Price:</strong> The price at which the option
+                    can be exercised. Affects option profit/loss calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Option Premium:</strong> The cost of purchasing the
+                    option. Affects option profit/loss calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Units:</strong> The number of currency units traded
+                    in forex. Affects profit/loss calculations.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>USD Exchange Rate:</strong> Used in forex trades to
+                    convert profit/loss to USD.
+                  </p>
                 </div>
               </div>
             </div>
