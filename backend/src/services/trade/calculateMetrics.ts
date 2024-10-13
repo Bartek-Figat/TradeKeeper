@@ -48,7 +48,7 @@ export class CalculateTradeMetricsRepository {
       if (!["stock", "forex", "crypto", "option"].includes(newTrade.tradeType)) {
         throw new ApiError("Invalid trade type", 400);
       }
-
+  
       // Calculate profit/loss based on trade type
       let profitLoss = 0;
       switch (newTrade.tradeType) {
@@ -109,35 +109,38 @@ export class CalculateTradeMetricsRepository {
           }
           break;
         case "crypto":
-          if (
-            newTrade.quantity !== undefined &&
-            newTrade.leverage !== undefined
-          ) {
-            const baseProfitLoss =
-              (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
-            profitLoss = baseProfitLoss * newTrade.leverage;
-            if (newTrade.positionType === "short") {
-              profitLoss = -profitLoss; // Reverse profit/loss for short positions
+          if (newTrade.quantity !== undefined) {
+            if (newTrade.leverage !== undefined) {
+              const baseProfitLoss =
+                (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
+              profitLoss = baseProfitLoss * newTrade.leverage;
+              if (newTrade.positionType === "short") {
+                profitLoss = -profitLoss; // Reverse profit/loss for short positions
+              }
+            } else {
+              // Spot position calculation
+              profitLoss =
+                (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
             }
           }
           break;
       }
-
+  
       // Determine if the trade is a win or lose
       const tradeOutcome = profitLoss > 0 ? "win" : "lose";
-
+  
       // Add profitLoss and tradeOutcome to the newTrade object
       newTrade.profitLoss = profitLoss;
       newTrade.tradeOutcome = tradeOutcome; // Assuming tradeOutcome is a valid field in ICreateTrade
-
+  
       const result = await this.db.insertOne(newTrade);
       if (result.insertedId) {
         return {
-          _id: result.insertedId.toString(), 
-          ...newTrade, 
+          _id: result.insertedId.toString(),
+          ...newTrade,
           entryDate: newTrade.entryDate,
           exitDate: newTrade.exitDate,
-          userId: newTrade.userId, 
+          userId: newTrade.userId,
         };
       } else {
         throw new ApiError("Failed to insert trade", 400);
@@ -155,7 +158,9 @@ export class CalculateTradeMetricsRepository {
     try {
       if (
         updatedTradeData.tradeType &&
-        !["stock", "forex", "crypto", "option"].includes(updatedTradeData.tradeType)
+        !["stock", "forex", "crypto", "option"].includes(
+          updatedTradeData.tradeType
+        )
       ) {
         throw new ApiError("Invalid trade type", 400);
       }
@@ -182,12 +187,12 @@ export class CalculateTradeMetricsRepository {
         entryDate: updatedTrade.entryDate,
         exitDate: updatedTrade.exitDate,
         avgProfitLoss: updatedTrade.avgProfitLoss,
-
       };
     } catch (error) {
       console.error("Error updating trade:", error);
       throw new ApiError("Failed to update trade", 500);
-    }}
+    }
+  }
 
   async filterTrades(
     filter: TradeFilter,
@@ -415,19 +420,31 @@ export class CalculateTradeMetricsRepository {
       );
     }
     // New suggestions based on trade type and profit/loss
-    if (trade.tradeType === "option" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+    if (
+      trade.tradeType === "option" &&
+      trade.avgProfitLoss !== undefined &&
+      trade.avgProfitLoss < 0
+    ) {
       suggestions.push(
         "Review your option strategies, consider adjusting strike prices or premiums."
       );
     }
 
-    if (trade.tradeType === "forex" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+    if (
+      trade.tradeType === "forex" &&
+      trade.avgProfitLoss !== undefined &&
+      trade.avgProfitLoss < 0
+    ) {
       suggestions.push(
         "Consider analyzing currency pair trends and adjusting your entry/exit points."
       );
     }
 
-    if (trade.tradeType === "crypto" && trade.avgProfitLoss !== undefined && trade.avgProfitLoss < 0) {
+    if (
+      trade.tradeType === "crypto" &&
+      trade.avgProfitLoss !== undefined &&
+      trade.avgProfitLoss < 0
+    ) {
       suggestions.push(
         "Evaluate the impact of leverage and market volatility on your crypto trades."
       );

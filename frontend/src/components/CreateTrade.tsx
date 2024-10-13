@@ -505,10 +505,63 @@ const CreateTrade: React.FC = () => {
                 </button>
               </Form>
               <div className="mt-6 flex-1 lg:ml-12 lg:mt-0">
-                <div className="rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
+                <div className="rounded-lg bg-gray-100 p-6 shadow-lg dark:bg-gray-800">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Trade Type Details
                   </h3>
+                  {values.tradeType && (
+                    <div className="mt-6 rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Sample Transactions
+                      </h3>
+                      {values.tradeType === "stock" && (
+                        <div>
+                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Stock Example:</strong> Buy 100 shares of
+                            XYZ at $50, sell at $55. Profit/Loss = (55 - 50) *
+                            100 = $500.
+                          </p>
+                        </div>
+                      )}
+                      {values.tradeType === "forex" && (
+                        <div>
+                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Forex Example:</strong> Buy 10,000 units of
+                            EUR/USD at 1.10, sell at 1.15. Profit/Loss = (1.15 -
+                            1.10) * 10,000 = $500.
+                          </p>
+                        </div>
+                      )}
+                      {values.tradeType === "crypto" && (
+                        <div>
+                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Crypto Example:</strong> Buy 2 BTC at
+                            $30,000, sell at $35,000 with 2x leverage.
+                            Profit/Loss = (35,000 - 30,000) * 2 * 2 = $20,000.
+                          </p>
+                        </div>
+                      )}
+                      {values.tradeType === "crypto" && (
+                        <div>
+                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Crypto Spot Example:</strong> Buy 2 BTC at
+                            $30,000, sell at $35,000. Profit/Loss = (35,000 -
+                            30,000) * 2 = $10,000.
+                          </p>
+                        </div>
+                      )}
+                      {values.tradeType === "option" && (
+                        <div>
+                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Option Example:</strong> Buy a call option
+                            for 100 shares of XYZ with a strike price of $50 and
+                            a premium of $2. If the stock price rises to $55,
+                            Profit/Loss = (55 - 50 - 2) * 100 = $300.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {values.tradeType === "stock" && (
                     <div>
                       <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
@@ -549,6 +602,13 @@ const CreateTrade: React.FC = () => {
                         <strong>Position Type:</strong> A long position profits
                         from price increases, while a short position profits
                         from price decreases.
+                      </p>
+                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Spot Position Calculation:</strong> If leverage
+                        is not defined, it assumes a spot position and
+                        calculates the profit/loss as (Exit Price - Entry Price)
+                        * Quantity. This is the standard calculation for spot
+                        trades where no leverage is involved.
                       </p>
                     </div>
                   )}

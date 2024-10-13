@@ -11,6 +11,7 @@ export interface ITrade {
   reward: number;
   tags: string[];
   createdAt: Date;
+  // Add performance metrics
   winRate?: number;
   avgProfitLoss?: number;
   riskRewardRatio?: number;
