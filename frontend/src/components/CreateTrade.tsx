@@ -1,9 +1,9 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
-import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
-import { useCreateTradeMutation } from "../services/tradeApi"; // Adjust the path as necessary
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useCreateTradeMutation } from "../services/tradeApi";
 import { ICreateTrade } from "../services/type";
 
 const tradeSchema = yup.object().shape({
@@ -117,18 +117,13 @@ const CreateTrade: React.FC = () => {
             <div className="flex flex-col lg:flex-row">
               <Form className="flex-1 lg:pr-12">
                 <div className="mb-6 grid gap-6 lg:grid-cols-2">
+                  {/* Common Fields */}
                   {[
                     {
                       id: "symbol",
                       label: "Symbol",
                       type: "text",
                       description: "The ticker symbol of the asset.",
-                    },
-                    {
-                      id: "entryPrice",
-                      label: "Entry Price",
-                      type: "number",
-                      description: "The price at which the asset was bought.",
                     },
                     {
                       id: "exitPrice",
@@ -184,6 +179,8 @@ const CreateTrade: React.FC = () => {
                       </p>
                     </div>
                   ))}
+
+                  {/* Trade Type Field */}
                   <div>
                     <label
                       htmlFor="tradeType"
@@ -213,75 +210,37 @@ const CreateTrade: React.FC = () => {
                       )}
                     </ErrorMessage>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="entryDate"
-                      className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Entry Date
-                    </label>
-                    <Field
-                      type="date"
-                      id="entryDate"
-                      name="entryDate"
-                      className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                        errors.entryDate && touched.entryDate
-                          ? "border-red-600"
-                          : ""
-                      }`}
-                    />
-                    <ErrorMessage name="entryDate">
-                      {(msg) => (
-                        <div className="mt-1 text-sm text-red-600">{msg}</div>
-                      )}
-                    </ErrorMessage>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="exitDate"
-                      className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Exit Date
-                    </label>
-                    <Field
-                      type="date"
-                      id="exitDate"
-                      name="exitDate"
-                      className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                        errors.exitDate && touched.exitDate
-                          ? "border-red-600"
-                          : ""
-                      }`}
-                    />
-                    <ErrorMessage name="exitDate">
-                      {(msg) => (
-                        <div className="mt-1 text-sm text-red-600">{msg}</div>
-                      )}
-                    </ErrorMessage>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="fees"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      Potential Fees
-                    </label>
-                    <Field
-                      type="number"
-                      name="fees"
-                      className={`mt-1 block w-full border ${
-                        errors.fees && touched.fees
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      } rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300`}
-                      placeholder="Enter potential fees"
-                    />
-                    <ErrorMessage
-                      name="fees"
-                      component="div"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
+
+                  {/* Conditional Fields */}
+                  {values.tradeType !== "option" && (
+                    <div>
+                      <label
+                        htmlFor="entryPrice"
+                        className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        Entry Price
+                      </label>
+                      <Field
+                        type="number"
+                        id="entryPrice"
+                        name="entryPrice"
+                        className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                          errors.entryPrice && touched.entryPrice
+                            ? "border-red-600"
+                            : ""
+                        }`}
+                      />
+                      <ErrorMessage name="entryPrice">
+                        {(msg) => (
+                          <div className="mt-1 text-sm text-red-600">{msg}</div>
+                        )}
+                      </ErrorMessage>
+                      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        The price at which the asset was bought.
+                      </p>
+                    </div>
+                  )}
+
                   {["stock", "crypto", "crypto spot"].includes(
                     values.tradeType,
                   ) && (
@@ -312,6 +271,7 @@ const CreateTrade: React.FC = () => {
                       </p>
                     </div>
                   )}
+
                   {values.tradeType === "crypto" && (
                     <>
                       <div>
@@ -376,7 +336,7 @@ const CreateTrade: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {/* =========================================================== */}
+
                   {values.tradeType === "option" && (
                     <>
                       <div>
@@ -410,7 +370,6 @@ const CreateTrade: React.FC = () => {
                           The type of option: Call or Put.
                         </p>
                       </div>
-
                       <div>
                         <label
                           htmlFor="strikePrice"
@@ -439,7 +398,6 @@ const CreateTrade: React.FC = () => {
                           The price at which the option can be exercised.
                         </p>
                       </div>
-
                       <div>
                         <label
                           htmlFor="optionPremium"
@@ -468,7 +426,6 @@ const CreateTrade: React.FC = () => {
                           The cost of purchasing the option.
                         </p>
                       </div>
-
                       <div>
                         <label
                           htmlFor="quantity"
@@ -499,7 +456,7 @@ const CreateTrade: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {/* =========================================================== */}
+
                   {values.tradeType === "forex" && (
                     <>
                       <div>
@@ -845,6 +802,7 @@ const CreateTrade: React.FC = () => {
             </div>
           )}
         </Formik>
+        // ... existing code ...
       </div>
     </section>
   );

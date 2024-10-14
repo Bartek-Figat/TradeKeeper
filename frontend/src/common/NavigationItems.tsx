@@ -31,7 +31,7 @@ export const navItems = [
     label: "Create Trade",
   },
   {
-    to: "/dashboard/tutorials",
+    to: "/dashboard/tutorial",
     icon: <InformationCircleIcon />,
     label: "Tutorials",
   },

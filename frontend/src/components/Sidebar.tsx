@@ -11,7 +11,7 @@ const SidebarItem: React.FC<{
     <NavLink
       to={path}
       className={({ isActive }) =>
-        `relative flex h-11 flex-row items-center border-l-4 border-transparent pr-6 text-gray-200 hover:border-indigo-500 hover:bg-[#333b5166] hover:text-gray-200 focus:outline-none ${
+        `relative flex h-14 flex-row items-center border-l-4 border-transparent pr-6 text-gray-200 hover:border-indigo-500 hover:bg-[#333b5166] hover:text-gray-200 focus:outline-none ${
           isActive ? "border-indigo-500" : ""
         }`
       }
