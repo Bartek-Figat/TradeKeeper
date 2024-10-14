@@ -490,11 +490,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"in": "path",
@@ -525,11 +521,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			}
 		},
@@ -548,11 +540,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -579,11 +567,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"in": "path",
@@ -624,11 +608,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"in": "query",
@@ -666,11 +646,7 @@
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"in": "path",

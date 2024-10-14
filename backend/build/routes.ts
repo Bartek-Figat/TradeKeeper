@@ -239,7 +239,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/custom-trades/get-trade/:tradeId',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getTradeById)),
 
@@ -265,7 +264,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/custom-trades/get-all-trades',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getAllTrades)),
 
@@ -290,7 +288,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/custom-trades/create',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.createTrade)),
 
@@ -316,7 +313,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/custom-trades/update-existing-trade/:tradeId',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.updateTrade)),
 
@@ -343,7 +339,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/custom-trades/filter-trades',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.filterTrades)),
 
@@ -371,7 +366,6 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/custom-trades/company/:symbol',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
             ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.getCompanyProfile)),
 

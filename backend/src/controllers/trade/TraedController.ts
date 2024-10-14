@@ -6,7 +6,6 @@ import {
   Route,
   Path,
   Body,
-  Security,
   Query,
   Request,
 } from "tsoa";
@@ -14,7 +13,10 @@ import { CompanyProfileTradeRepository } from "../../services/trade/tradeService
 import { Trade } from "../../utils/tradeTypes";
 import { CalculateTradeMetricsRepository } from "../../services/trade/calculateMetrics";
 import { TradeDto } from "../../services/trade/trade.dto";
-import { TradeFilter } from "../../services/trade/trade.interface";
+import {
+  ICreateTrade,
+  TradeFilter,
+} from "../../services/trade/trade.interface";
 
 @Route("custom-trades")
 export class CustomTradeController extends Controller {
@@ -23,7 +25,7 @@ export class CustomTradeController extends Controller {
   private calculateTradeMetricsRepository: CalculateTradeMetricsRepository =
     new CalculateTradeMetricsRepository();
 
-  @Security("jwt")
+  //@Security("jwt")
   @Get("/get-trade/{tradeId}")
   public async getTradeById(@Path() tradeId: string) {
     try {
@@ -34,13 +36,13 @@ export class CustomTradeController extends Controller {
     }
   }
 
-  @Security("jwt")
+  // @Security("jwt")
   @Get("/get-all-trades")
   public async getAllTrades(): Promise<TradeDto[]> {
     return this.calculateTradeMetricsRepository.getAllTrades();
   }
 
-  @Security("jwt")
+  //  @Security("jwt")
   @Post("/create")
   public async createTrade(@Body() newTrade: any) {
     try {
@@ -54,7 +56,7 @@ export class CustomTradeController extends Controller {
     }
   }
 
-  @Security("jwt")
+  //@Security("jwt")
   @Put("/update-existing-trade/{tradeId}")
   public async updateTrade(
     @Path() tradeId: string,
@@ -62,11 +64,11 @@ export class CustomTradeController extends Controller {
   ) {
     return this.calculateTradeMetricsRepository.updateTrade(
       tradeId,
-      updatedTrade
+      updatedTrade as Partial<ICreateTrade>
     );
   }
 
-  @Security("jwt")
+  //@Security("jwt")
   @Get("/filter-trades")
   public async filterTrades(
     @Request() filter: TradeFilter,
@@ -85,7 +87,7 @@ export class CustomTradeController extends Controller {
     }
   }
 
-  @Security("jwt")
+  //@Security("jwt")
   @Get("/company/{symbol}")
   public async getCompanyProfile(@Path() symbol: string): Promise<any> {
     return this.companyProfileTradeRepository.getCompanyProfile(symbol);

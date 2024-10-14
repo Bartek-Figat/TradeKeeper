@@ -1,32 +1,10 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-
-interface ICreateTrade {
-  riskPercentage?: number;
-  costBasis?: number;
-  profitLoss?: number;
-  symbol: string;
-  entryPrice: number;
-  exitPrice: number;
-  risk: number;
-  reward: number;
-  tags: string[];
-  createdAt: Date;
-  stopLossLevel?: number;
-  positionSize?: number;
-  tradeType: "stock" | "forex" | "crypto" | "option";
-  entryDate: Date;
-  exitDate: Date;
-  quantity?: number;
-  optionType?: "call" | "put";
-  strikePrice?: number;
-  optionPremium?: number;
-  units?: number;
-  usdExchangeRate?: number;
-  leverage?: number;
-  positionType?: "long" | "short";
-}
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
+import { useCreateTradeMutation } from "../services/tradeApi"; // Adjust the path as necessary
+import { ICreateTrade } from "../services/type";
 
 const tradeSchema = yup.object().shape({
   symbol: yup
@@ -42,7 +20,10 @@ const tradeSchema = yup.object().shape({
   entryDate: yup.date().required("Entry Date is required"),
   exitDate: yup.date().required("Exit Date is required"),
   quantity: yup.number().when("tradeType", {
-    is: (tradeType: string) => tradeType === "stock" || tradeType === "crypto",
+    is: (tradeType: string) =>
+      tradeType === "stock" ||
+      tradeType === "crypto" ||
+      tradeType === "crypto spot",
     then: (schema) =>
       schema.required("Quantity is required for stock and crypto"),
   }),
@@ -81,34 +62,58 @@ const tradeSchema = yup.object().shape({
     .min(0, "Risk percentage must be at least 0")
     .max(100, "Risk percentage cannot exceed 100")
     .required("Risk percentage is required"),
+  fees: yup
+    .number()
+    .min(0, "Fees must be at least 0")
+    .required("Fees are required"), // Validation for fees
 });
 
 const CreateTrade: React.FC = () => {
+  const [createTrade, { isLoading }] = useCreateTradeMutation();
+
   const initialValues: ICreateTrade = {
     symbol: "",
     entryPrice: 0,
     exitPrice: 0,
     risk: 0,
+    createdAt: new Date(),
     reward: 0,
     tags: [],
-    createdAt: new Date(),
     tradeType: "stock",
-    entryDate: new Date(),
-    exitDate: new Date(),
+    entryDate: new Date(), // Use Date object directly
+    exitDate: new Date(), // Use Date object directly
+    quantity: 0,
+    optionType: undefined,
+    strikePrice: 0,
+    optionPremium: 0,
+    units: 0,
+    usdExchangeRate: 0,
+    leverage: 0,
+    positionType: undefined,
+    riskPercentage: 0,
+    fees: 0,
   };
 
   return (
     <section className="my-auto py-10 dark:bg-gray-900">
       <div className="max-w-8xl mx-auto bg-white p-16">
+        <ToastContainer />
         <Formik
           initialValues={initialValues}
           validationSchema={tradeSchema}
-          onSubmit={(values, { resetForm }) => {
-            alert(`Trade Created: ${JSON.stringify(values, null, 2)}`);
-            resetForm();
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              await createTrade(values).unwrap();
+              toast.success("Trade Created Successfully");
+              resetForm();
+            } catch (err) {
+              console.error("Failed to create trade:", err);
+              toast.error("Failed to create trade");
+              resetForm();
+            }
           }}
         >
-          {({ errors, touched, isSubmitting, values }) => (
+          {({ errors, touched, values }) => (
             <div className="flex flex-col lg:flex-row">
               <Form className="flex-1 lg:pr-12">
                 <div className="mb-6 grid gap-6 lg:grid-cols-2">
@@ -199,6 +204,7 @@ const CreateTrade: React.FC = () => {
                       <option value="stock">Stock</option>
                       <option value="forex">Forex</option>
                       <option value="crypto">Crypto</option>
+                      <option value="crypto spot">Crypto Spot</option>
                       <option value="option">Option</option>
                     </Field>
                     <ErrorMessage name="tradeType">
@@ -253,7 +259,32 @@ const CreateTrade: React.FC = () => {
                       )}
                     </ErrorMessage>
                   </div>
-                  {["stock", "crypto"].includes(values.tradeType) && (
+                  <div>
+                    <label
+                      htmlFor="fees"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Potential Fees
+                    </label>
+                    <Field
+                      type="number"
+                      name="fees"
+                      className={`mt-1 block w-full border ${
+                        errors.fees && touched.fees
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300`}
+                      placeholder="Enter potential fees"
+                    />
+                    <ErrorMessage
+                      name="fees"
+                      component="div"
+                      className="text-sm text-red-500"
+                    />
+                  </div>
+                  {["stock", "crypto", "crypto spot"].includes(
+                    values.tradeType,
+                  ) && (
                     <div>
                       <label
                         htmlFor="quantity"
@@ -330,6 +361,7 @@ const CreateTrade: React.FC = () => {
                         >
                           <option value="long">Long</option>
                           <option value="short">Short</option>
+                          <option value="spot">Spot</option>
                         </Field>
                         <ErrorMessage name="positionType">
                           {(msg) => (
@@ -339,7 +371,7 @@ const CreateTrade: React.FC = () => {
                           )}
                         </ErrorMessage>
                         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          The position type: Long or Short.
+                          The position type: Long, Short, or Spot.
                         </p>
                       </div>
                     </>
@@ -498,25 +530,25 @@ const CreateTrade: React.FC = () => {
                 </div>
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
-                  disabled={isSubmitting}
                 >
-                  Submit
+                  {isLoading ? "Creating..." : "Create Trade"}
                 </button>
               </Form>
               <div className="mt-6 flex-1 lg:ml-12 lg:mt-0">
-                <div className="rounded-lg bg-gray-100 p-6 shadow-lg dark:bg-gray-800">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Trade Type Details
+                <div className="rounded-lg bg-gradient-to-r from-blue-100 to-blue-200 p-6 shadow-lg dark:bg-gray-800">
+                  <h3 className="text-2xl font-bold text-blue-900 dark:text-white">
+                    Trade Details
                   </h3>
                   {values.tradeType && (
-                    <div className="mt-6 rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <div className="mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 p-6 shadow-md dark:bg-gray-800">
+                      <h3 className="text-xl font-semibold text-blue-800 dark:text-white">
                         Sample Transactions
                       </h3>
                       {values.tradeType === "stock" && (
                         <div>
-                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                             <strong>Stock Example:</strong> Buy 100 shares of
                             XYZ at $50, sell at $55. Profit/Loss = (55 - 50) *
                             100 = $500.
@@ -525,7 +557,7 @@ const CreateTrade: React.FC = () => {
                       )}
                       {values.tradeType === "forex" && (
                         <div>
-                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                             <strong>Forex Example:</strong> Buy 10,000 units of
                             EUR/USD at 1.10, sell at 1.15. Profit/Loss = (1.15 -
                             1.10) * 10,000 = $500.
@@ -534,16 +566,16 @@ const CreateTrade: React.FC = () => {
                       )}
                       {values.tradeType === "crypto" && (
                         <div>
-                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                             <strong>Crypto Example:</strong> Buy 2 BTC at
                             $30,000, sell at $35,000 with 2x leverage.
                             Profit/Loss = (35,000 - 30,000) * 2 * 2 = $20,000.
                           </p>
                         </div>
                       )}
-                      {values.tradeType === "crypto" && (
+                      {values.tradeType === "crypto spot" && (
                         <div>
-                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                             <strong>Crypto Spot Example:</strong> Buy 2 BTC at
                             $30,000, sell at $35,000. Profit/Loss = (35,000 -
                             30,000) * 2 = $10,000.
@@ -552,7 +584,7 @@ const CreateTrade: React.FC = () => {
                       )}
                       {values.tradeType === "option" && (
                         <div>
-                          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                             <strong>Option Example:</strong> Buy a call option
                             for 100 shares of XYZ with a strike price of $50 and
                             a premium of $2. If the stock price rises to $55,
@@ -564,16 +596,16 @@ const CreateTrade: React.FC = () => {
                   )}
                   {values.tradeType === "stock" && (
                     <div>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         Stock trades involve buying and selling shares of a
                         company. The quantity represents the number of shares
                         traded.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Calculation:</strong> Profit/Loss = (Exit Price
                         - Entry Price) * Quantity
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         This calculation determines the total profit or loss
                         from the trade by multiplying the difference between the
                         exit and entry prices by the number of shares traded.
@@ -583,27 +615,27 @@ const CreateTrade: React.FC = () => {
 
                   {values.tradeType === "crypto" && (
                     <div>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         Crypto trades involve buying and selling digital
                         currencies. The quantity represents the amount of
                         cryptocurrency traded.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Calculation:</strong> Profit/Loss = (Exit Price
                         - Entry Price) * Quantity * Leverage
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         Leverage amplifies the potential profit or loss by
                         multiplying the base profit/loss with the leverage
                         factor. For short positions, the profit/loss is
                         reversed.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Position Type:</strong> A long position profits
                         from price increases, while a short position profits
                         from price decreases.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Spot Position Calculation:</strong> If leverage
                         is not defined, it assumes a spot position and
                         calculates the profit/loss as (Exit Price - Entry Price)
@@ -613,23 +645,43 @@ const CreateTrade: React.FC = () => {
                     </div>
                   )}
 
+                  {values.tradeType === "crypto spot" && (
+                    <div>
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
+                        Crypto spot trades involve buying and selling digital
+                        currencies without leverage. The quantity represents the
+                        amount of cryptocurrency traded.
+                      </p>
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
+                        <strong>Calculation:</strong> Profit/Loss = (Exit Price
+                        - Entry Price) * Quantity
+                      </p>
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
+                        This calculation determines the total profit or loss
+                        from the trade by multiplying the difference between the
+                        exit and entry prices by the amount of cryptocurrency
+                        traded.
+                      </p>
+                    </div>
+                  )}
+
                   {values.tradeType === "option" && (
                     <div>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         Options are contracts that give the buyer the right, but
                         not the obligation, to buy or sell an asset at a set
                         price on or before a certain date.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Calculation:</strong> Profit/Loss = (Max(0, Exit
                         Price - Strike Price) - Option Premium) for Call Options
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Calculation:</strong> Profit/Loss = (Max(0,
                         Strike Price - Exit Price) - Option Premium) for Put
                         Options
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         The profit/loss for options is calculated based on the
                         option type (call or put) and involves the strike price
                         and option premium.
@@ -639,16 +691,16 @@ const CreateTrade: React.FC = () => {
 
                   {values.tradeType === "forex" && (
                     <div>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         Forex trades involve exchanging one currency for
                         another. The units represent the amount of currency
                         being traded.
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         <strong>Calculation:</strong> Profit/Loss = (Exit Price
                         - Entry Price) * Units * USD Exchange Rate
                       </p>
-                      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         This calculation accounts for the currency exchange
                         rate, multiplying the price difference by the number of
                         units and the USD exchange rate.
@@ -656,76 +708,76 @@ const CreateTrade: React.FC = () => {
                     </div>
                   )}
                 </div>
-                <div className="mt-6 rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Input Impact Explanation
+                <div className="mt-6 rounded-lg bg-gradient-to-r from-blue-100 to-blue-200 p-6 shadow-md dark:bg-gray-800">
+                  <h3 className="text-2xl font-bold text-blue-900 dark:text-white">
+                    Input Explanation
                   </h3>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Symbol:</strong> Identifies the asset being traded.
                     Affects the market data used for calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Entry Price:</strong> The price at which the trade
                     is entered. Affects the calculation of profit/loss.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Exit Price:</strong> The price at which the trade is
                     exited. Affects the calculation of profit/loss.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Risk:</strong> The potential loss in the trade.
                     Helps in determining the risk/reward ratio.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Reward:</strong> The potential gain in the trade.
                     Helps in determining the risk/reward ratio.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Tags:</strong> Keywords associated with the trade.
                     Useful for categorizing and filtering trades.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Trade Type:</strong> Determines the type of trade
-                    (stock, forex, crypto, option) and affects the applicable
-                    calculations.
+                    (stock, forex, crypto, option, crypto spot) and affects the
+                    applicable calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Entry Date:</strong> The date the trade was entered.
                     Useful for tracking and analyzing trade duration.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Exit Date:</strong> The date the trade was exited.
                     Useful for tracking and analyzing trade duration.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Quantity:</strong> The number of units traded.
                     Affects the calculation of profit/loss.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Leverage:</strong> Used in crypto trades to amplify
                     potential profit/loss.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Position Type:</strong> Indicates if the position is
-                    long or short, affecting profit/loss calculations.
+                    long, short, or spot, affecting profit/loss calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Option Type:</strong> Determines if the option is a
                     call or put, affecting profit/loss calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Strike Price:</strong> The price at which the option
                     can be exercised. Affects option profit/loss calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Option Premium:</strong> The cost of purchasing the
                     option. Affects option profit/loss calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>Units:</strong> The number of currency units traded
                     in forex. Affects profit/loss calculations.
                   </p>
-                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                     <strong>USD Exchange Rate:</strong> Used in forex trades to
                     convert profit/loss to USD.
                   </p>

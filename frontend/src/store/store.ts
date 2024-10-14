@@ -1,18 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../slice/authSlice"; // Import the authReducer
+import authReducer from "../slice/authSlice";
 import scrollReducer from "../slice/scrollSlice";
 import { userApi } from "../services/apiCall";
-import darkModeReducer from '../slice/darkModeSlice';
+import { tradeApi } from "../services/tradeApi"; // Ensure this import is correct
+import darkModeReducer from "../slice/darkModeSlice";
 
 export const store = configureStore({
   reducer: {
     darkMode: darkModeReducer,
-    auth: authReducer, 
+    auth: authReducer,
     scroll: scrollReducer,
+    [tradeApi.reducerPath]: tradeApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(userApi.middleware);
+    return getDefaultMiddleware()
+      .concat(userApi.middleware)
+      .concat(tradeApi.middleware);
   },
 });
 

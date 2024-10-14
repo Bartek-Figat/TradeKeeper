@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { ITrade, ICreateTrade, TradeFilter } from "./trade.interface";
 import { TradeDto } from "./trade.dto";
 import { Database } from "../../config/db/database";
@@ -45,17 +46,55 @@ export class CalculateTradeMetricsRepository {
 
   async createTrade(newTrade: ICreateTrade): Promise<TradeDto> {
     try {
-      if (!["stock", "forex", "crypto", "option"].includes(newTrade.tradeType)) {
+      if (!["stock", "forex", "crypto", "option", "crypto spot"].includes(newTrade.tradeType)) {
         throw new ApiError("Invalid trade type", 400);
       }
   
+      // Validate fields based on trade type
+      switch (newTrade.tradeType) {
+        case "stock":
+          if (newTrade.quantity === undefined) {
+            throw new ApiError("Quantity is required for stock trades", 400);
+          }
+          break;
+        case "option":
+          if (
+            newTrade.optionType === undefined ||
+            newTrade.strikePrice === undefined ||
+            newTrade.optionPremium === undefined ||
+            newTrade.quantity === undefined
+          ) {
+            throw new ApiError("Option type, strike price, option premium, and quantity are required for option trades", 400);
+          }
+          break;
+        case "forex":
+          if (
+            newTrade.units === undefined ||
+            newTrade.usdExchangeRate === undefined
+          ) {
+            throw new ApiError("Units and USD exchange rate are required for forex trades", 400);
+          }
+          break;
+        case "crypto":
+          if (newTrade.quantity === undefined) {
+            throw new ApiError("Quantity is required for crypto trades", 400);
+          }
+          break;
+        case "crypto spot":
+          if (newTrade.quantity === undefined) {
+            throw new ApiError("Quantity is required for crypto spot trades", 400);
+          }
+          break;
+      }
+  
       // Calculate profit/loss based on trade type
-      let profitLoss = 0;
+      let profitLoss = new Decimal(0);
       switch (newTrade.tradeType) {
         case "stock":
           if (newTrade.quantity !== undefined) {
-            profitLoss =
-              (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
+            profitLoss = new Decimal(newTrade.exitPrice)
+              .minus(newTrade.entryPrice)
+              .times(newTrade.quantity);
           }
           break;
         case "option":
@@ -65,31 +104,23 @@ export class CalculateTradeMetricsRepository {
             newTrade.optionPremium !== undefined
           ) {
             if (newTrade.optionType === "call") {
-              const exerciseProfit =
-                newTrade.quantity !== undefined
-                  ? (newTrade.exitPrice - newTrade.strikePrice) *
-                      newTrade.quantity -
-                    newTrade.optionPremium
-                  : 0;
-              const sellProfit =
-                newTrade.quantity !== undefined
-                  ? (newTrade.exitPrice - newTrade.optionPremium) *
-                    newTrade.quantity
-                  : 0;
-              profitLoss = Math.max(exerciseProfit, sellProfit);
+              const exerciseProfit = new Decimal(newTrade.exitPrice || 0)
+                .minus(newTrade.strikePrice || 0)
+                .times(newTrade.quantity || 0)
+                .minus(newTrade.optionPremium || 0);
+              const sellProfit = new Decimal(newTrade.exitPrice || 0)
+                .minus(newTrade.optionPremium || 0)
+                .times(newTrade.quantity || 0);
+              profitLoss = Decimal.max(exerciseProfit, sellProfit);
             } else if (newTrade.optionType === "put") {
-              const exerciseProfit =
-                newTrade.quantity !== undefined
-                  ? (newTrade.strikePrice - newTrade.exitPrice) *
-                      newTrade.quantity -
-                    newTrade.optionPremium
-                  : 0;
-              const sellProfit =
-                newTrade.quantity !== undefined
-                  ? (newTrade.exitPrice - newTrade.optionPremium) *
-                    newTrade.quantity
-                  : 0;
-              profitLoss = Math.max(exerciseProfit, sellProfit);
+              const exerciseProfit = new Decimal(newTrade.strikePrice || 0)
+                .minus(newTrade.exitPrice || 0)
+                .times(newTrade.quantity || 0)
+                .minus(newTrade.optionPremium || 0);
+              const sellProfit = new Decimal(newTrade.exitPrice || 0)
+                .minus(newTrade.optionPremium || 0)
+                .times(newTrade.quantity || 0);
+              profitLoss = Decimal.max(exerciseProfit, sellProfit);
             }
           }
           break;
@@ -98,39 +129,50 @@ export class CalculateTradeMetricsRepository {
             newTrade.units !== undefined &&
             newTrade.usdExchangeRate !== undefined
           ) {
-            const nominalValue = newTrade.units * newTrade.usdExchangeRate;
-            if (newTrade.positionType === "buy") {
-              profitLoss =
-                (newTrade.exitPrice - newTrade.entryPrice) * nominalValue;
-            } else if (newTrade.positionType === "sell") {
-              profitLoss =
-                (newTrade.entryPrice - newTrade.exitPrice) * nominalValue;
+            const nominalValue = new Decimal(newTrade.units).times(newTrade.usdExchangeRate);
+            if (newTrade.positionType === "long") {
+              profitLoss = new Decimal(newTrade.exitPrice)
+                .minus(newTrade.entryPrice)
+                .times(nominalValue);
+            } else if (newTrade.positionType === "short") {
+              profitLoss = new Decimal(newTrade.entryPrice)
+                .minus(newTrade.exitPrice)
+                .times(nominalValue);
             }
           }
           break;
         case "crypto":
+        case "crypto spot":
           if (newTrade.quantity !== undefined) {
-            if (newTrade.leverage !== undefined) {
-              const baseProfitLoss =
-                (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
-              profitLoss = baseProfitLoss * newTrade.leverage;
+            const baseProfitLoss = new Decimal(newTrade.exitPrice)
+              .minus(newTrade.entryPrice)
+              .times(newTrade.quantity);
+            if (newTrade.leverage !== undefined && newTrade.tradeType === "crypto") {
+              profitLoss = baseProfitLoss.times(newTrade.leverage);
               if (newTrade.positionType === "short") {
-                profitLoss = -profitLoss; // Reverse profit/loss for short positions
+                profitLoss = profitLoss.negated(); // Reverse profit/loss for short positions
               }
             } else {
               // Spot position calculation
-              profitLoss =
-                (newTrade.exitPrice - newTrade.entryPrice) * newTrade.quantity;
+              profitLoss = baseProfitLoss;
             }
           }
           break;
       }
   
+      // Subtract fees if they exist
+      if (newTrade.fees !== undefined) {
+        profitLoss = profitLoss.minus(newTrade.fees);
+      }
+  
+      // Round profitLoss to two decimal places
+      profitLoss = profitLoss.toDecimalPlaces(2);
+  
       // Determine if the trade is a win or lose
-      const tradeOutcome = profitLoss > 0 ? "win" : "lose";
+      const tradeOutcome = profitLoss.gt(0) ? "win" : "lose";
   
       // Add profitLoss and tradeOutcome to the newTrade object
-      newTrade.profitLoss = profitLoss;
+      newTrade.profitLoss = profitLoss.toNumber();
       newTrade.tradeOutcome = tradeOutcome; // Assuming tradeOutcome is a valid field in ICreateTrade
   
       const result = await this.db.insertOne(newTrade);
@@ -356,12 +398,15 @@ export class CalculateTradeMetricsRepository {
   private calculateAvgHoldingPeriod(trades: ITrade[]): number {
     const totalHoldingPeriod = trades.reduce((acc, trade) => {
       if (trade.entryDate && trade.exitDate) {
-        return acc + (trade.exitDate.getTime() - trade.entryDate.getTime());
+        const entryDate = new Date(trade.entryDate);
+        const exitDate = new Date(trade.exitDate);
+        return acc + (exitDate.getTime() - entryDate.getTime());
       }
       return acc;
     }, 0);
     return trades.length ? totalHoldingPeriod / trades.length : 0;
-  }
+}
+// ... existing code ...
 
   private suggestImprovements(trade: ITrade): string[] {
     const suggestions: string[] = [];
