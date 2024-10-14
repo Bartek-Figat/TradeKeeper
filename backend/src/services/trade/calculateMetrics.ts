@@ -46,10 +46,14 @@ export class CalculateTradeMetricsRepository {
 
   async createTrade(newTrade: ICreateTrade): Promise<TradeDto> {
     try {
-      if (!["stock", "forex", "crypto", "option", "crypto spot"].includes(newTrade.tradeType)) {
+      if (
+        !["stock", "forex", "crypto", "option", "crypto spot"].includes(
+          newTrade.tradeType
+        )
+      ) {
         throw new ApiError("Invalid trade type", 400);
       }
-  
+
       // Validate fields based on trade type
       switch (newTrade.tradeType) {
         case "stock":
@@ -64,7 +68,10 @@ export class CalculateTradeMetricsRepository {
             newTrade.optionPremium === undefined ||
             newTrade.quantity === undefined
           ) {
-            throw new ApiError("Option type, strike price, option premium, and quantity are required for option trades", 400);
+            throw new ApiError(
+              "Option type, strike price, option premium, and quantity are required for option trades",
+              400
+            );
           }
           break;
         case "forex":
@@ -72,7 +79,10 @@ export class CalculateTradeMetricsRepository {
             newTrade.units === undefined ||
             newTrade.usdExchangeRate === undefined
           ) {
-            throw new ApiError("Units and USD exchange rate are required for forex trades", 400);
+            throw new ApiError(
+              "Units and USD exchange rate are required for forex trades",
+              400
+            );
           }
           break;
         case "crypto":
@@ -82,11 +92,14 @@ export class CalculateTradeMetricsRepository {
           break;
         case "crypto spot":
           if (newTrade.quantity === undefined) {
-            throw new ApiError("Quantity is required for crypto spot trades", 400);
+            throw new ApiError(
+              "Quantity is required for crypto spot trades",
+              400
+            );
           }
           break;
       }
-  
+
       // Calculate profit/loss based on trade type
       let profitLoss = new Decimal(0);
       switch (newTrade.tradeType) {
@@ -101,26 +114,26 @@ export class CalculateTradeMetricsRepository {
           if (
             newTrade.optionType &&
             newTrade.strikePrice !== undefined &&
-            newTrade.optionPremium !== undefined
+            newTrade.optionPremium !== undefined &&
+            newTrade.quantity !== undefined
           ) {
+            const stockPriceAtExpiration = new Decimal(newTrade.exitPrice || 0);
+            const strikePrice = new Decimal(newTrade.strikePrice);
+            const optionPremium = new Decimal(newTrade.optionPremium);
+            const quantity = new Decimal(newTrade.quantity);
+
             if (newTrade.optionType === "call") {
-              const exerciseProfit = new Decimal(newTrade.exitPrice || 0)
-                .minus(newTrade.strikePrice || 0)
-                .times(newTrade.quantity || 0)
-                .minus(newTrade.optionPremium || 0);
-              const sellProfit = new Decimal(newTrade.exitPrice || 0)
-                .minus(newTrade.optionPremium || 0)
-                .times(newTrade.quantity || 0);
-              profitLoss = Decimal.max(exerciseProfit, sellProfit);
+              // Call option profit formula
+              profitLoss = stockPriceAtExpiration
+                .minus(strikePrice)
+                .minus(optionPremium)
+                .times(quantity);
             } else if (newTrade.optionType === "put") {
-              const exerciseProfit = new Decimal(newTrade.strikePrice || 0)
-                .minus(newTrade.exitPrice || 0)
-                .times(newTrade.quantity || 0)
-                .minus(newTrade.optionPremium || 0);
-              const sellProfit = new Decimal(newTrade.exitPrice || 0)
-                .minus(newTrade.optionPremium || 0)
-                .times(newTrade.quantity || 0);
-              profitLoss = Decimal.max(exerciseProfit, sellProfit);
+              // Put option profit formula
+              profitLoss = strikePrice
+                .minus(stockPriceAtExpiration)
+                .minus(optionPremium)
+                .times(quantity);
             }
           }
           break;
@@ -129,7 +142,9 @@ export class CalculateTradeMetricsRepository {
             newTrade.units !== undefined &&
             newTrade.usdExchangeRate !== undefined
           ) {
-            const nominalValue = new Decimal(newTrade.units).times(newTrade.usdExchangeRate);
+            const nominalValue = new Decimal(newTrade.units).times(
+              newTrade.usdExchangeRate
+            );
             if (newTrade.positionType === "long") {
               profitLoss = new Decimal(newTrade.exitPrice)
                 .minus(newTrade.entryPrice)
@@ -147,7 +162,10 @@ export class CalculateTradeMetricsRepository {
             const baseProfitLoss = new Decimal(newTrade.exitPrice)
               .minus(newTrade.entryPrice)
               .times(newTrade.quantity);
-            if (newTrade.leverage !== undefined && newTrade.tradeType === "crypto") {
+            if (
+              newTrade.leverage !== undefined &&
+              newTrade.tradeType === "crypto"
+            ) {
               profitLoss = baseProfitLoss.times(newTrade.leverage);
               if (newTrade.positionType === "short") {
                 profitLoss = profitLoss.negated(); // Reverse profit/loss for short positions
@@ -159,22 +177,22 @@ export class CalculateTradeMetricsRepository {
           }
           break;
       }
-  
+
       // Subtract fees if they exist
       if (newTrade.fees !== undefined) {
         profitLoss = profitLoss.minus(newTrade.fees);
       }
-  
+
       // Round profitLoss to two decimal places
       profitLoss = profitLoss.toDecimalPlaces(2);
-  
+
       // Determine if the trade is a win or lose
       const tradeOutcome = profitLoss.gt(0) ? "win" : "lose";
-  
+
       // Add profitLoss and tradeOutcome to the newTrade object
       newTrade.profitLoss = profitLoss.toNumber();
       newTrade.tradeOutcome = tradeOutcome; // Assuming tradeOutcome is a valid field in ICreateTrade
-  
+
       const result = await this.db.insertOne(newTrade);
       if (result.insertedId) {
         return {
@@ -356,7 +374,7 @@ export class CalculateTradeMetricsRepository {
         .map((r) => Math.pow(r - avgReturn, 2))
         .reduce((acc, val) => acc + val, 0) / returns.length
     );
-    const riskFreeRate = 0.01; // Example risk-free rate
+    const riskFreeRate = 0.01;
     return stdDev !== 0 ? (avgReturn - riskFreeRate) / stdDev : 0;
   }
 
@@ -405,8 +423,7 @@ export class CalculateTradeMetricsRepository {
       return acc;
     }, 0);
     return trades.length ? totalHoldingPeriod / trades.length : 0;
-}
-// ... existing code ...
+  }
 
   private suggestImprovements(trade: ITrade): string[] {
     const suggestions: string[] = [];

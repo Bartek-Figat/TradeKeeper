@@ -376,6 +376,7 @@ const CreateTrade: React.FC = () => {
                       </div>
                     </>
                   )}
+                  {/* =========================================================== */}
                   {values.tradeType === "option" && (
                     <>
                       <div>
@@ -409,6 +410,7 @@ const CreateTrade: React.FC = () => {
                           The type of option: Call or Put.
                         </p>
                       </div>
+
                       <div>
                         <label
                           htmlFor="strikePrice"
@@ -437,6 +439,7 @@ const CreateTrade: React.FC = () => {
                           The price at which the option can be exercised.
                         </p>
                       </div>
+
                       <div>
                         <label
                           htmlFor="optionPremium"
@@ -465,8 +468,38 @@ const CreateTrade: React.FC = () => {
                           The cost of purchasing the option.
                         </p>
                       </div>
+
+                      <div>
+                        <label
+                          htmlFor="quantity"
+                          className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >
+                          Quantity
+                        </label>
+                        <Field
+                          type="number"
+                          id="quantity"
+                          name="quantity"
+                          className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                            errors.quantity && touched.quantity
+                              ? "border-red-600"
+                              : ""
+                          }`}
+                        />
+                        <ErrorMessage name="quantity">
+                          {(msg) => (
+                            <div className="mt-1 text-sm text-red-600">
+                              {msg}
+                            </div>
+                          )}
+                        </ErrorMessage>
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          The number of option contracts.
+                        </p>
+                      </div>
                     </>
                   )}
+                  {/* =========================================================== */}
                   {values.tradeType === "forex" && (
                     <>
                       <div>
@@ -673,18 +706,44 @@ const CreateTrade: React.FC = () => {
                         price on or before a certain date.
                       </p>
                       <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
-                        <strong>Calculation:</strong> Profit/Loss = (Max(0, Exit
-                        Price - Strike Price) - Option Premium) for Call Options
+                        <strong>Required Fields for Calculation:</strong>
+                      </p>
+                      <ul className="list-disc pl-5 text-gray-800 dark:text-gray-300">
+                        <li>
+                          <strong>Option Type:</strong> Determines if the option
+                          is a "call" or "put".
+                        </li>
+                        <li>
+                          <strong>Strike Price:</strong> The price at which the
+                          option can be exercised.
+                        </li>
+                        <li>
+                          <strong>Option Premium:</strong> The cost of
+                          purchasing the option.
+                        </li>
+                        <li>
+                          <strong>Quantity:</strong> The number of option
+                          contracts.
+                        </li>
+                        <li>
+                          <strong>Exit Price:</strong> The price at which the
+                          option is sold or the stock price at expiration.
+                        </li>
+                      </ul>
+                      <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
+                        <strong>Calculation:</strong> For Call Options:
+                        Profit/Loss = (Max(0, Exit Price - Strike Price) -
+                        Option Premium) * Quantity.
                       </p>
                       <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
-                        <strong>Calculation:</strong> Profit/Loss = (Max(0,
-                        Strike Price - Exit Price) - Option Premium) for Put
-                        Options
+                        <strong>Calculation:</strong> For Put Options:
+                        Profit/Loss = (Max(0, Strike Price - Exit Price) -
+                        Option Premium) * Quantity.
                       </p>
                       <p className="mt-2 text-base text-gray-800 dark:text-gray-300">
                         The profit/loss for options is calculated based on the
-                        option type (call or put) and involves the strike price
-                        and option premium.
+                        option type (call or put) and involves the strike price,
+                        option premium, and quantity.
                       </p>
                     </div>
                   )}

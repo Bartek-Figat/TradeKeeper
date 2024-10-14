@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import Pagination from "rc-pagination";
 import "react-datepicker/dist/react-datepicker.css";
 import "rc-pagination/assets/index.css";
-import { useFilterTradesQuery } from "../services/tradeApi"; // Adjust the import path as necessary
+import { useGetAllTradesQuery } from "../services/tradeApi"; // Adjust the import path as necessary
 
 const TransactionTable: React.FC = () => {
   const [filter, setFilter] = useState("");
@@ -16,39 +16,66 @@ const TransactionTable: React.FC = () => {
   const [minProfitLoss, setMinProfitLoss] = useState<number | null>(null);
   const [maxProfitLoss, setMaxProfitLoss] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 5;
 
-  // Fetch filtered transactions using the hook
-  const {
-    data: transactions = [],
-    isLoading,
-    error,
-  } = useFilterTradesQuery({
-    filter: {
-      symbol: filter,
-      tradeType: selectedType,
-      tradeOutcome: selectedStatus,
-      entryDate: selectedDate
-        ? selectedDate.toISOString().split("T")[0]
-        : undefined,
-      minWinRate,
-      maxWinRate,
-      minProfitLoss,
-      maxProfitLoss,
-    },
-    page: currentPage,
-    limit: pageSize,
-  });
+  // Fetch transactions using the hook
+  const { data: transactions = [], isLoading, error } = useGetAllTradesQuery();
+
+  console.log("transactions", transactions);
 
   const typeOptions = [
-    { value: "Buy", label: "Buy" },
-    { value: "Sell", label: "Sell" },
+    { value: "stock", label: "Stock" },
+    { value: "forex", label: "Forex" },
+    { value: "crypto", label: "Crypto" },
+    { value: "crypto spot", label: "Crypto Spot" },
   ];
 
   const statusOptions = [
     { value: "Pending", label: "Pending" },
     { value: "Completed", label: "Completed" },
   ];
+
+  const filteredTransactions = transactions.filter((transaction) => {
+    const matchesSymbol = transaction.symbol
+      .toLowerCase()
+      .includes(filter.toLowerCase());
+    const matchesType = selectedType
+      ? transaction.tradeType === selectedType
+      : true;
+    const matchesStatus = selectedStatus
+      ? transaction.tradeOutcome === selectedStatus
+      : true;
+    const matchesDate = selectedDate
+      ? new Date(transaction.entryDate).toISOString().split("T")[0] ===
+        selectedDate.toISOString().split("T")[0]
+      : true;
+    const matchesMinWinRate =
+      minWinRate !== null && transaction.profitLoss !== undefined
+        ? transaction.profitLoss >= minWinRate
+        : true;
+    const matchesMaxWinRate =
+      maxWinRate !== null && transaction.profitLoss !== undefined
+        ? transaction.profitLoss <= maxWinRate
+        : true;
+    const matchesMinProfitLoss =
+      minProfitLoss !== null && transaction.profitLoss !== undefined
+        ? transaction.profitLoss >= minProfitLoss
+        : true;
+    const matchesMaxProfitLoss =
+      maxProfitLoss !== null && transaction.profitLoss !== undefined
+        ? transaction.profitLoss <= maxProfitLoss
+        : true;
+    return (
+      matchesSymbol &&
+      matchesType &&
+      matchesStatus &&
+      matchesDate &&
+      matchesMinWinRate &&
+      matchesMaxWinRate &&
+      matchesMinProfitLoss &&
+      matchesMaxProfitLoss
+    );
+  });
 
   const clearFilters = () => {
     setFilter("");
@@ -64,6 +91,11 @@ const TransactionTable: React.FC = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const paginatedTransactions = filteredTransactions.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading transactions</div>;
@@ -195,7 +227,7 @@ const TransactionTable: React.FC = () => {
             </thead>
             {/* Table body */}
             <tbody className="divide-y divide-gray-200 text-sm dark:divide-gray-600">
-              {transactions.map((transaction, index) => {
+              {paginatedTransactions.map((transaction, index) => {
                 const formattedEntryDate = new Date(
                   transaction.entryDate,
                 ).toLocaleDateString();
@@ -249,7 +281,7 @@ const TransactionTable: React.FC = () => {
         {/* Pagination */}
         <Pagination
           current={currentPage}
-          total={transactions.length}
+          total={filteredTransactions.length}
           pageSize={pageSize}
           onChange={handlePageChange}
           className="mt-4"
