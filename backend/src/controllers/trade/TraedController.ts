@@ -17,6 +17,7 @@ import {
   ICreateTrade,
   TradeFilter,
 } from "../../services/trade/trade.interface";
+import { GroupTradesForChart } from "../../services/trade/groupTradesForChart";
 
 @Route("custom-trades")
 export class CustomTradeController extends Controller {
@@ -24,7 +25,7 @@ export class CustomTradeController extends Controller {
     new CompanyProfileTradeRepository();
   private calculateTradeMetricsRepository: CalculateTradeMetricsRepository =
     new CalculateTradeMetricsRepository();
-
+  private groupTradesForChart: GroupTradesForChart = new GroupTradesForChart();
   //@Security("jwt")
   @Get("/get-trade/{tradeId}")
   public async getTradeById(@Path() tradeId: string) {
@@ -84,6 +85,16 @@ export class CustomTradeController extends Controller {
     } catch (error) {
       this.setStatus(500);
       throw new Error("Failed to filter trades");
+    }
+  }
+
+  //@Security("jwt")
+  @Get("/group-trades")
+  public async tradesForChart() {
+    try {
+      return await this.groupTradesForChart.calculateTradeFrequencies();
+    } catch (error) {
+      console.log(error);
     }
   }
 

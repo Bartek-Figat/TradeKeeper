@@ -262,6 +262,81 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"TradeFrequency": {
+				"properties": {
+					"to": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"from": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"tradeCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"_id": {
+						"properties": {
+							"day": {
+								"type": "number",
+								"format": "double"
+							},
+							"week": {
+								"type": "number",
+								"format": "double"
+							},
+							"month": {
+								"type": "number",
+								"format": "double"
+							},
+							"year": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"year"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"to",
+					"from",
+					"tradeCount",
+					"_id"
+				],
+				"type": "object"
+			},
+			"TradeFrequencies": {
+				"properties": {
+					"daily": {
+						"items": {
+							"$ref": "#/components/schemas/TradeFrequency"
+						},
+						"type": "array"
+					},
+					"weekly": {
+						"items": {
+							"$ref": "#/components/schemas/TradeFrequency"
+						},
+						"type": "array"
+					},
+					"monthly": {
+						"items": {
+							"$ref": "#/components/schemas/TradeFrequency"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"daily",
+					"weekly",
+					"monthly"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {
@@ -631,6 +706,25 @@
 						}
 					}
 				]
+			}
+		},
+		"/custom-trades/group-trades": {
+			"get": {
+				"operationId": "TradesForChart",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TradeFrequencies"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/custom-trades/company/{symbol}": {

@@ -99,6 +99,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TradeFrequency": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"to":{"dataType":"datetime","required":true},"from":{"dataType":"datetime","required":true},"tradeCount":{"dataType":"double","required":true},"_id":{"dataType":"nestedObjectLiteral","nestedProperties":{"day":{"dataType":"double"},"week":{"dataType":"double"},"month":{"dataType":"double"},"year":{"dataType":"double","required":true}},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TradeFrequencies": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"daily":{"dataType":"array","array":{"dataType":"refAlias","ref":"TradeFrequency"},"required":true},"weekly":{"dataType":"array","array":{"dataType":"refAlias","ref":"TradeFrequency"},"required":true},"monthly":{"dataType":"array","array":{"dataType":"refAlias","ref":"TradeFrequency"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -359,6 +369,30 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.filterTrades.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/custom-trades/group-trades',
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController)),
+            ...(fetchMiddlewares<RequestHandler>(CustomTradeController.prototype.tradesForChart)),
+
+            function CustomTradeController_tradesForChart(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CustomTradeController();
+
+
+              const promise = controller.tradesForChart.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

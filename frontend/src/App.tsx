@@ -16,7 +16,8 @@ import ProtectedRoute from "./layouts/ProtectedRoute";
 import NotFoundPage from "./pages/NotFoundPage";
 import ChangeLogPage from "./pages/ChangeLog";
 import TransactionTable from "./pages/Transactions";
-import TutorialPage from "./pages/TutorialPage"
+//import TutorialPage from "./pages/TutorialPage";
+import TradeCalendar from "./pages/Calendar";
 
 export const App = () => {
   const element = useRoutes([
@@ -73,7 +74,8 @@ export const App = () => {
             { path: "lightweigh", element: <Lightweigh /> },
             { path: "create-trade", element: <CreateTrade /> },
             { path: "change-log", element: <ChangeLogPage /> },
-            { path: "tutorial", element: <TutorialPage /> },
+            //{ path: "tutorial", element: <TutorialPage /> },
+            { path: "tutorial", element: <TradeCalendar /> },
           ],
         },
       ],
