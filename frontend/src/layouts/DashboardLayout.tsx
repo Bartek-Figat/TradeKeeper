@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import axios from "axios";
 import { navItems } from "../common/NavigationItems";
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleDarkMode } from "../slice/darkModeSlice";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ const DashboardLayout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const darkMode = useSelector(
+    (state: { darkMode: boolean }) => state.darkMode,
+  );
+  const dispatch = useDispatch();
 
   const API_URL = "http://localhost:8080/auth";
 
@@ -85,23 +90,31 @@ const DashboardLayout = () => {
     setIsFullScreen(false);
   };
 
+  const handleToggleDarkMode = () => {
+    dispatch(toggleDarkMode());
+  };
+
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div
+      className={`${darkMode ? "dark" : "light"} flex min-h-screen w-full flex-col`}
+    >
       {isMobile ? (
         <>
           <div
-            className={`fixed inset-0 bg-[#111c43] transition-all duration-300 ${
-              isFullScreen ? "opacity-1" : "pointer-events-none opacity-0"
-            } z-50`}
+            className={`fixed inset-0 transition-all duration-300 ${
+              darkMode
+                ? "bg-[#1a1c1e] text-gray-200"
+                : "bg-[#111c43] text-white"
+            } ${isFullScreen ? "opacity-1" : "pointer-events-none opacity-0"} z-50`}
           >
-            <nav className="flex h-full flex-col space-y-4 bg-[#111c43] p-10 text-white">
+            <nav className="flex h-full flex-col space-y-4 p-10">
               {navItems.map(({ to, icon, label }) => (
                 <NavLink
                   key={to}
                   to={to}
                   onClick={handleLinkClick}
                   className={({ isActive }) =>
-                    `flex items-center space-x-2 rounded-md border-l-4 border-transparent p-2 pr-6 text-gray-200 transition duration-200 hover:border-indigo-500 hover:bg-[#333b5166] hover:text-gray-200 focus:outline-none ${
+                    `flex items-center space-x-2 rounded-md border-l-4 border-transparent p-2 pr-6 transition duration-200 hover:border-indigo-500 hover:bg-[#333b5166] ${
                       isActive ? "hover:bg-[#333b5166]" : ""
                     }`
                   }
@@ -110,6 +123,17 @@ const DashboardLayout = () => {
                   <span className="text-sm">{label}</span>
                 </NavLink>
               ))}
+              <button
+                onClick={handleToggleDarkMode}
+                className="mt-4 flex w-full items-center justify-center rounded bg-indigo-500 py-2 text-center text-sm font-semibold transition-all duration-300 hover:bg-indigo-600"
+              >
+                {darkMode ? (
+                  <FaSun className="animate-spin-slow mr-2" />
+                ) : (
+                  <FaMoon className="animate-spin-slow mr-2" />
+                )}
+                Toggle Dark Mode
+              </button>
             </nav>
           </div>
           <div className="absolute right-0 top-0 z-50 p-4">
@@ -134,15 +158,17 @@ const DashboardLayout = () => {
       ) : (
         <div className="relative flex flex-1">
           <aside
-            className={`sticky top-0 h-screen self-start bg-[#111c43] transition-transform duration-300 ease-in-out ${
-              isOpen
-                ? "translate-x-0 opacity-100"
-                : "opacity-1 translate-x-[-240px]"
-            }`}
+            className={`sticky top-0 h-screen self-start transition-transform duration-300 ease-in-out ${
+              darkMode ? "bg-[#1a1c1e]" : "bg-[#111c43]"
+            } ${isOpen ? "translate-x-0 opacity-100" : "opacity-1 translate-x-[-240px]"}`}
           >
             <div>
               <motion.div
-                className="absolute right-[-50px] top-[5px] z-20 flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#111c43] shadow-lg transition duration-300 hover:bg-[#243369]"
+                className={`absolute right-[-50px] top-[5px] z-20 flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded-full shadow-lg transition duration-300 ${
+                  darkMode
+                    ? "bg-[#1a1c1e] hover:bg-[#243369]"
+                    : "bg-[#111c43] hover:bg-[#243369]"
+                }`}
                 onClick={toggleSidebar}
                 whileHover={{ scale: 1.0 }}
                 whileTap={{ scale: 0.8 }}
@@ -164,7 +190,7 @@ const DashboardLayout = () => {
               !isOpen ? "ml-[-240px] justify-between" : "ml-0"
             }`}
           >
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col dark:bg-[#252729]">
               <Outlet />
             </div>
             <footer>

@@ -32,10 +32,10 @@ const PriceTicker = () => {
   ];
 
   return (
-    <div className="bg-[#000000] rounded-md text-white p-2 overflow-hidden whitespace-nowrap w-full max-w-screen-lg mx-auto">
-      <div className="flex animate-scroll">
+    <div className="mx-auto w-full max-w-screen-lg overflow-hidden whitespace-nowrap rounded-md bg-[#000000] p-2 text-white dark:bg-[#1a1c1e]">
+      <div className="animate-scroll flex">
         {prices.concat(prices).map((item, index) => (
-          <div key={index} className="flex flex-col items-center mx-4">
+          <div key={index} className="mx-4 flex flex-col items-center">
             <span className="text-sm">{item.label}</span>
             <span className="font-bold">{item.price}</span>
             <span

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 interface Transaction {
   id: number;
@@ -22,6 +23,9 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, transaction }) => {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
+  const darkMode = useSelector(
+    (state: { darkMode: boolean }) => state.darkMode,
+  );
 
   const handleDeleteTransaction = () => {
     setIsDeleting(true);
@@ -50,14 +54,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, transaction }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 backdrop-blur-sm"
+          className={`fixed inset-0 z-[999] grid h-screen w-screen place-items-center ${
+            darkMode ? "bg-black bg-opacity-80" : "bg-black bg-opacity-60"
+          } backdrop-blur-sm`}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative mx-auto flex w-full max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md"
+            className={`relative mx-auto flex w-full max-w-[24rem] flex-col rounded-xl ${
+              darkMode
+                ? "bg-[#1a1c1e] text-neutral-300"
+                : "bg-white text-gray-700"
+            } shadow-md`}
           >
             <div className="flex flex-col gap-4 p-6">
               <p>
@@ -107,7 +117,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, transaction }) => {
               {/* User Actions Section */}
               <div className="mt-4">
                 <h3 className="font-semibold">User Actions</h3>
-                <p className="text-sm text-gray-600">
+                <p
+                  className={`text-sm ${darkMode ? "text-neutral-400" : "text-gray-600"}`}
+                >
                   Choose an action to perform on this transaction:
                 </p>
                 <ul className="list-inside list-disc">
@@ -143,7 +155,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, transaction }) => {
             {/* Confirmation Dialog for Deletion */}
             {isDeleting && (
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="rounded-lg bg-white p-4">
+                <div
+                  className={`rounded-lg p-4 ${darkMode ? "bg-[#1a1c1e] text-neutral-300" : "bg-white text-gray-700"}`}
+                >
                   <p>Are you sure you want to delete this transaction?</p>
                   <button onClick={confirmDelete} className="text-red-500">
                     Yes, Delete

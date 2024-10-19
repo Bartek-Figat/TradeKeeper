@@ -71,15 +71,14 @@ export const tradeApi = createApi({
         }
       },
     }),
-    filterTrades: builder.query<
-      TradeDto[],
-      { filter: Record<string, unknown>; page?: number; limit?: number }
-    >({
-      query: ({ filter, page = 1, limit = 10 }) => ({
-        url: "filter-trades",
-        method: "GET",
-        params: { ...filter, page, limit },
-      }),
+    filterTrades: builder.query({
+      query: (filter) => {
+        const queryString = new URLSearchParams(filter).toString();
+        return {
+          url: `filter-trades?${queryString}`,
+          method: "GET",
+        };
+      },
       providesTags: ["Trade"],
       async onQueryStarted(_, { queryFulfilled }) {
         try {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import Modal from './Modal'; // Import the Modal component
+import { useState } from "react";
+import Modal from "./Modal"; // Import the Modal component
 
 interface PortfolioItem {
   id: number;
@@ -16,24 +16,25 @@ function PortfolioOverview() {
   const portfolioItems: PortfolioItem[] = [
     {
       id: 0,
-      title: 'Stock Portfolio',
-      content: 'Track your stock investments and monitor market trends.',
-      performance: '+5.2%',
-      type: 'Stocks',
+      title: "Stock Portfolio",
+      content: "Track your stock investments and monitor market trends.",
+      performance: "+5.2%",
+      type: "Stocks",
     },
     {
       id: 1,
-      title: 'Crypto Portfolio',
-      content: 'Manage your cryptocurrency assets and analyze market volatility.',
-      performance: '-2.3%',
-      type: 'Cryptocurrency',
+      title: "Crypto Portfolio",
+      content:
+        "Manage your cryptocurrency assets and analyze market volatility.",
+      performance: "-2.3%",
+      type: "Cryptocurrency",
     },
     {
       id: 2,
-      title: 'Real Estate Portfolio',
-      content: 'Evaluate your real estate investments and rental income.',
-      performance: '+3.8%',
-      type: 'Real Estate',
+      title: "Real Estate Portfolio",
+      content: "Evaluate your real estate investments and rental income.",
+      performance: "+3.8%",
+      type: "Real Estate",
     },
   ];
 
@@ -52,22 +53,34 @@ function PortfolioOverview() {
       {/* Sidebar */}
 
       {/* Content area */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <main className="grow p-8">
           <div className="grid grid-cols-12 gap-6">
-            {portfolioItems.map(item => (
+            {portfolioItems.map((item) => (
               <div
                 key={item.id}
-                className="dark:bg-neutral-900 col-span-12 sm:col-span-6 lg:col-span-4 bg-white p-4 rounded shadow cursor-pointer dark:shadow-neutral-100"
+                className="col-span-12 cursor-pointer rounded bg-white p-4 shadow dark:bg-[#1a1c1e] sm:col-span-6 lg:col-span-4"
                 onClick={() => openModal(item)}
               >
-                <h2 className="dark:text-neutral-300 text-xl font-semibold">{item.title}</h2>
-                <p className="text-gray-600 dark:text-neutral-300">{item.content}</p>
+                <h2 className="text-xl font-semibold dark:text-neutral-300">
+                  {item.title}
+                </h2>
+                <p className="text-gray-600 dark:text-neutral-300">
+                  {item.content}
+                </p>
                 <div className="mt-4">
-                  <span className="dark:text-neutral-300 text-sm font-medium">Performance: </span>
-                  <span className={`text-lg ${item.performance.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>{item.performance}</span>
+                  <span className="text-sm font-medium dark:text-neutral-300">
+                    Performance:{" "}
+                  </span>
+                  <span
+                    className={`text-lg ${item.performance.startsWith("+") ? "text-green-500" : "text-red-500"}`}
+                  >
+                    {item.performance}
+                  </span>
                 </div>
-                <div className="dark:text-neutral-300 mt-2 text-sm text-gray-500">Type: {item.type}</div>
+                <div className="mt-2 text-sm text-gray-500 dark:text-neutral-300">
+                  Type: {item.type}
+                </div>
               </div>
             ))}
           </div>
@@ -78,14 +91,16 @@ function PortfolioOverview() {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        transaction={selectedItem && {
-          id: selectedItem.id,
-          date: 'N/A',
-          type: selectedItem.type as "Buy" | "Sell",
-          amount: 'N/A',
-          status: 'Pending', // Changed from 'N/A' to a valid status
-          description: selectedItem.content,
-        }}
+        transaction={
+          selectedItem && {
+            id: selectedItem.id,
+            date: "N/A",
+            type: selectedItem.type as "Buy" | "Sell",
+            amount: "N/A",
+            status: "Pending", // Changed from 'N/A' to a valid status
+            description: selectedItem.content,
+          }
+        }
       />
     </div>
   );

@@ -674,38 +674,30 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/TradeDto"
+									"properties": {
+										"dataLength": {
+											"type": "number",
+											"format": "double"
+										},
+										"tradesWithMetrics": {
+											"items": {
+												"$ref": "#/components/schemas/TradeDto"
+											},
+											"type": "array"
+										}
 									},
-									"type": "array"
+									"required": [
+										"dataLength",
+										"tradesWithMetrics"
+									],
+									"type": "object"
 								}
 							}
 						}
 					}
 				},
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"default": 1,
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"default": 10,
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
+				"parameters": []
 			}
 		},
 		"/custom-trades/group-trades": {

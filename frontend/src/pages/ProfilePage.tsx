@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ProfilePage: React.FC = () => {
   const [firstName, setFirstName] = useState("John");
@@ -11,6 +12,10 @@ const ProfilePage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const darkMode = useSelector(
+    (state: { darkMode: boolean }) => state.darkMode,
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -21,9 +26,15 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <section className="my-auto py-10 dark:bg-gray-900">
-      <div className="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-lg">
-        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
+    <section
+      className={`my-auto py-10 ${darkMode ? "dark:bg-gray-900" : "bg-[#f9f9f9] shadow-md"}`}
+    >
+      <div
+        className={`mx-auto max-w-3xl rounded-lg p-8 shadow-lg ${darkMode ? "bg-gray-800 text-white" : "bg-white text-[#000080]"}`}
+      >
+        <h2
+          className={`mb-6 text-2xl font-bold ${darkMode ? "text-white" : "text-[#000080]"}`}
+        >
           Profile Settings
         </h2>
         <form onSubmit={handleSubmit}>
@@ -31,7 +42,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="first_name"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 First name
               </label>
@@ -40,7 +51,7 @@ const ProfilePage: React.FC = () => {
                 id="first_name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder="John"
                 required
               />
@@ -48,7 +59,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="last_name"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 Last name
               </label>
@@ -57,7 +68,7 @@ const ProfilePage: React.FC = () => {
                 id="last_name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder="Doe"
                 required
               />
@@ -65,7 +76,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="company"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 Company
               </label>
@@ -74,7 +85,7 @@ const ProfilePage: React.FC = () => {
                 id="company"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder="Flowbite"
                 required
               />
@@ -82,7 +93,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="phone"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 Phone number
               </label>
@@ -91,7 +102,7 @@ const ProfilePage: React.FC = () => {
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder="123-456-7890"
                 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                 required
@@ -100,7 +111,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="website"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 Website URL
               </label>
@@ -109,7 +120,7 @@ const ProfilePage: React.FC = () => {
                 id="website"
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder="flowbite.com"
                 required
               />
@@ -117,7 +128,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <label
                 htmlFor="visitors"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+                className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
               >
                 Unique visitors (per month)
               </label>
@@ -126,7 +137,7 @@ const ProfilePage: React.FC = () => {
                 id="visitors"
                 value={visitors}
                 onChange={(e) => setVisitors(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
                 placeholder=""
                 required
               />
@@ -135,7 +146,7 @@ const ProfilePage: React.FC = () => {
           <div className="mb-6">
             <label
               htmlFor="email"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
             >
               Email address
             </label>
@@ -144,7 +155,7 @@ const ProfilePage: React.FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
               placeholder="john.doe@company.com"
               required
             />
@@ -152,7 +163,7 @@ const ProfilePage: React.FC = () => {
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
             >
               Password
             </label>
@@ -161,7 +172,7 @@ const ProfilePage: React.FC = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
               placeholder="•••••••••"
               required
             />
@@ -169,7 +180,7 @@ const ProfilePage: React.FC = () => {
           <div className="mb-6">
             <label
               htmlFor="confirm_password"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
+              className={`mb-2 block text-sm font-medium ${darkMode ? "text-gray-300" : "text-[#000080]"}`}
             >
               Confirm password
             </label>
@@ -178,7 +189,7 @@ const ProfilePage: React.FC = () => {
               id="confirm_password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="block w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-md border p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 ${darkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
               placeholder="•••••••••"
               required
             />
@@ -186,7 +197,7 @@ const ProfilePage: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className={`w-full rounded-md px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 ${darkMode ? "bg-blue-600 hover:bg-blue-700 focus:ring-blue-800" : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300"}`}
           >
             Submit
           </button>

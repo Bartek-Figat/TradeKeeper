@@ -1,13 +1,95 @@
 import Decimal from "decimal.js";
-import { ITrade, ICreateTrade, TradeFilter } from "./trade.interface";
+import { ITrade, ICreateTrade } from "./trade.interface";
 import { TradeDto } from "./trade.dto";
 import { Database } from "../../config/db/database";
 import { ApiError } from "../../error/apiError";
 import { ObjectId } from "mongodb";
+import { buildTradeMongoQuery } from "./buildTradeMongoQuery";
 
 export class CalculateTradeMetricsRepository {
   private readonly trades: string = "trades";
   private db = new Database().getCollection(this.trades);
+
+  async insertMockTrades(): Promise<void> {
+    const mockTrades = this.generateRandomTradeData();
+    try {
+      const result = await this.db.insertMany(mockTrades);
+      console.log(`${result.insertedCount} mock trades inserted successfully.`);
+    } catch (error) {
+      console.error("Error inserting mock trades:", error);
+      throw new ApiError("Failed to insert mock trades", 500);
+    }
+  }
+
+  private generateRandomTradeData(): ICreateTrade[] {
+    const tradeTypes: Array<
+      "stock" | "forex" | "crypto" | "option" | "crypto spot"
+    > = ["stock", "forex", "crypto", "option", "crypto spot"];
+    const trades: ICreateTrade[] = [];
+
+    for (const tradeType of tradeTypes) {
+      for (let i = 0; i < 10; i++) {
+        const entryPrice = parseFloat((Math.random() * 100).toFixed(2));
+        const exitPrice = parseFloat((Math.random() * 100).toFixed(2));
+        const quantity = Math.floor(Math.random() * 100) + 1; // Random quantity between 1 and 100
+        const fees = parseFloat((Math.random() * 10).toFixed(2)); // Random fees between 0 and 10
+
+        let trade: ICreateTrade = {
+          symbol: `SYM${Math.floor(Math.random() * 1000)}`, // Random symbol
+          entryPrice,
+          exitPrice,
+          risk: parseFloat((Math.random() * 10).toFixed(2)), // Random risk
+          reward: parseFloat((Math.random() * 10).toFixed(2)), // Random reward
+          tags: ["mock", "data", "trade"], // Example tags
+          tradeType,
+          entryDate: new Date(Date.now() - Math.random() * 10000000000), // Random entry date
+          exitDate: new Date(Date.now() - Math.random() * 1000000000), // Random exit date
+          quantity,
+          createdAt: new Date(),
+          optionType:
+            tradeType === "option"
+              ? Math.random() > 0.5
+                ? "call"
+                : "put"
+              : undefined,
+          strikePrice:
+            tradeType === "option"
+              ? parseFloat((Math.random() * 100).toFixed(2))
+              : undefined,
+          optionPremium:
+            tradeType === "option"
+              ? parseFloat((Math.random() * 10).toFixed(2))
+              : undefined,
+          units:
+            tradeType === "forex"
+              ? Math.floor(Math.random() * 1000) + 1
+              : undefined,
+          usdExchangeRate:
+            tradeType === "forex"
+              ? parseFloat((Math.random() * 1.5 + 0.5).toFixed(2))
+              : undefined,
+          leverage:
+            tradeType === "crypto"
+              ? Math.floor(Math.random() * 10) + 1
+              : undefined,
+          positionType:
+            tradeType === "forex"
+              ? Math.random() > 0.5
+                ? "long"
+                : "short"
+              : undefined,
+          riskPercentage: parseFloat((Math.random() * 100).toFixed(2)), // Random risk percentage
+          fees,
+          userId: "",
+          tradeOutcome: "",
+        };
+
+        trades.push(trade);
+      }
+    }
+
+    return trades;
+  }
 
   async getTradeById(tradeId: string): Promise<TradeDto> {
     try {
@@ -255,61 +337,42 @@ export class CalculateTradeMetricsRepository {
   }
 
   async filterTrades(
-    filter: TradeFilter,
-    page: number = 1,
+    filter: any,
     limit: number = 10
-  ): Promise<TradeDto[]> {
-    try {
-      const query: any = {};
+  ): Promise<{ tradesWithMetrics: TradeDto[]; dataLength: number }> {
+    console.log("Filter====================", filter);
 
-      if (filter.userId) query.userId = filter.userId;
-      if (filter.tradeType) query.tradeType = filter.tradeType;
-      if (filter.symbol) query.symbol = filter.symbol;
-      if (filter.startDate || filter.endDate) {
-        query.createdAt = {};
-        if (filter.startDate) query.createdAt.$gte = new Date(filter.startDate);
-        if (filter.endDate) query.createdAt.$lte = new Date(filter.endDate);
-      }
+    const { page, ...rest } = filter;
+
+    console.log("Filter====================", filter);
+    try {
+      const query = buildTradeMongoQuery(rest);
 
       const skip = (page - 1) * limit;
-      const trades = await this.db
-        .find(query)
+
+      // Use $and to combine filter conditions
+      const filterResult = await this.db
+        .find({
+          $and: [query],
+        })
         .skip(skip)
         .limit(limit)
         .toArray();
+
       const allTrades = await this.db.find<ITrade>({}).toArray();
 
-      const tradesWithMetrics = trades.map((trade) =>
+      // Calculate the total number of documents matching the query
+      const dataLength = await this.db
+        .find({
+          $and: [query],
+        })
+        .count();
+
+      const tradesWithMetrics = filterResult.map((trade) =>
         this.calculateMetrics(trade as unknown as ITrade, allTrades)
       );
 
-      return tradesWithMetrics.filter((trade) => {
-        if (
-          filter.minWinRate !== undefined &&
-          trade.winRate !== undefined &&
-          trade.winRate < filter.minWinRate
-        )
-          return false;
-        if (
-          filter.maxWinRate !== undefined &&
-          trade.winRate !== undefined &&
-          trade.winRate > filter.maxWinRate
-        )
-          return false;
-        if (
-          filter.minProfitLoss !== undefined &&
-          trade.avgProfitLoss !== undefined &&
-          trade.avgProfitLoss < filter.minProfitLoss
-        )
-          return false;
-        if (
-          filter.maxProfitLoss !== undefined &&
-          trade.avgProfitLoss !== undefined &&
-          trade.avgProfitLoss > filter.maxProfitLoss
-        )
-          return false;
-        return true;
-      });
+      return { tradesWithMetrics, dataLength };
     } catch (error) {
       console.error("Error filtering trades:", error);
       throw new ApiError("Failed to filter trades", 500);
@@ -515,3 +578,8 @@ export class CalculateTradeMetricsRepository {
     return suggestions;
   }
 }
+
+// (async () => {
+//   const tradeRepo = new CalculateTradeMetricsRepository();
+//   await tradeRepo.insertMockTrades();
+// })();

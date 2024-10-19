@@ -1,6 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleDarkMode } from "../slice/darkModeSlice";
 import { navItems } from "../common/NavigationItems";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const SidebarItem: React.FC<{
   title: string;
@@ -11,9 +14,9 @@ const SidebarItem: React.FC<{
     <NavLink
       to={path}
       className={({ isActive }) =>
-        `relative flex h-14 flex-row items-center border-l-4 border-transparent pr-6 text-gray-200 hover:border-indigo-500 hover:bg-[#333b5166] hover:text-gray-200 focus:outline-none ${
+        `relative flex h-14 flex-row items-center border-l-4 border-transparent pr-6 ${
           isActive ? "border-indigo-500" : ""
-        }`
+        } hover:border-indigo-500 hover:bg-[#333b5166] focus:outline-none`
       }
     >
       <span className="ml-4 inline-flex items-center justify-center">
@@ -25,20 +28,37 @@ const SidebarItem: React.FC<{
 };
 
 const Sidebar: React.FC = () => {
+  const darkMode = useSelector(
+    (state: { darkMode: boolean }) => state.darkMode,
+  );
+  const dispatch = useDispatch();
+
+  const handleToggleDarkMode = () => {
+    dispatch(toggleDarkMode());
+  };
 
   return (
-    <aside className="w-full bg-[#111c43] p-6 text-gray-50 sm:w-60">
+    <aside
+      className={`w-full p-6 sm:w-60 ${
+        darkMode ? "bg-[#1a1c1e] text-gray-200" : "bg-[#111c43] text-gray-50"
+      }`}
+    >
       <nav className="space-y-8 text-sm">
         <div className="space-y-2">
-          <div className="flex flex-col space-y-1 justify-start">
+          <div className="flex flex-col justify-start space-y-1">
             {navItems.map(({ to, icon, label }) => (
               <SidebarItem key={to} title={label} path={to} Icon={icon} />
             ))}
           </div>
           <button
-            
-            className="mt-4 w-full py-2 text-center text-sm font-semibold text-gray-200 bg-indigo-500 hover:bg-indigo-600 rounded"
+            onClick={handleToggleDarkMode}
+            className="mt-4 flex w-full items-center justify-center rounded bg-indigo-500 py-2 text-center text-sm font-semibold text-gray-200 transition-all duration-300 hover:bg-indigo-600"
           >
+            {darkMode ? (
+              <FaSun className="animate-spin-slow mr-2" />
+            ) : (
+              <FaMoon className="animate-spin-slow mr-2" />
+            )}
             Toggle Dark Mode
           </button>
         </div>

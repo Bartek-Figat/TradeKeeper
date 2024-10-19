@@ -1,22 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Route,
-  Path,
-  Body,
-  Query,
-  Request,
-} from "tsoa";
+import { Controller, Get, Post, Put, Route, Path, Body, Request } from "tsoa";
 import { CompanyProfileTradeRepository } from "../../services/trade/tradeService";
 import { Trade } from "../../utils/tradeTypes";
 import { CalculateTradeMetricsRepository } from "../../services/trade/calculateMetrics";
 import { TradeDto } from "../../services/trade/trade.dto";
-import {
-  ICreateTrade,
-  TradeFilter,
-} from "../../services/trade/trade.interface";
+import { ICreateTrade } from "../../services/trade/trade.interface";
 import { GroupTradesForChart } from "../../services/trade/groupTradesForChart";
 
 @Route("custom-trades")
@@ -71,21 +58,10 @@ export class CustomTradeController extends Controller {
 
   //@Security("jwt")
   @Get("/filter-trades")
-  public async filterTrades(
-    @Request() filter: TradeFilter,
-    @Query() page: number = 1,
-    @Query() limit: number = 10
-  ): Promise<TradeDto[]> {
-    try {
-      return await this.calculateTradeMetricsRepository.filterTrades(
-        filter,
-        page,
-        limit
-      );
-    } catch (error) {
-      this.setStatus(500);
-      throw new Error("Failed to filter trades");
-    }
+  public async filterTrades(@Request() filter: any) {
+    return await this.calculateTradeMetricsRepository.filterTrades(
+      filter.query
+    );
   }
 
   //@Security("jwt")

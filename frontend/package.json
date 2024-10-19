@@ -43,6 +43,7 @@
     "react-select": "^5.8.1",
     "react-toastify": "^10.0.5",
     "react-tooltip": "^5.28.0",
+    "rizzui": "^0.8.7",
     "swiper": "^11.1.4",
     "tailwind-merge": "^2.3.0",
     "yahoo-finance2": "^2.11.1",

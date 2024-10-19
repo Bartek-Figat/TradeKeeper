@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export type Login = {
   email: string;
   password: string;
@@ -15,32 +13,73 @@ export type Register = {
 };
 
 export interface ICreateTrade {
-  riskPercentage?: number;
-  costBasis?: number;
-  profitLoss?: number;
+  _id: string;
   symbol: string;
   entryPrice: number;
   exitPrice: number;
   risk: number;
+  createdAt: string;
   reward: number;
-  tags: string[];
-  createdAt: Date;
-  stopLossLevel?: number;
-  positionSize?: number;
-  tradeType: "stock" | "forex" | "crypto" | "option" | "crypto spot";
-  entryDate: Date;
-  exitDate: Date;
-  quantity?: number;
-  optionType?: "call" | "put";
-  strikePrice?: number;
-  optionPremium?: number;
-  units?: number;
-  usdExchangeRate?: number;
-  leverage?: number;
-  positionType?: "long" | "short" | "spot";
-  fees?: number;
+  tags: string | string[];
+  tradeType: string;
+  entryDate: string;
+  exitDate: string;
+  quantity: number;
+  strikePrice: number;
+  optionPremium: number;
+  units: number;
+  usdExchangeRate: number;
+  leverage: number;
+  riskPercentage: number;
+  fees: number;
+  profitLoss: number;
+  tradeOutcome: string;
+  winRate: number;
+  avgProfitLoss: number;
+  riskRewardRatio: number;
+  maxDrawdown: number;
+  sharpeRatio: number;
+  profitFactor: number;
+  volatility: number;
+  sortinoRatio: number;
+  avgHoldingPeriod: number;
+  improvementSuggestions: string[];
 }
 
-export interface TradeDto extends ICreateTrade {
-  tradeOutcome: ReactNode;
+export interface TradeDto {
+  tradesWithMetrics: [];
+  dataLength: number;
+}
+
+export interface Transaction {
+  symbol: string;
+  entryPrice: number;
+  exitPrice: number;
+  risk: number;
+  createdAt: string;
+  reward: number;
+  tags: string | string[];
+  tradeType: string;
+  entryDate: string;
+  exitDate: string;
+  quantity: number;
+  strikePrice: number;
+  optionPremium: number;
+  units: number;
+  usdExchangeRate: number;
+  leverage: number;
+  riskPercentage: number;
+  fees: number;
+  profitLoss: number;
+  tradeOutcome: string;
+  winRate: number;
+  avgProfitLoss: number;
+  riskRewardRatio: number;
+  maxDrawdown: number;
+  sharpeRatio: number;
+  profitFactor: number;
+  volatility: number;
+  sortinoRatio: number;
+  avgHoldingPeriod: number;
+  improvementSuggestions: string[];
 }

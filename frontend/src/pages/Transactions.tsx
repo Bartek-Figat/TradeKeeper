@@ -1,64 +1,74 @@
-import React, { useState } from "react";
-// import Select from "react-select";
-import DatePicker from "react-datepicker";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Pagination from "rc-pagination";
-import "react-datepicker/dist/react-datepicker.css";
-import "rc-pagination/assets/index.css";
-import { useFilterTradesQuery } from "../services/tradeApi"; // Adjust the import path as necessary
+import { useFilterTradesQuery } from "../services/tradeApi";
+import { useSearchParams } from "react-router-dom";
+import { Transaction } from "../services/type";
 
 const TransactionTable: React.FC = () => {
-  const [filter, setFilter] = useState("");
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [minWinRate, setMinWinRate] = useState<number | null>(null);
-  const [maxWinRate, setMaxWinRate] = useState<number | null>(null);
-  const [minProfitLoss, setMinProfitLoss] = useState<number | null>(null);
-  const [maxProfitLoss, setMaxProfitLoss] = useState<number | null>(null);
+  const [transactions, setTransactions] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filter, setFilter] = useState(searchParams.get("symbol") || "");
+  const [selectedType, setSelectedType] = useState<string | null>(
+    searchParams.get("tradeType") || null,
+  );
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(
+    searchParams.get("tradeOutcome") || null,
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
-  // Fetch filtered transactions using the hook
+  const darkMode = useSelector(
+    (state: { darkMode: boolean }) => state.darkMode,
+  );
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params: Record<string, string | number | null> = {
+      symbol: filter.toUpperCase(),
+      tradeType: selectedType,
+      tradeOutcome: selectedStatus,
+    };
+
+    // Remove null values from params
+    const paramsArray = Object.entries(params)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .filter(([_, value]) => value !== null)
+      .map(([key, value]) => [key, String(value)] as [string, string]);
+
+    console.log(paramsArray);
+    setSearchParams(paramsArray);
+  };
+
+  // Convert URLSearchParams to a plain object
+  const filterObject = Object.fromEntries(searchParams.entries());
+
+  console.log("FilterObject", filterObject);
+
   const {
-    data: transactions = [],
+    data: queryData = { tradesWithMetrics: [], dataLength: 0 },
     isLoading,
     error,
   } = useFilterTradesQuery({
-    filter: {
-      symbol: filter,
-      tradeType: selectedType,
-      tradeOutcome: selectedStatus,
-      entryDate: selectedDate
-        ? selectedDate.toISOString().split("T")[0]
-        : undefined,
-      minWinRate,
-      maxWinRate,
-      minProfitLoss,
-      maxProfitLoss,
-    },
     page: currentPage,
-    limit: pageSize,
+    ...filterObject,
   });
 
-  // const typeOptions = [
-  //   { value: "Buy", label: "Buy" },
-  //   { value: "Sell", label: "Sell" },
-  // ];
+  console.log(searchParams);
 
-  // const statusOptions = [
-  //   { value: "Pending", label: "Pending" },
-  //   { value: "Completed", label: "Completed" },
-  // ];
+  useEffect(() => {
+    if (queryData) {
+      setTotalPages(queryData.dataLength);
+      setTransactions(queryData.tradesWithMetrics);
+    }
+  }, [queryData]);
 
   const clearFilters = () => {
     setFilter("");
     setSelectedType(null);
     setSelectedStatus(null);
-    setSelectedDate(null);
-    setMinWinRate(null);
-    setMaxWinRate(null);
-    setMinProfitLoss(null);
-    setMaxProfitLoss(null);
+    setSearchParams({});
   };
 
   const handlePageChange = (page: number) => {
@@ -69,186 +79,204 @@ const TransactionTable: React.FC = () => {
   if (error) return <div>Error loading transactions</div>;
 
   return (
-    <section className="container px-4 mx-auto">
-      <div className="sm:flex sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-x-3">
-            <h2 className="text-lg font-medium text-gray-800 dark:text-white">Transactions</h2>
-            <span className="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">
-              {transactions.length} records
-            </span>
+    <section
+      className={`container mx-auto px-4 ${darkMode ? "dark:bg-gray-900" : "bg-[#f9f9f9]"}`}
+    >
+      <form onSubmit={handleSubmit}>
+        <div className="sm:flex sm:items-center sm:justify-between">
+          <div className="ml-16">
+            <div className="ml-3 flex items-center gap-x-3">
+              <h2
+                className={`text-lg font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
+              >
+                Transactions
+              </h2>
+              <span
+                className={`px-3 py-1 text-xs ${darkMode ? "bg-gray-800 text-blue-400" : "bg-blue-100 text-blue-600"} rounded-full`}
+              >
+                {transactions.length} records
+              </span>
+            </div>
+            <p
+              className={`mt-1 text-sm ${darkMode ? "text-gray-300" : "text-gray-500"}`}
+            >
+              Filter and view transaction records.
+            </p>
           </div>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-            Filter and view transaction records.
-          </p>
+          <div className="mt-4 flex items-center gap-x-3">
+            <button
+              type="button"
+              onClick={clearFilters}
+              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"}`}
+            >
+              Clear Filters
+            </button>
+            <button
+              type="submit"
+              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"}`}
+            >
+              Apply Filters
+            </button>
+          </div>
         </div>
-        <div className="flex items-center mt-4 gap-x-3">
-          <button
-            onClick={clearFilters}
-            className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700"
-          >
-            Clear Filters
-          </button>
-        </div>
-      </div>
 
-      <div className="mt-6 md:flex md:items-center md:justify-between">
-        <div className="flex items-center gap-x-3">
-          {/* <Select
-            options={typeOptions}
-            value={typeOptions.find(option => option.value === selectedType)}
-            onChange={(option) => setSelectedType(option?.value || null)}
-            placeholder="Select Type"
-            className="w-40"
-          />
-          <Select
-            options={statusOptions}
-            value={statusOptions.find(option => option.value === selectedStatus)}
-            onChange={(option) => setSelectedStatus(option?.value || null)}
-            placeholder="Select Status"
-            className="w-40"
-          /> */}
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date: Date | null) => setSelectedDate(date)}
-            placeholderText="Select Date"
-            className="w-40 px-2 py-1 border rounded"
-          />
-          <input
-            type="number"
-            value={minWinRate || ""}
-            onChange={(e) => setMinWinRate(e.target.value ? parseFloat(e.target.value) : null)}
-            placeholder="Min Win Rate"
-            className="w-40 px-2 py-1 border rounded"
-          />
-          <input
-            type="number"
-            value={maxWinRate || ""}
-            onChange={(e) => setMaxWinRate(e.target.value ? parseFloat(e.target.value) : null)}
-            placeholder="Max Win Rate"
-            className="w-40 px-2 py-1 border rounded"
-          />
-          <input
-            type="number"
-            value={minProfitLoss || ""}
-            onChange={(e) => setMinProfitLoss(e.target.value ? parseFloat(e.target.value) : null)}
-            placeholder="Min Profit/Loss"
-            className="w-40 px-2 py-1 border rounded"
-          />
-          <input
-            type="number"
-            value={maxProfitLoss || ""}
-            onChange={(e) => setMaxProfitLoss(e.target.value ? parseFloat(e.target.value) : null)}
-            placeholder="Max Profit/Loss"
-            className="w-40 px-2 py-1 border rounded"
-          />
+        {/* Symbol Input and Trade Type Dropdown */}
+        <div className="mt-6 md:flex md:items-center md:justify-between">
+          <div className="flex items-center gap-x-3">
+            <input
+              type="text"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              placeholder="Symbol"
+              className={`w-40 rounded border px-2 py-1 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
+            />
+            <select
+              value={selectedType || ""}
+              onChange={(e) => setSelectedType(e.target.value || null)}
+              className={`w-40 rounded border px-2 py-1 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
+            >
+              <option value="">Select Trade Type</option>
+              <option value="stock">Stock</option>
+              <option value="forex">Forex</option>
+              <option value="crypto">Crypto</option>
+              <option value="option">Option</option>
+              <option value="crypto spot">Crypto Spot</option>
+            </select>
+          </div>
         </div>
-      </div>
+      </form>
 
-      <div className="flex flex-col mt-6">
+      {/* Table and Pagination */}
+      <div className="mt-6 flex flex-col">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-800">
+            <div
+              className={`overflow-hidden border ${darkMode ? "border-gray-700" : "border-gray-200"} md:rounded-lg`}
+            >
+              <table
+                className={`min-w-full divide-y ${darkMode ? "divide-gray-700 bg-gray-900" : "divide-gray-200 bg-white"}`}
+              >
+                <thead
+                  className={`bg-gray-50 ${darkMode ? "dark:bg-gray-800" : ""}`}
+                >
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Symbol
                     </th>
                     <th
                       scope="col"
-                      className="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-12 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Trade Type
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Outcome
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Quantity
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Entry Price
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Exit Price
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Profit/Loss
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Entry Date
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className={`px-4 py-3.5 text-left text-sm font-normal rtl:text-right ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Exit Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                  {transactions.map((transaction, index) => {
-                    const formattedEntryDate = new Date(
-                      transaction.entryDate
-                    ).toLocaleDateString();
-                    const formattedExitDate = new Date(
-                      transaction.exitDate
-                    ).toLocaleDateString();
+                <tbody>
+                  {transactions.map(
+                    (transaction: Transaction, index: number) => {
+                      const formattedEntryDate = new Date(
+                        transaction.entryDate,
+                      ).toLocaleDateString();
+                      const formattedExitDate = new Date(
+                        transaction.exitDate,
+                      ).toLocaleDateString();
 
-                    return (
-                      <tr key={index}>
-                        <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                          {transaction.symbol}
-                        </td>
-                        <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
-                          {transaction.tradeType}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {transaction.tradeOutcome}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {transaction.quantity}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {transaction.entryPrice}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {transaction.exitPrice}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {transaction.profitLoss}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {formattedEntryDate}
-                        </td>
-                        <td className="px-4 py-4 text-sm whitespace-nowrap">
-                          {formattedExitDate}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                      return (
+                        <tr key={index}>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.symbol}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-12 py-4 text-sm font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.tradeType}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.tradeOutcome}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.quantity}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.entryPrice}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.exitPrice}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {transaction.profitLoss}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {formattedEntryDate}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
+                          >
+                            {formattedExitDate}
+                          </td>
+                        </tr>
+                      );
+                    },
+                  )}
                 </tbody>
               </table>
             </div>
@@ -257,16 +285,24 @@ const TransactionTable: React.FC = () => {
       </div>
 
       <div className="mt-6 sm:flex sm:items-center sm:justify-between">
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          Page <span className="font-medium text-gray-700 dark:text-gray-100">{currentPage} of {Math.ceil(transactions.length / pageSize)}</span>
+        <div
+          className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+        >
+          Page{" "}
+          <span
+            className={`font-medium ${darkMode ? "text-gray-100" : "text-gray-700"}`}
+          >
+            {currentPage} of {Math.ceil(totalPages / pageSize)}
+          </span>
         </div>
 
         <Pagination
+          className="pagination-data"
           current={currentPage}
-          total={transactions.length}
+          total={totalPages}
           pageSize={pageSize}
           onChange={handlePageChange}
-          className="flex items-center mt-4 gap-x-4 sm:mt-0"
+          showLessItems
         />
       </div>
     </section>

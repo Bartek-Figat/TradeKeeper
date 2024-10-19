@@ -355,8 +355,6 @@ export function RegisterRoutes(app: Router) {
             function CustomTradeController_filterTrades(request: any, response: any, next: any) {
             const args = {
                     filter: {"in":"request","name":"filter","required":true,"dataType":"object"},
-                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
-                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

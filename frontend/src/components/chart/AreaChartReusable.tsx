@@ -4,9 +4,18 @@ import { useSelector } from "react-redux";
 
 type AreaChartProps = {
   data: Array<{ time: string | number; value: number }>;
+  title?: string; // Optional title for the chart
+  tooltipContent?: (value: number, time: string) => string; // Function to customize tooltip content
+  height?: number; // Optional height for the chart
+  width?: number; // Optional width for the chart
 };
 
-const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
+const AreaChart: React.FC<AreaChartProps> = ({
+  data,
+  title,
+  tooltipContent,
+  height = 400, // Default height
+}) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const darkMode = useSelector(
@@ -42,7 +51,7 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
       watermark: {
         color: "rgb(145 149 157 / 30%)",
         visible: true,
-        text: "TradeKeeper: Riding the Market Tide!",
+        text: title || "Area Chart", // Use the title prop
         fontSize: 40,
         horzAlign: "center",
         vertAlign: "bottom",
@@ -123,10 +132,12 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
             price = data.close;
           }
         }
-        toolTip.innerHTML = `<div style="color: #2962FF; font-weight: bold;">Apple Inc.</div><div style="font-size: 24px; margin: 4px 0px; color: ${darkMode ? "#fff" : "black"}">
+        toolTip.innerHTML = tooltipContent
+          ? tooltipContent(price, dateStr.toString())
+          : `<div style="color: #2962FF; font-weight: bold;">Value</div><div style="font-size: 24px; margin: 4px 0px; color: ${darkMode ? "#fff" : "black"}">
             ${Math.round(100 * price) / 100}
             </div><div style="color: ${darkMode ? "#aaa" : "black"}">
-            ${dateStr}
+            ${dateStr.toString()}
             </div>`;
 
         const coordinate = areaSeries.priceToCoordinate(price);
@@ -158,7 +169,7 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
 
     chart.timeScale().fitContent();
     chartRef.current = chart;
-  }, [data, darkMode]);
+  }, [data, darkMode, title, tooltipContent]);
 
   useEffect(() => {
     initializeChart();
@@ -188,7 +199,7 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
       ref={chartContainerRef}
       style={{
         width: "100%",
-        height: "400px", // Set a default height for the chart
+        height: `${height}px`, // Use the height prop
         minHeight: "300px", // Ensure a minimum height for smaller screens
       }}
     />
