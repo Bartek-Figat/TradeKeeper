@@ -11,6 +11,11 @@ import {
 } from "@heroicons/react/20/solid";
 
 export const navItems = [
+  {
+    to: "/dashboard/create-trade",
+    icon: <PlusCircleIcon />,
+    label: "Create Trade",
+  },
   { to: "/dashboard", icon: <HomeIcon />, label: "Dashboard" },
   {
     to: "/dashboard/transactions",
@@ -25,11 +30,7 @@ export const navItems = [
     icon: <PresentationChartLineIcon />,
     label: "Lightweigh",
   },
-  {
-    to: "/dashboard/create-trade",
-    icon: <PlusCircleIcon />,
-    label: "Create Trade",
-  },
+
   {
     to: "/dashboard/tutorial",
     icon: <InformationCircleIcon />,

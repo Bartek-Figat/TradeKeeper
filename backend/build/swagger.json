@@ -728,85 +728,22 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"generalNote": {
-											"type": "string"
+									"items": {
+										"properties": {
+											"performancePercentage": {},
+											"totalTrades": {},
+											"totalProfitLoss": {},
+											"tradeType": {}
 										},
-										"maxDrawdown": {
-											"type": "string"
-										},
-										"riskRewardRatio": {
-											"type": "string"
-										},
-										"sortinoRatio": {
-											"type": "string"
-										},
-										"sharpeRatio": {
-											"type": "string"
-										},
-										"ES": {
-											"type": "string"
-										},
-										"VaR": {
-											"type": "string"
-										},
-										"losses": {
-											"items": {
-												"properties": {
-													"profitLoss": {},
-													"exitPrice": {},
-													"entryPrice": {},
-													"exitDate": {},
-													"entryDate": {},
-													"symbol": {}
-												},
-												"required": [
-													"profitLoss",
-													"exitPrice",
-													"entryPrice",
-													"exitDate",
-													"entryDate",
-													"symbol"
-												],
-												"type": "object"
-											},
-											"type": "array"
-										},
-										"wins": {
-											"items": {
-												"properties": {
-													"profitLoss": {},
-													"exitPrice": {},
-													"entryPrice": {},
-													"exitDate": {},
-													"entryDate": {},
-													"symbol": {}
-												},
-												"required": [
-													"profitLoss",
-													"exitPrice",
-													"entryPrice",
-													"exitDate",
-													"entryDate",
-													"symbol"
-												],
-												"type": "object"
-											},
-											"type": "array"
-										}
+										"required": [
+											"performancePercentage",
+											"totalTrades",
+											"totalProfitLoss",
+											"tradeType"
+										],
+										"type": "object"
 									},
-									"required": [
-										"generalNote",
-										"maxDrawdown",
-										"riskRewardRatio",
-										"sortinoRatio",
-										"sharpeRatio",
-										"ES",
-										"VaR",
-										"losses",
-										"wins"
-									],
-									"type": "object"
+									"type": "array"
 								}
 							}
 						}

@@ -421,4 +421,754 @@ export class GroupTradesForChart {
       generalNote,
     };
   }
+
+  async groupTradesByTypeWithPerformance(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalProfitLoss: { $sum: "$profitLoss" },
+          totalEntryPrice: { $sum: "$entryPrice" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalProfitLoss: 1,
+          totalEntryPrice: 1,
+          totalTrades: 1,
+          performancePercentage: {
+            $multiply: [
+              { $divide: ["$totalProfitLoss", "$totalEntryPrice"] },
+              100,
+            ],
+          },
+        },
+      },
+    ];
+
+    const groupedTrades = await this.db.aggregate(pipeline).toArray();
+
+    return groupedTrades.map((trade) => ({
+      tradeType: trade.tradeType,
+      totalProfitLoss: trade.totalProfitLoss,
+      totalTrades: trade.totalTrades,
+      performancePercentage: trade.performancePercentage.toFixed(2),
+    }));
+  }
+
+  async groupTradesByTypeWithDetails(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          trades: {
+            $push: {
+              symbol: "$symbol",
+              entryPrice: "$entryPrice",
+              exitPrice: "$exitPrice",
+              profitLoss: { $subtract: ["$exitPrice", "$entryPrice"] },
+            },
+          },
+          totalProfitLoss: {
+            $sum: { $subtract: ["$exitPrice", "$entryPrice"] },
+          },
+          totalEntryPrice: { $sum: "$entryPrice" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          trades: 1,
+          totalProfitLoss: 1,
+          totalEntryPrice: 1,
+          totalTrades: 1,
+          performancePercentage: {
+            $multiply: [
+              { $divide: ["$totalProfitLoss", "$totalEntryPrice"] },
+              100,
+            ],
+          },
+        },
+      },
+    ];
+
+    const groupedTrades = await this.db.aggregate(pipeline).toArray();
+
+    return groupedTrades.map((trade) => ({
+      tradeType: trade.tradeType,
+      trades: trade.trades.map((t: any) => ({
+        symbol: t.symbol,
+        entryPrice: t.entryPrice,
+        exitPrice: t.exitPrice,
+        profitLoss: t.profitLoss,
+        performancePercentage: ((t.profitLoss / t.entryPrice) * 100).toFixed(2),
+      })),
+      totalProfitLoss: trade.totalProfitLoss,
+      totalTrades: trade.totalTrades,
+      performancePercentage: trade.performancePercentage.toFixed(2),
+    }));
+  }
+  async calculateAverageProfitLossByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalProfitLoss: { $sum: "$profitLoss" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          averageProfitLoss: { $divide: ["$totalProfitLoss", "$totalTrades"] },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateTotalFeesByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalFees: { $sum: "$fees" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalFees: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMaxDrawdownByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          maxDrawdown: {
+            $min: { $subtract: ["$exitPrice", "$entryPrice"] },
+          },
+          totalEntryPrice: { $sum: "$entryPrice" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          maxDrawdownPercentage: {
+            $multiply: [{ $divide: ["$maxDrawdown", "$totalEntryPrice"] }, 100],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateSharpeRatioByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalProfitLoss: { $sum: "$profitLoss" },
+          totalTrades: { $sum: 1 },
+          profitLosses: { $push: "$profitLoss" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalProfitLoss: 1,
+          totalTrades: 1,
+          standardDeviation: {
+            $stdDevPop: "$profitLosses",
+          },
+          sharpeRatio: {
+            $cond: {
+              if: { $eq: ["$standardDeviation", 0] },
+              then: 0,
+              else: {
+                $divide: ["$totalProfitLoss", "$standardDeviation"],
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateSortinoRatioByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalProfitLoss: { $sum: "$profitLoss" },
+          downsideDeviations: {
+            $push: {
+              $cond: [{ $lt: ["$profitLoss", 0] }, "$profitLoss", 0],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalProfitLoss: 1,
+          downsideDeviation: { $stdDevPop: "$downsideDeviations" },
+          sortinoRatio: {
+            $cond: {
+              if: { $eq: ["$downsideDeviation", 0] },
+              then: 0,
+              else: {
+                $divide: ["$totalProfitLoss", "$downsideDeviation"],
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateWinLossRatioByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          wins: {
+            $sum: { $cond: [{ $gt: ["$exitPrice", "$entryPrice"] }, 1, 0] },
+          },
+          losses: {
+            $sum: { $cond: [{ $lt: ["$exitPrice", "$entryPrice"] }, 1, 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          winLossRatio: {
+            $cond: {
+              if: { $eq: ["$losses", 0] },
+              then: "$wins",
+              else: { $divide: ["$wins", "$losses"] },
+            },
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateAverageHoldingPeriodByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $addFields: {
+          holdingPeriod: { $subtract: ["$exitDate", "$entryDate"] },
+        },
+      },
+      {
+        $group: {
+          _id: "$tradeType",
+          totalHoldingPeriod: { $sum: "$holdingPeriod" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          averageHoldingPeriod: {
+            $divide: ["$totalHoldingPeriod", "$totalTrades"],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results.map((result) => ({
+      ...result,
+      averageHoldingPeriodDays: (
+        result.averageHoldingPeriod /
+        (1000 * 60 * 60 * 24)
+      ).toFixed(2),
+    }));
+  }
+  async calculateMedianProfitLossByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          profitLosses: { $push: "$profitLoss" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          medianProfitLoss: {
+            $arrayElemAt: [
+              {
+                $slice: [
+                  { $sortArray: { input: "$profitLosses", sortBy: 1 } },
+                  { $floor: { $divide: [{ $size: "$profitLosses" }, 2] } },
+                  1,
+                ],
+              },
+              0,
+            ],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateTotalQuantityByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalQuantity: { $sum: "$quantity" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalQuantity: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMaxProfitByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          maxProfit: { $max: "$profitLoss" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          maxProfit: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMinLossByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          minLoss: { $min: "$profitLoss" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          minLoss: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateProfitFactorByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          grossProfit: {
+            $sum: { $cond: [{ $gt: ["$profitLoss", 0] }, "$profitLoss", 0] },
+          },
+          grossLoss: {
+            $sum: { $cond: [{ $lt: ["$profitLoss", 0] }, "$profitLoss", 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          profitFactor: {
+            $cond: {
+              if: { $eq: ["$grossLoss", 0] },
+              then: "Infinity",
+              else: { $divide: ["$grossProfit", { $abs: "$grossLoss" }] },
+            },
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateAverageTradeDurationByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $addFields: {
+          tradeDuration: { $subtract: ["$exitDate", "$entryDate"] },
+        },
+      },
+      {
+        $group: {
+          _id: "$tradeType",
+          totalDuration: { $sum: "$tradeDuration" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          averageTradeDuration: {
+            $divide: ["$totalDuration", "$totalTrades"],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results.map((result) => ({
+      ...result,
+      averageTradeDurationDays: (
+        result.averageTradeDuration /
+        (1000 * 60 * 60 * 24)
+      ).toFixed(2),
+    }));
+  }
+
+  async calculateMaxHoldingPeriodByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $addFields: {
+          holdingPeriod: { $subtract: ["$exitDate", "$entryDate"] },
+        },
+      },
+      {
+        $group: {
+          _id: "$tradeType",
+          maxHoldingPeriod: { $max: "$holdingPeriod" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          maxHoldingPeriodDays: {
+            $divide: ["$maxHoldingPeriod", 1000 * 60 * 60 * 24],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMinHoldingPeriodByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $addFields: {
+          holdingPeriod: { $subtract: ["$exitDate", "$entryDate"] },
+        },
+      },
+      {
+        $group: {
+          _id: "$tradeType",
+          minHoldingPeriod: { $min: "$holdingPeriod" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          minHoldingPeriodDays: {
+            $divide: ["$minHoldingPeriod", 1000 * 60 * 60 * 24],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateTotalProfitByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalProfit: {
+            $sum: { $cond: [{ $gt: ["$profitLoss", 0] }, "$profitLoss", 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalProfit: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateTotalLossByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalLoss: {
+            $sum: { $cond: [{ $lt: ["$profitLoss", 0] }, "$profitLoss", 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalLoss: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateAverageFeesByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalFees: { $sum: "$fees" },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          averageFees: { $divide: ["$totalFees", "$totalTrades"] },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMaxFeesByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          maxFees: { $max: "$fees" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          maxFees: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateMinFeesByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          minFees: { $min: "$fees" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          minFees: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateAverageRiskRewardRatioByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalRiskReward: {
+            $sum: {
+              $divide: [
+                { $subtract: ["$exitPrice", "$entryPrice"] },
+                { $subtract: ["$entryPrice", "$exitPrice"] },
+              ],
+            },
+          },
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          averageRiskRewardRatio: {
+            $divide: ["$totalRiskReward", "$totalTrades"],
+          },
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
+
+  async calculateTotalTradesByType(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $group: {
+          _id: "$tradeType",
+          totalTrades: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          tradeType: "$_id",
+          totalTrades: 1,
+        },
+      },
+    ];
+
+    const results = await this.db.aggregate(pipeline).toArray();
+    return results;
+  }
 }
