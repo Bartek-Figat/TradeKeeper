@@ -148,7 +148,7 @@ const DashboardLayout = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-1 flex-col">
+          <div className="flex w-full flex-1 flex-col dark:bg-[#252729]">
             <Outlet />
             <footer>
               <Footer />
@@ -190,7 +190,7 @@ const DashboardLayout = () => {
               !isOpen ? "ml-[-240px] justify-between" : "ml-0"
             }`}
           >
-            <div className="flex flex-1 flex-col dark:bg-[#252729]">
+            <div className="flex w-full flex-1 flex-col dark:bg-[#252729]">
               <Outlet />
             </div>
             <footer>

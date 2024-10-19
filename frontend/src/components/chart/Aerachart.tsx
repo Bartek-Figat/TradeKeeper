@@ -1,14 +1,17 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { createChart, IChartApi } from "lightweight-charts";
+import { createChart, IChartApi, ISeriesApi } from "lightweight-charts";
 import { useSelector } from "react-redux";
 
 type AreaChartProps = {
-  data: Array<{ time: string | number; value: number }>;
+  data1: Array<{ time: string | number; value: number }>;
+  data2: Array<{ time: string | number; value: number }>;
 };
 
-const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
+const AreaChart1: React.FC<AreaChartProps> = ({ data1, data2 }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
+  const lineSeries1Ref = useRef<ISeriesApi<"Line"> | null>(null);
+  const lineSeries2Ref = useRef<ISeriesApi<"Line"> | null>(null);
   const darkMode = useSelector(
     (state: { darkMode: boolean }) => state.darkMode,
   );
@@ -27,57 +30,35 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
         vertLines: { visible: false },
         horzLines: { visible: false },
       },
-      crosshair: {
-        horzLine: {
-          visible: false,
-          labelVisible: false,
-        },
-        vertLine: {
-          labelVisible: false,
-        },
-      },
     });
 
-    chart.applyOptions({
-      watermark: {
-        color: "rgb(145 149 157 / 30%)",
-        visible: true,
-        text: "Area Chart", // Use the title prop
-        fontSize: 40,
-        horzAlign: "center",
-        vertAlign: "bottom",
-      },
-      leftPriceScale: {
-        visible: true,
-        borderColor: "transparent",
-      },
-      timeScale: {
-        visible: true,
-      },
-      rightPriceScale: {
-        visible: false,
-      },
-    });
-
-    const areaSeries = chart.addAreaSeries({
-      topColor: darkMode
-        ? "rgba(38, 198, 218, 0.56)"
-        : "rgba(38, 198, 218, 0.56)",
-      bottomColor: darkMode
-        ? "rgba(38, 198, 218, 0.04)"
-        : "rgba(38, 198, 218, 0.04)",
-      lineColor: darkMode ? "rgba(38, 198, 218, 1)" : "rgba(38, 198, 218, 1)",
+    // Create first line series
+    const lineSeries1 = chart.addLineSeries({
+      color: "rgba(255, 0, 0, 1)", // Red line
       lineWidth: 2,
-      crosshairMarkerVisible: false,
     });
-
-    areaSeries.setData(
-      data.map(({ time, value }) => ({
+    lineSeries1.setData(
+      data1.map(({ time, value }) => ({
         time: new Date(time).toISOString().split("T")[0],
         value,
       })),
     );
+    lineSeries1Ref.current = lineSeries1;
 
+    // Create second line series
+    const lineSeries2 = chart.addLineSeries({
+      color: "rgba(0, 0, 255, 1)", // Blue line
+      lineWidth: 2,
+    });
+    lineSeries2.setData(
+      data2.map(({ time, value }) => ({
+        time: new Date(time).toISOString().split("T")[0],
+        value,
+      })),
+    );
+    lineSeries2Ref.current = lineSeries2;
+
+    // Tooltip setup
     const toolTip = document.createElement("div");
     toolTip.style.width = "120px";
     toolTip.style.height = "auto";
@@ -116,24 +97,24 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
         const dateStr = param.time;
         toolTip.style.opacity = "1";
         toolTip.style.display = "block"; // Show the tooltip
-        const data = param.seriesData.get(areaSeries);
-        let price = 0;
-        if (data) {
-          if ("value" in data) {
-            price = data.value;
-          } else if ("close" in data) {
-            price = data.close;
-          }
+        const data1 = param.seriesData.get(lineSeries1);
+        const data2 = param.seriesData.get(lineSeries2);
+        let price1 = 0;
+        let price2 = 0;
+        if (data1 && "value" in data1) {
+          price1 = data1.value;
         }
-        toolTip.innerHTML = `<div style="color: #2962FF; font-weight: bold;">Apple Inc.</div><div style="font-size: 24px; margin: 4px 0px; color: ${darkMode ? "#fff" : "black"}">
-            ${Math.round(100 * price) / 100}
-            </div><div style="color: ${darkMode ? "#aaa" : "black"}">
-            ${dateStr}
-            </div>`;
+        if (data2 && "value" in data2) {
+          price2 = data2.value;
+        }
+        toolTip.innerHTML = `<div style="color: #2962FF; font-weight: bold;">Data 1: ${Math.round(100 * price1) / 100}</div>
+                             <div style="color: #2962FF; font-weight: bold;">Data 2: ${Math.round(100 * price2) / 100}</div>
+                             <div style="color: ${darkMode ? "#aaa" : "black"}">${dateStr}</div>`;
 
-        const coordinate = areaSeries.priceToCoordinate(price);
+        const coordinate1 = lineSeries1.priceToCoordinate(price1);
+        const coordinate2 = lineSeries2.priceToCoordinate(price2);
         let shiftedCoordinate = param.point.x - 60;
-        if (coordinate === null) {
+        if (coordinate1 === null || coordinate2 === null) {
           return;
         }
         shiftedCoordinate = Math.max(
@@ -144,22 +125,23 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
           ),
         );
         const coordinateY =
-          coordinate - 80 - 15 > 0
-            ? coordinate - 80 - 15
+          Math.min(coordinate1, coordinate2) - 80 - 15 > 0
+            ? Math.min(coordinate1, coordinate2) - 80 - 15
             : Math.max(
                 0,
                 Math.min(
                   chartContainerRef.current!.clientHeight - 80 - 15,
-                  coordinate + 15,
+                  Math.max(coordinate1, coordinate2) + 15,
                 ),
               );
         toolTip.style.left = shiftedCoordinate + "px";
         toolTip.style.top = coordinateY + "px";
       }
     });
+
     chart.timeScale().fitContent();
     chartRef.current = chart;
-  }, [data, darkMode]);
+  }, [data1, data2, darkMode]);
 
   useEffect(() => {
     initializeChart();
@@ -189,11 +171,11 @@ const AreaChart: React.FC<AreaChartProps> = ({ data }) => {
       ref={chartContainerRef}
       style={{
         width: "100%",
-        height: "400px", // Set a default height for the chart
-        minHeight: "300px", // Ensure a minimum height for smaller screens
+        height: "400px",
+        minHeight: "300px",
       }}
     />
   );
 };
 
-export default AreaChart;
+export default AreaChart1;

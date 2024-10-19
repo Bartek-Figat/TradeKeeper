@@ -74,6 +74,15 @@ export class CustomTradeController extends Controller {
     }
   }
 
+  @Get("/analyze-trade-execution")
+  public async analyzeTradeExecution() {
+    try {
+      return await this.groupTradesForChart.groupWinsAndLosses();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   //@Security("jwt")
   @Get("/company/{symbol}")
   public async getCompanyProfile(@Path() symbol: string): Promise<any> {

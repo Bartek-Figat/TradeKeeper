@@ -80,40 +80,35 @@ const TransactionTable: React.FC = () => {
 
   return (
     <section
-      className={`container mx-auto px-4 ${darkMode ? "dark:bg-gray-900" : "bg-[#f9f9f9]"}`}
+      className={`container m-8 mx-auto w-full rounded-md px-14 ${darkMode ? "" : ""}`}
     >
       <form onSubmit={handleSubmit}>
         <div className="sm:flex sm:items-center sm:justify-between">
-          <div className="ml-16">
-            <div className="ml-3 flex items-center gap-x-3">
+          <div className="">
+            <div className="flex items-center gap-x-3">
               <h2
                 className={`text-lg font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
               >
-                Transactions
+                Transactions per page:
               </h2>
               <span
-                className={`px-3 py-1 text-xs ${darkMode ? "bg-gray-800 text-blue-400" : "bg-blue-100 text-blue-600"} rounded-full`}
+                className={`px-3 py-1 text-xs ${darkMode ? "bg-gray-800 text-blue-400" : "bg-blue-100 text-blue-600"} rounded-full shadow-md`}
               >
                 {transactions.length} records
               </span>
             </div>
-            <p
-              className={`mt-1 text-sm ${darkMode ? "text-gray-300" : "text-gray-500"}`}
-            >
-              Filter and view transaction records.
-            </p>
           </div>
           <div className="mt-4 flex items-center gap-x-3">
             <button
               type="button"
               onClick={clearFilters}
-              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"}`}
+              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"} shadow-lg hover:shadow-xl`}
             >
               Clear Filters
             </button>
             <button
               type="submit"
-              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"}`}
+              className={`flex w-1/2 items-center justify-center gap-x-2 rounded-lg border px-5 py-2 text-sm transition-colors duration-200 sm:w-auto ${darkMode ? "border-gray-700 bg-gray-900 text-gray-200 hover:bg-gray-800" : "bg-white text-gray-700 hover:bg-gray-100"} shadow-lg hover:shadow-xl`}
             >
               Apply Filters
             </button>
@@ -128,12 +123,12 @@ const TransactionTable: React.FC = () => {
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               placeholder="Symbol"
-              className={`w-40 rounded border px-2 py-1 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
+              className={`w-40 rounded-lg border px-3 py-2 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"} transform shadow-md transition duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500`}
             />
             <select
               value={selectedType || ""}
               onChange={(e) => setSelectedType(e.target.value || null)}
-              className={`w-40 rounded border px-2 py-1 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"}`}
+              className={`w-40 rounded-lg border px-3 py-2 pr-8 ${darkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-gray-50 text-[#000080]"} transform shadow-md transition duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500`}
             >
               <option value="">Select Trade Type</option>
               <option value="stock">Stock</option>
@@ -284,7 +279,7 @@ const TransactionTable: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 sm:flex sm:items-center sm:justify-between">
+      <div className="mb-6 mt-6 sm:flex sm:items-center sm:justify-between">
         <div
           className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
         >

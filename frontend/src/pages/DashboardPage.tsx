@@ -3,7 +3,8 @@ import PortfolioOverview from "./PortfolioOverview";
 import PriceTicker from "./PriceTicker";
 import { FaArrowRight } from "react-icons/fa";
 import ChartComponent from "../components/chart/chartContentPage";
-import { staticData } from "../components/chart/priceData";
+import ChartComponetTwo from "../components/chart/Aerachart";
+import { staticData, staticData2 } from "../components/chart/priceData";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -139,6 +140,13 @@ const DashboardPage = () => {
           >
             <ChartComponent data={staticData} />
           </div>
+
+          <div
+            className={`relative rounded-md p-1 ${darkMode ? "bg-[#1a1c1e]" : "bg-white"} p-2 md:col-span-2 lg:col-span-2`}
+          >
+            <ChartComponetTwo data1={staticData} data2={staticData2} />
+          </div>
+
           <div
             className={`rounded-lg p-2 shadow-md ${darkMode ? "bg-[#1a1c1e]" : "bg-white"}`}
           >
@@ -183,7 +191,7 @@ const DashboardPage = () => {
             <div className="flex flex-col">
               <div className="overflow-x-auto">
                 <table
-                  className={`min-w-full text-left text-sm ${darkMode ? "text-neutral-300" : "text-[#000080]"}`}
+                  className={`min-w-full text-left text-sm ${darkMode ? "text-neutral-300" : "text-[#000080]"} divide-y ${darkMode ? "divide-neutral-700 bg-[#1a1c1e]" : "divide-gray-200 bg-white"}`}
                 >
                   <thead
                     className={`text-xs uppercase ${darkMode ? "bg-[#2a2c2e] text-neutral-400" : "bg-gray-50 text-[#000080]"}`}
