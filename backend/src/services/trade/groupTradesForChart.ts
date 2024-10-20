@@ -19,8 +19,68 @@ type TradeFrequencies = {
 };
 
 export class GroupTradesForChart {
-  //private readonly trades: string = "trades";
   private db = new Database().getCollection("trades");
+
+  // Data Retrieval Methods
+  async getUserTrades(userId: string) {
+    const userTrades = await this.db.find({ userId }).toArray();
+    console.log(
+      `Trades for User ID ${userId}:`,
+      JSON.stringify(userTrades, null, 2)
+    );
+    return userTrades; // Return user trades for further use
+  }
+
+  async getBestTrades(_userId?: string) {
+    const matchStage = _userId ? { $match: { userId: _userId } } : null;
+
+    const pipeline = [
+      ...(matchStage ? [matchStage] : []),
+      {
+        $project: {
+          _id: 0,
+          symbol: 1,
+          entryPrice: 1,
+          exitPrice: 1,
+          profitLoss: { $subtract: ["$exitPrice", "$entryPrice"] },
+          gainPercentage: {
+            $multiply: [
+              {
+                $divide: [
+                  { $subtract: ["$exitPrice", "$entryPrice"] },
+                  "$entryPrice",
+                ],
+              },
+              100,
+            ],
+          },
+        },
+      },
+      {
+        $sort: { profitLoss: -1 }, // Sort by profit/loss in descending order
+      },
+      {
+        $limit: 10, // Limit to the top 10 trades
+      },
+    ];
+
+    const bestTrades = await this.db.aggregate(pipeline).toArray();
+
+    const maxGainPercentage = Math.max(
+      ...bestTrades.map((trade) => trade.gainPercentage)
+    );
+
+    return bestTrades.map((trade) => ({
+      symbol: trade.symbol,
+      entryPrice: trade.entryPrice,
+      exitPrice: trade.exitPrice,
+      profitLoss: trade.profitLoss.toFixed(2),
+      gainPercentage: (
+        100 -
+        (trade.gainPercentage / maxGainPercentage) * 100
+      ).toFixed(2),
+    }));
+  }
 
   async groupTradesForChart(_userId?: string) {
     const matchStage = _userId ? { $match: { userId: _userId } } : null;
@@ -209,15 +269,7 @@ export class GroupTradesForChart {
     return { chartData, generalNote };
   }
 
-  async getUserTrades(userId: string) {
-    const userTrades = await this.db.find({ userId }).toArray();
-    console.log(
-      `Trades for User ID ${userId}:`,
-      JSON.stringify(userTrades, null, 2)
-    );
-    return userTrades; // Return user trades for further use
-  }
-
+  // Calculation Methods
   async calculateTradeFrequencies(_userId?: string): Promise<TradeFrequencies> {
     try {
       // Validate userId if provided
@@ -422,103 +474,7 @@ export class GroupTradesForChart {
     };
   }
 
-  async groupTradesByTypeWithPerformance(_userId?: string) {
-    const matchStage = _userId ? { $match: { userId: _userId } } : null;
-
-    const pipeline = [
-      ...(matchStage ? [matchStage] : []),
-      {
-        $group: {
-          _id: "$tradeType",
-          totalProfitLoss: { $sum: "$profitLoss" },
-          totalEntryPrice: { $sum: "$entryPrice" },
-          totalTrades: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          tradeType: "$_id",
-          totalProfitLoss: 1,
-          totalEntryPrice: 1,
-          totalTrades: 1,
-          performancePercentage: {
-            $multiply: [
-              { $divide: ["$totalProfitLoss", "$totalEntryPrice"] },
-              100,
-            ],
-          },
-        },
-      },
-    ];
-
-    const groupedTrades = await this.db.aggregate(pipeline).toArray();
-
-    return groupedTrades.map((trade) => ({
-      tradeType: trade.tradeType,
-      totalProfitLoss: trade.totalProfitLoss,
-      totalTrades: trade.totalTrades,
-      performancePercentage: trade.performancePercentage.toFixed(2),
-    }));
-  }
-
-  async groupTradesByTypeWithDetails(_userId?: string) {
-    const matchStage = _userId ? { $match: { userId: _userId } } : null;
-
-    const pipeline = [
-      ...(matchStage ? [matchStage] : []),
-      {
-        $group: {
-          _id: "$tradeType",
-          trades: {
-            $push: {
-              symbol: "$symbol",
-              entryPrice: "$entryPrice",
-              exitPrice: "$exitPrice",
-              profitLoss: { $subtract: ["$exitPrice", "$entryPrice"] },
-            },
-          },
-          totalProfitLoss: {
-            $sum: { $subtract: ["$exitPrice", "$entryPrice"] },
-          },
-          totalEntryPrice: { $sum: "$entryPrice" },
-          totalTrades: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          tradeType: "$_id",
-          trades: 1,
-          totalProfitLoss: 1,
-          totalEntryPrice: 1,
-          totalTrades: 1,
-          performancePercentage: {
-            $multiply: [
-              { $divide: ["$totalProfitLoss", "$totalEntryPrice"] },
-              100,
-            ],
-          },
-        },
-      },
-    ];
-
-    const groupedTrades = await this.db.aggregate(pipeline).toArray();
-
-    return groupedTrades.map((trade) => ({
-      tradeType: trade.tradeType,
-      trades: trade.trades.map((t: any) => ({
-        symbol: t.symbol,
-        entryPrice: t.entryPrice,
-        exitPrice: t.exitPrice,
-        profitLoss: t.profitLoss,
-        performancePercentage: ((t.profitLoss / t.entryPrice) * 100).toFixed(2),
-      })),
-      totalProfitLoss: trade.totalProfitLoss,
-      totalTrades: trade.totalTrades,
-      performancePercentage: trade.performancePercentage.toFixed(2),
-    }));
-  }
+  // Calculation Methods Continued
   async calculateAverageProfitLossByType(_userId?: string) {
     const matchStage = _userId ? { $match: { userId: _userId } } : null;
 
@@ -747,6 +703,7 @@ export class GroupTradesForChart {
       ).toFixed(2),
     }));
   }
+
   async calculateMedianProfitLossByType(_userId?: string) {
     const matchStage = _userId ? { $match: { userId: _userId } } : null;
 
@@ -896,7 +853,12 @@ export class GroupTradesForChart {
       ...(matchStage ? [matchStage] : []),
       {
         $addFields: {
-          tradeDuration: { $subtract: ["$exitDate", "$entryDate"] },
+          // Convert entryDate and exitDate to Date objects
+          entryDate: { $toDate: "$entryDate" },
+          exitDate: { $toDate: "$exitDate" },
+          tradeDuration: {
+            $subtract: [{ $toDate: "$exitDate" }, { $toDate: "$entryDate" }],
+          },
         },
       },
       {

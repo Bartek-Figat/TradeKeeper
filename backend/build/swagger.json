@@ -730,16 +730,20 @@
 								"schema": {
 									"items": {
 										"properties": {
-											"performancePercentage": {},
-											"totalTrades": {},
-											"totalProfitLoss": {},
-											"tradeType": {}
+											"gainPercentage": {
+												"type": "string"
+											},
+											"profitLoss": {},
+											"exitPrice": {},
+											"entryPrice": {},
+											"symbol": {}
 										},
 										"required": [
-											"performancePercentage",
-											"totalTrades",
-											"totalProfitLoss",
-											"tradeType"
+											"gainPercentage",
+											"profitLoss",
+											"exitPrice",
+											"entryPrice",
+											"symbol"
 										],
 										"type": "object"
 									},

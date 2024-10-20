@@ -77,7 +77,7 @@ export class CustomTradeController extends Controller {
   @Get("/analyze-trade-execution")
   public async analyzeTradeExecution() {
     try {
-      return await this.groupTradesForChart.groupTradesByTypeWithPerformance();
+      return await this.groupTradesForChart.getBestTrades();
     } catch (error) {
       console.log(error);
     }
