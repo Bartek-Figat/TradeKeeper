@@ -211,7 +211,9 @@ const TransactionTable: React.FC = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody
+                  className={`divide-y-[0.5px] ${darkMode ? "divide-gray-700" : "divide-gray-200"}`}
+                >
                   {transactions.map(
                     (transaction: Transaction, index: number) => {
                       const formattedEntryDate = new Date(

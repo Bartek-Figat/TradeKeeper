@@ -37,7 +37,7 @@ export const BestTradesDisplay: React.FC<BestTradesDisplayProps> = ({
           {bestTrades.map((trade, index) => (
             <li
               key={index}
-              className={`flex items-center justify-between border-b p-2 ${darkMode ? "dark:border-neutral-700" : "border-gray-200"}`}
+              className={`flex items-center justify-between p-2 ${darkMode ? "dark:border-neutral-700" : "border-gray-200"} ${index < bestTrades.length - 1 ? "border-b" : ""}`}
             >
               <div>
                 <span

@@ -177,7 +177,7 @@ const DashboardPage = () => {
             <LineChartComponent data={staticData} />
           </div>
         </div>
-        <BestTradesDisplay bestTrades={bestTrades} />;
+        <BestTradesDisplay bestTrades={bestTrades} />
       </div>
     </div>
   );
