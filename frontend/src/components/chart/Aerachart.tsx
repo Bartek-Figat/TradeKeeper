@@ -47,7 +47,7 @@ const AreaChart1: React.FC<AreaChartProps> = ({ data1, data2 }) => {
 
     // Create second line series
     const lineSeries2 = chart.addLineSeries({
-      color: "rgba(0, 0, 255, 1)", // Blue line
+      color: "rgba(37, 133, 42, 0.8)", // Blue line
       lineWidth: 2,
     });
     lineSeries2.setData(

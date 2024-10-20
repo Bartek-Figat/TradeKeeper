@@ -224,9 +224,11 @@ const TransactionTable: React.FC = () => {
                       return (
                         <tr key={index}>
                           <td
-                            className={`whitespace-nowrap px-4 py-4 text-sm font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
+                            className={`whitespace-nowrap px-4 py-4 text-sm font-medium ${darkMode ? "text-white" : "text-white"}`}
                           >
-                            {transaction.symbol}
+                            <div className="rounded-md bg-sky-500 p-1 text-center">
+                              {transaction.symbol}
+                            </div>
                           </td>
                           <td
                             className={`whitespace-nowrap px-12 py-4 text-sm font-medium ${darkMode ? "text-white" : "text-[#000080]"}`}
@@ -236,7 +238,11 @@ const TransactionTable: React.FC = () => {
                           <td
                             className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}
                           >
-                            {transaction.tradeOutcome}
+                            <div
+                              className={`rounded-md text-center text-white ${transaction.tradeOutcome === "win" ? "bg-green-600" : "bg-red-600"}`}
+                            >
+                              {transaction.tradeOutcome}
+                            </div>
                           </td>
                           <td
                             className={`whitespace-nowrap px-4 py-4 text-sm ${darkMode ? "text-white" : "text-[#000080]"}`}

@@ -3,10 +3,8 @@ import {
   HomeIcon,
   ChartBarIcon,
   UserIcon,
-  BriefcaseIcon,
   ChartPieIcon,
   PresentationChartLineIcon,
-  RectangleGroupIcon,
   PlusCircleIcon,
 } from "@heroicons/react/20/solid";
 
@@ -17,13 +15,8 @@ export const navItems = [
     label: "Create Trade",
   },
   { to: "/dashboard", icon: <HomeIcon />, label: "Dashboard" },
-  {
-    to: "/dashboard/transactions",
-    icon: <RectangleGroupIcon />,
-    label: "Transactions",
-  },
+
   { to: "/dashboard/profile", icon: <UserIcon />, label: "Profile" },
-  { to: "/dashboard/project", icon: <BriefcaseIcon />, label: "Project" },
   { to: "/dashboard/analytics", icon: <ChartPieIcon />, label: "Analytics" },
   {
     to: "/dashboard/lightweigh",

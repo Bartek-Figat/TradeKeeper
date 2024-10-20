@@ -489,3 +489,32 @@ body {
   background-color: #eceff5;
   border-color: #eceff5;
 }
+
+/*  */
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f4f4; /* Light background for contrast */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.chart-container {
+  position: relative;
+  width: 100%; /* Full width */
+  height: 400px; /* Set a height for the chart */
+  max-width: 800px; /* Optional: limit the maximum width */
+  margin: 20px 0; /* Space between charts */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Prevent overflow */
+  background-color: white; /* White background for charts */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for charts */
+}
+
+@media (max-width: 600px) {
+  .chart-container {
+    height: 300px; /* Adjust height for smaller screens */
+  }
+}
