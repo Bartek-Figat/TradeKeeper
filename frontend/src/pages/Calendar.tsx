@@ -7,15 +7,22 @@ import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
 import { AnimatePresence, motion } from "framer-motion";
 
-// Initialize moment localizer
 const localizer = momentLocalizer(moment);
 
-// Define types for trade frequency data
+// Define a localization function
+const localizeDate = (date: Date, locale: string) => {
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+};
+
 interface TradeFrequency {
   _id: string;
   tradeCount: number;
-  start: string; // ISO date string
-  end: string; // ISO date string
+  start: string;
+  end: string;
   totalProfit?: number;
   averageDuration?: number;
   trades?: Array<{
@@ -103,146 +110,6 @@ const tradeFrequencies = {
         },
       ],
     },
-    {
-      _id: "2023-40",
-      tradeCount: 10,
-      start: "2023-07-07T00:00:00.000Z",
-      end: "2024-10-08T00:00:00.000Z",
-      totalProfit: 0,
-      averageDuration: 39657600000,
-      trades: [
-        {
-          tradeId: "AAPL",
-          entryDate: "2023-07-07T00:00:00.000Z",
-          exitDate: "2024-10-08T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "GOOGL",
-          entryDate: "2023-07-08T00:00:00.000Z",
-          exitDate: "2024-10-09T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "AMZN",
-          entryDate: "2023-07-09T00:00:00.000Z",
-          exitDate: "2024-10-10T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "MSFT",
-          entryDate: "2023-07-10T00:00:00.000Z",
-          exitDate: "2024-10-11T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "TSLA",
-          entryDate: "2023-07-11T00:00:00.000Z",
-          exitDate: "2024-10-12T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "FB",
-          entryDate: "2023-07-12T00:00:00.000Z",
-          exitDate: "2024-10-13T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "NFLX",
-          entryDate: "2023-07-13T00:00:00.000Z",
-          exitDate: "2024-10-14T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "NVDA",
-          entryDate: "2023-07-14T00:00:00.000Z",
-          exitDate: "2024-10-15T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "DIS",
-          entryDate: "2023-07-15T00:00:00.000Z",
-          exitDate: "2024-10-16T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "PYPL",
-          entryDate: "2023-07-16T00:00:00.000Z",
-          exitDate: "2024-10-17T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-      ],
-    },
-    {
-      _id: "2024-42",
-      tradeCount: 10,
-      start: "2024-06-01T00:00:00.000Z",
-      end: "2024-10-14T00:00:00.000Z",
-      totalProfit: 0,
-      averageDuration: 129600000,
-      trades: [
-        {
-          tradeId: "EUR/USD",
-          entryDate: "2024-06-01T00:00:00.000Z",
-          exitDate: "2024-06-02T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "GBP/USD",
-          entryDate: "2024-06-03T00:00:00.000Z",
-          exitDate: "2024-06-04T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "USD/JPY",
-          entryDate: "2024-06-05T00:00:00.000Z",
-          exitDate: "2024-06-06T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "AUD/USD",
-          entryDate: "2024-06-07T00:00:00.000Z",
-          exitDate: "2024-06-08T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "USD/CAD",
-          entryDate: "2024-06-09T00:00:00.000Z",
-          exitDate: "2024-06-10T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "NZD/USD",
-          entryDate: "2024-06-11T00:00:00.000Z",
-          exitDate: "2024-06-12T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "CHF/JPY",
-          entryDate: "2024-06-13T00:00:00.000Z",
-          exitDate: "2024-06-14T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "GBP/CHF",
-          entryDate: "2024-06-15T00:00:00.000Z",
-          exitDate: "2024-06-16T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "EUR/GBP",
-          entryDate: "2024-06-17T00:00:00.000Z",
-          exitDate: "2024-06-18T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-        {
-          tradeId: "AUD/JPY",
-          entryDate: "2024-06-19T00:00:00.000Z",
-          exitDate: "2024-06-20T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
-      ],
-    },
   ],
 };
 
@@ -252,10 +119,10 @@ const transformToEvents = (frequencies: TradeFrequencies) => {
     const { tradeCount, start, end, ...rest } = item;
     return {
       title: `Trades: ${tradeCount}`,
-      start: new Date(start).toISOString(), // Convert to ISO string
-      end: new Date(end).toISOString(), // Convert to ISO string
-      tradeCount, // Add tradeCount explicitly
-      ...rest, // Spread additional trade details
+      start: new Date(start).toISOString(),
+      end: new Date(end).toISOString(),
+      tradeCount,
+      ...rest,
     };
   });
 };
@@ -266,28 +133,46 @@ const TradeCalendar: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<TradeFrequency | null>(
     null,
   );
+
   const [currentPage, setCurrentPage] = useState(1);
-  const tradesPerPage = 1; // Number of trades to display per page
+  const tradesPerPage = 1;
+  const userLocale = navigator.language;
 
   const handleSelectEvent = (event: TradeFrequency) => {
     setSelectedEvent(event);
-    setCurrentPage(1); // Reset to first page when a new event is selected
+    setCurrentPage(1);
   };
 
   const handleClosePopup = () => {
     setSelectedEvent(null);
   };
 
-  // Calculate the current trades based on the current page
   const currentTrades = selectedEvent?.trades?.slice(
     (currentPage - 1) * tradesPerPage,
     currentPage * tradesPerPage,
   );
 
-  // Calculate total pages
-  //   const totalPages = selectedEvent?.trades
-  //     ? Math.ceil(selectedEvent.trades.length / tradesPerPage)
-  //     : 0;
+  const components: any = {
+    event: ({ event }) => {
+      if (event) {
+        return (
+          <div
+            className="absolute top-0 flex min-w-[14%] justify-center rounded-md border-[2px] border-emerald-500 bg-emerald-400 p-[5px]"
+            style={{ height: 80 }}
+          >
+            <div className="flex flex-col justify-center">
+              <p className="text-lg font-medium text-gray-800">{`$${event.totalProfit}`}</p>
+              <p className="text-center text-sm font-extralight text-gray-700">
+                {event.tradeCount} trades
+              </p>
+            </div>
+          </div>
+        );
+      }
+
+      return null;
+    },
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -303,20 +188,19 @@ const TradeCalendar: React.FC = () => {
               Frequencies Calendar
             </h1>
             <Calendar
+              components={components}
               localizer={localizer}
               events={events.map((event) => ({
                 ...event,
-                tradeCount: event.tradeCount || 0, // Ensure tradeCount is always present
-                start: new Date(event.start), // Convert back to Date object
-                end: new Date(event.end), // Convert back to Date object
+                start: new Date(event.end),
+                end: new Date(event.end),
               }))}
               startAccessor="start"
               endAccessor="end"
-              style={{ height: 500 }}
-              defaultView="week"
-              views={["week", "day"]}
-              popup
-              onSelectEvent={handleSelectEvent} // Handle event selection
+              style={{ height: 500, width: 800 }}
+              defaultView="month"
+              views={["month"]}
+              onSelectEvent={handleSelectEvent}
             />
           </div>
           <AnimatePresence>
@@ -388,14 +272,20 @@ const TradeCalendar: React.FC = () => {
                                 Holding From:
                               </span>
                               <span>
-                                {new Date(trade.entryDate).toLocaleDateString()}
+                                {localizeDate(
+                                  new Date(trade.entryDate),
+                                  userLocale,
+                                )}
                               </span>
                             </div>
 
                             <div className="flex flex-col p-2">
                               <span className="font-semibold">To:</span>
                               <span>
-                                {new Date(trade.exitDate).toLocaleDateString()}
+                                {localizeDate(
+                                  new Date(trade.exitDate),
+                                  userLocale,
+                                )}
                               </span>
                             </div>
                           </div>
@@ -411,8 +301,8 @@ const TradeCalendar: React.FC = () => {
                     pageSize={tradesPerPage}
                     total={selectedEvent?.trades?.length || 0}
                     onChange={(page) => setCurrentPage(page)}
-                    showSizeChanger={false} // Hide size changer if you want a fixed page size
-                    style={{ marginTop: "16px" }} // Optional styling
+                    showSizeChanger={false}
+                    style={{ marginTop: "16px" }}
                     showLessItems
                   />
                 </div>
@@ -433,3 +323,62 @@ const TradeCalendar: React.FC = () => {
 };
 
 export default TradeCalendar;
+
+// import React, { useState } from 'react';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+// import { Calendar, momentLocalizer } from 'react-big-calendar';
+// import moment from 'moment';
+
+// const localizer = momentLocalizer(moment);
+
+// const MyCalendar = ({ events }) => {
+//   const [startDate, setStartDate] = useState(null);
+//   const [endDate, setEndDate] = useState(null);
+
+//   const filteredEvents = events.filter(event => {
+//     const eventStart = new Date(event.start);
+//     const eventEnd = new Date(event.end);
+//     return (!startDate || eventStart >= startDate) && (!endDate || eventEnd <= endDate);
+//   });
+
+//   return (
+//     <div>
+//       <div className="date-picker">
+//         <DatePicker
+//           selected={startDate}
+//           onChange={date => setStartDate(date)}
+//           selectsStart
+//           startDate={startDate}
+//           endDate={endDate}
+//           placeholderText="Start Date"
+//         />
+//         <DatePicker
+//           selected={endDate}
+//           onChange={date => setEndDate(date)}
+//           selectsEnd
+//           startDate={startDate}
+//           endDate={endDate}
+//           placeholderText="End Date"
+//         />
+//       </div>
+//       <Calendar
+//         localizer={localizer}
+//         events={filteredEvents.map(event => ({
+//           ...event,
+//           start: new Date(event.start),
+//           end: new Date(event.end),
+//         }))}
+//         startAccessor="start"
+//         endAccessor="end"
+//         style={{ height: 500 }}
+//         defaultView="month"
+//         views={["month"]}
+//         popup
+//         onSelectEvent={handleSelectEvent}
+//       />
+//     </div>
+//   );
+// };
+
+// export default MyCalendar;

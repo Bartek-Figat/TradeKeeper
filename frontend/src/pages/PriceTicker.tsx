@@ -622,11 +622,11 @@ const PriceTicker = () => {
 
   return (
     <div className="mx-auto w-full max-w-screen-lg overflow-hidden whitespace-nowrap rounded-md bg-[#000000] p-4 text-white dark:bg-[#1a1c1e]">
-      <div className="mb-6 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 p-4 shadow-md">
+      {/* <div className="mb-6 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 p-4 shadow-md">
         <h2 className="text-center text-2xl font-bold">
           Stay updated with your latest trades
         </h2>
-      </div>
+      </div> */}
       <div className="animate-scroll flex">
         {prices.map((item, index) => (
           <div key={index} className="mx-4 flex flex-col items-center">

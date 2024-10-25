@@ -641,6 +641,35 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.8.tgz#21a907684723bbbaa5f0974cf7730bd797eb8e62"
   integrity sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==
 
+"@fullcalendar/core@^6.1.15":
+  version "6.1.15"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.15.tgz#6c3f5259fc4589870228853072131219bb533f6e"
+  integrity sha512-BuX7o6ALpLb84cMw1FCB9/cSgF4JbVO894cjJZ6kP74jzbUZNjtwffwRdA+Id8rrLjT30d/7TrkW90k4zbXB5Q==
+  dependencies:
+    preact "~10.12.1"
+
+"@fullcalendar/daygrid@^6.1.15", "@fullcalendar/daygrid@~6.1.15":
+  version "6.1.15"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.15.tgz#91208b0955ba805ddad285a53ee6f53855146963"
+  integrity sha512-j8tL0HhfiVsdtOCLfzK2J0RtSkiad3BYYemwQKq512cx6btz6ZZ2RNc/hVnIxluuWFyvx5sXZwoeTJsFSFTEFA==
+
+"@fullcalendar/list@^6.1.15":
+  version "6.1.15"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.15.tgz#d9b7ff0a50d7efa0d31234ed6caea06db6090c29"
+  integrity sha512-U1bce04tYDwkFnuVImJSy2XalYIIQr6YusOWRPM/5ivHcJh67Gm8CIMSWpi3KdRSNKFkqBxLPkfZGBMaOcJYug==
+
+"@fullcalendar/react@^6.1.15":
+  version "6.1.15"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.15.tgz#3198b4a64e256afd37c9760c8741a9af89ade894"
+  integrity sha512-L0b9hybS2J4e7lq6G2CD4nqriyLEqOH1tE8iI6JQjAMTVh5JicOo5Mqw+fhU5bJ7hLfMw2K3fksxX3Ul1ssw5w==
+
+"@fullcalendar/timegrid@^6.1.15":
+  version "6.1.15"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.15.tgz#c4630b7c03c813065154c6e3981f8d51d9d692e5"
+  integrity sha512-61ORr3A148RtxQ2FNG7JKvacyA/TEVZ7z6I+3E9Oeu3dqTf6M928bFcpehRTIK6zIA6Yifs7BeWHgOE9dFnpbw==
+  dependencies:
+    "@fullcalendar/daygrid" "~6.1.15"
+
 "@headlessui/react@^1.7.18":
   version "1.7.18"
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.18.tgz#30af4634d2215b2ca1aa29d07f33d02bea82d9d7"
@@ -917,6 +946,18 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@preact/signals-core@^1.7.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.8.0.tgz#45ffadb81b48a298a4accd26b3f6c0140cd6dacc"
+  integrity sha512-OBvUsRZqNmjzCZXWLxkZfhcgT+Fk8DDcT/8vD6a1xhDemodyy87UJRJfASMuSD8FaAIeGgGm85ydXhm7lr4fyA==
+
+"@preact/signals@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@preact/signals/-/signals-1.3.0.tgz#07d0210d0f813b932255ed30e0ffadae0d64fe13"
+  integrity sha512-EOMeg42SlLS72dhoq6Vjq08havnLseWmPQ8A0YsgIAqMgWgx7V1a39+Pxo6i7SY5NwJtH4849JogFq3M67AzWg==
+  dependencies:
+    "@preact/signals-core" "^1.7.0"
+
 "@reduxjs/toolkit@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-2.2.3.tgz#5ce71cbf162f98c5dafb49bd3f1e11c5486ab9c4"
@@ -1003,6 +1044,31 @@
   version "4.9.6"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.9.6.tgz#2c1fb69e02a3f1506f52698cfdc3a8b6386df9a6"
   integrity sha512-jqzNLhNDvIZOrt69Ce4UjGRpXJBzhUBzawMwnaDAwyHriki3XollsewxWzOzz+4yOFDkuJHtTsZFwMxhYJWmLQ==
+
+"@schedule-x/calendar@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@schedule-x/calendar/-/calendar-2.4.1.tgz#9972eab98beddd3b55484d5e5608f3dddc91481f"
+  integrity sha512-3r/UEFAqITTUA0uqWuV6CC1BJQt51cYLj/aXMUWoy4SAedBj7+qV7ne/D7SX0qefGMlu3gZaC5USHzBVdm6ZTA==
+
+"@schedule-x/event-modal@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@schedule-x/event-modal/-/event-modal-2.4.1.tgz#a485a2814b639494e049ff5997c2fb73b58c91e0"
+  integrity sha512-/eJR9oLnVRFIu4iFAfdfHSiXlNj28UJiCfq4ipb/27BHVt9PF17U+ZNuB2ek86MWDvZAizZhfZjRxz2kLtG+tQ==
+
+"@schedule-x/events-service@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@schedule-x/events-service/-/events-service-2.4.1.tgz#f0e7f34834f9ab78a788d5f0610cb11390b8bcbe"
+  integrity sha512-4w2bbyPimdVqE35HJ3Y+ZuvEBY6cXbJxbveoAQLfyIvwlH0ZeX4nHhEjUeiDonUGKW4sjFfoYt1KfHZNIxgTow==
+
+"@schedule-x/react@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@schedule-x/react/-/react-2.4.1.tgz#8dadfc09b9a98d8e34580880aad467b838428041"
+  integrity sha512-0FTSC0LpNlkrPK+bpinnrqqQlkXJ+ZAmrRGQCbp7LopRfSAIpiI0NIFy1jzjDyVMV4lqvxgaA9XnAg7tR2CTXA==
+
+"@schedule-x/theme-default@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@schedule-x/theme-default/-/theme-default-2.4.1.tgz#bb6e376c7a119daa75c4217a34beba63bc6dfada"
+  integrity sha512-DrDuxgLXzAWcZMYQmW4SyMcESbKDW+YXVrAOcc4NlUhhsLkbJkngS1JDBiGBJiKzFI47FntJyGFTz5qPeZDpXw==
 
 "@tailwindcss/forms@^0.5.7":
   version "0.5.7"
@@ -2773,6 +2839,16 @@ postcss@^8.4.32:
     nanoid "^3.3.7"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+preact@^10.24.3:
+  version "10.24.3"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.24.3.tgz#086386bd47071e3b45410ef20844c21e23828f64"
+  integrity sha512-Z2dPnBnMUfyQfSQ+GBdsGa16hz35YmLmtTLhM169uW944hYL6xzTYkJjC07j+Wosz733pMWx0fgON3JNw1jJQA==
+
+preact@~10.12.1:
+  version "10.12.1"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.12.1.tgz#8f9cb5442f560e532729b7d23d42fd1161354a21"
+  integrity sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==
 
 prelude-ls@^1.2.1:
   version "1.2.1"
