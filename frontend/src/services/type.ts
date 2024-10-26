@@ -49,7 +49,27 @@ export interface ICreateTrade {
 }
 
 export interface TradeDto {
-  tradesWithMetrics: [];
+  exitPrice: string;
+  entryPrice: string;
+  quantity: string;
+  exitDate: string | number | Date;
+  profitLoss: undefined;
+  entryDate: string | number | Date;
+  tradeOutcome: string;
+  tradeType: string;
+  symbol: string;
+  tradesWithMetrics: {
+    symbol: string;
+    tradeType: string;
+    tradeOutcome: string;
+    entryDate: string;
+    exitDate: string;
+    quantity: number;
+    entryPrice: number;
+    exitPrice: number;
+    profitLoss: number;
+    // Add other properties as needed
+  }[];
   dataLength: number;
 }
 

@@ -4,7 +4,9 @@ import DatePicker from "react-datepicker";
 import Pagination from "rc-pagination";
 import "react-datepicker/dist/react-datepicker.css";
 import "rc-pagination/assets/index.css";
-import { useGetAllTradesQuery } from "../services/tradeApi"; // Adjust the import path as necessary
+import { useGetAllTradesQuery } from "../services/tradeApi";
+
+
 
 const TransactionTable: React.FC = () => {
   const [filter, setFilter] = useState("");

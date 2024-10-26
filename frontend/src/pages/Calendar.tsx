@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer, EventProps } from "react-big-calendar";
 import moment from "moment";
 import { CalendarIcon, XMarkIcon } from "@heroicons/react/20/solid"; // Importing icons
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -38,7 +38,7 @@ interface TradeFrequencies {
 }
 
 // Sample trade frequency data
-const tradeFrequencies = {
+const tradeFrequencies: TradeFrequencies = {
   weekly: [
     {
       _id: "2024-41",
@@ -152,8 +152,8 @@ const TradeCalendar: React.FC = () => {
     currentPage * tradesPerPage,
   );
 
-  const components: any = {
-    event: ({ event }) => {
+  const components = {
+    event: ({ event }: EventProps<TradeFrequency>) => {
       if (event) {
         return (
           <div
@@ -192,8 +192,8 @@ const TradeCalendar: React.FC = () => {
               localizer={localizer}
               events={events.map((event) => ({
                 ...event,
-                start: new Date(event.end),
-                end: new Date(event.end),
+                start: new Date(event.start).toISOString(),
+                end: new Date(event.end).toISOString(),
               }))}
               startAccessor="start"
               endAccessor="end"
@@ -293,17 +293,11 @@ const TradeCalendar: React.FC = () => {
                       );
                     })}
                   </ul>
-                </div>
-                {/* Pagination Controls */}
-                <div className="mt-4">
                   <Pagination
                     current={currentPage}
-                    pageSize={tradesPerPage}
                     total={selectedEvent?.trades?.length || 0}
-                    onChange={(page) => setCurrentPage(page)}
-                    showSizeChanger={false}
-                    style={{ marginTop: "16px" }}
-                    showLessItems
+                    pageSize={tradesPerPage}
+                    onChange={setCurrentPage}
                   />
                 </div>
                 <button
@@ -323,62 +317,3 @@ const TradeCalendar: React.FC = () => {
 };
 
 export default TradeCalendar;
-
-// import React, { useState } from 'react';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
-// import { Calendar, momentLocalizer } from 'react-big-calendar';
-// import moment from 'moment';
-
-// const localizer = momentLocalizer(moment);
-
-// const MyCalendar = ({ events }) => {
-//   const [startDate, setStartDate] = useState(null);
-//   const [endDate, setEndDate] = useState(null);
-
-//   const filteredEvents = events.filter(event => {
-//     const eventStart = new Date(event.start);
-//     const eventEnd = new Date(event.end);
-//     return (!startDate || eventStart >= startDate) && (!endDate || eventEnd <= endDate);
-//   });
-
-//   return (
-//     <div>
-//       <div className="date-picker">
-//         <DatePicker
-//           selected={startDate}
-//           onChange={date => setStartDate(date)}
-//           selectsStart
-//           startDate={startDate}
-//           endDate={endDate}
-//           placeholderText="Start Date"
-//         />
-//         <DatePicker
-//           selected={endDate}
-//           onChange={date => setEndDate(date)}
-//           selectsEnd
-//           startDate={startDate}
-//           endDate={endDate}
-//           placeholderText="End Date"
-//         />
-//       </div>
-//       <Calendar
-//         localizer={localizer}
-//         events={filteredEvents.map(event => ({
-//           ...event,
-//           start: new Date(event.start),
-//           end: new Date(event.end),
-//         }))}
-//         startAccessor="start"
-//         endAccessor="end"
-//         style={{ height: 500 }}
-//         defaultView="month"
-//         views={["month"]}
-//         popup
-//         onSelectEvent={handleSelectEvent}
-//       />
-//     </div>
-//   );
-// };
-
-// export default MyCalendar;

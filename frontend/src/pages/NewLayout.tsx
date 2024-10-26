@@ -71,31 +71,31 @@ const MobileNavbar: React.FC<{ toggleMobileNav: () => void }> = ({
   );
 };
 
-const Analytics = () => {
-  return (
-    <div className="p-4">
-      <h1 className="mb-4 text-2xl font-bold">Analytics</h1>
+// const Analytics = () => {
+//   return (
+//     <div className="p-4">
+//       <h1 className="mb-4 text-2xl font-bold">Analytics</h1>
 
-      {/* Section 1 */}
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"></section>
+//       {/* Section 1 */}
+//       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"></section>
 
-      {/* Section 2 */}
-      <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"></section>
+//       {/* Section 2 */}
+//       <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"></section>
 
-      {/* Section 3 */}
-      <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6"></section>
+//       {/* Section 3 */}
+//       <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6"></section>
 
-      {/* Section 4 */}
-      <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"></section>
+//       {/* Section 4 */}
+//       <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"></section>
 
-      {/* Section 5 */}
-      <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5"></section>
+//       {/* Section 5 */}
+//       <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5"></section>
 
-      {/* Section 6 */}
-      <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6"></section>
-    </div>
-  );
-};
+//       {/* Section 6 */}
+//       <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6"></section>
+//     </div>
+//   );
+// };
 
 const MainContent = () => {
   return (

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { createChart, IChartApi } from "lightweight-charts";
+import { createChart, IChartApi, BarData } from "lightweight-charts";
 import { useSelector } from "react-redux";
 
 type BarChartProps = {
@@ -42,8 +42,16 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
       thinBars: true,
     });
 
-    // Ensure the data has the required structure
-    barSeries.setData(data);
+    // Convert time to a string format if necessary
+    const formattedData: BarData[] = data.map(item => ({
+      time: typeof item.time === 'number' ? new Date(item.time * 1000).toISOString().split('T')[0] : item.time,
+      open: item.open,
+      high: item.high,
+      low: item.low,
+      close: item.close,
+    }));
+
+    barSeries.setData(formattedData);
 
     chart.timeScale().fitContent();
     chartRef.current = chart;
