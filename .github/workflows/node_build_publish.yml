@@ -34,7 +34,7 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.4.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_HUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.
           folder: frontend/dist # Adjust this path if your build output is in a different directory
           clean: true # Automatically remove deleted files from the deploy branch
