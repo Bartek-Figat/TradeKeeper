@@ -82,7 +82,7 @@ export const App = () => {
     },
     {
       path: "*",
-      element: <NotFoundPage />, // Render a NotFoundPage component for unmatched routes
+      element: <NotFoundPage />,
     },
   ]);
 
