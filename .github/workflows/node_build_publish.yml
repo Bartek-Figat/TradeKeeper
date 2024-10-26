@@ -24,9 +24,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies 🔧
+        working-directory: frontend
         run: yarn install
 
       - name: Build Project 🔨
+        working-directory: frontend
         run: yarn build
 
       - name: Deploy 🚀
