@@ -10,6 +10,7 @@ import {
   Path,
   Tags,
 } from "tsoa";
+import rateLimit from "express-rate-limit";
 import { AuthService } from "../../services/authService/authService";
 import { validateIncomingFields } from "../../middlewares/middleware";
 
@@ -18,14 +19,21 @@ import { validateIncomingFields } from "../../middlewares/middleware";
 export class CustomAuthController extends Controller {
   private authService = new AuthService();
 
+  // Rate limiter for login and registration
+  private static rateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: "Too many requests, please try again later.",
+  });
+
   @Post("register")
-  @Middlewares(validateIncomingFields)
+  @Middlewares([validateIncomingFields, CustomAuthController.rateLimiter])
   async registration(@Body() req: any): Promise<void> {
     return this.authService.registration(req);
   }
 
   @Post("login")
-  @Middlewares(validateIncomingFields)
+  @Middlewares([validateIncomingFields, CustomAuthController.rateLimiter])
   async login(@Body() req: any): Promise<{ token: string }> {
     return this.authService.login(req);
   }

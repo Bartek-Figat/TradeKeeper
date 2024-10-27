@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Database } from "../../config/db/database";
 
 type TradeFrequency = {
@@ -20,6 +21,112 @@ type TradeFrequencies = {
 
 export class GroupTradesForChart {
   private db = new Database().getCollection("trades");
+
+  async getSingleTradeDetails(tradeId: string) {
+    try {
+      const trade = await this.db.findOne({ _id: new ObjectId(tradeId) });
+
+      if (!trade) {
+        throw new Error(`Trade with ID ${tradeId} not found`);
+      }
+
+      const profitLoss = trade.exitPrice - trade.entryPrice;
+      const gainPercentage = ((profitLoss / trade.entryPrice) * 100).toFixed(2);
+      const holdingPeriod =
+        (new Date(trade.exitDate).getTime() -
+          new Date(trade.entryDate).getTime()) /
+        (1000 * 60 * 60 * 24);
+      const riskRewardRatio = (profitLoss / trade.entryPrice).toFixed(2);
+      const annualizedReturn = (
+        (Math.pow(1 + profitLoss / trade.entryPrice, 365 / holdingPeriod) - 1) *
+        100
+      ).toFixed(2);
+
+      // Calculate average trade performance directly
+      const trades = await this.db.find({}).toArray();
+      const totalProfitLoss = trades.reduce(
+        (acc, trade) => acc + (trade.exitPrice - trade.entryPrice),
+        0
+      );
+      const totalGainPercentage = trades.reduce(
+        (acc, trade) =>
+          acc + ((trade.exitPrice - trade.entryPrice) / trade.entryPrice) * 100,
+        0
+      );
+
+      const averageTradePerformance = {
+        profitLoss: totalProfitLoss / trades.length,
+        gainPercentage: totalGainPercentage / trades.length,
+      };
+
+      // Calculate additional statistics
+      const standardDeviation = Math.sqrt(
+        trades.reduce(
+          (acc, trade) =>
+            acc +
+            Math.pow(
+              trade.exitPrice -
+                trade.entryPrice -
+                averageTradePerformance.profitLoss,
+              2
+            ),
+          0
+        ) / trades.length
+      );
+
+      const sharpeRatio = standardDeviation
+        ? (profitLoss / standardDeviation).toFixed(2)
+        : "N/A";
+      const downsideDeviation = Math.sqrt(
+        trades.reduce(
+          (acc, trade) =>
+            acc + Math.pow(Math.min(0, trade.exitPrice - trade.entryPrice), 2),
+          0
+        ) / trades.length
+      );
+      const sortinoRatio = downsideDeviation
+        ? (profitLoss / downsideDeviation).toFixed(2)
+        : "N/A";
+
+      const maxDrawdown = Math.min(
+        ...trades.map((trade) => trade.exitPrice - trade.entryPrice)
+      );
+      const maxDrawdownPercentage = (
+        (maxDrawdown / trade.entryPrice) *
+        100
+      ).toFixed(2);
+
+      return {
+        symbol: trade.symbol,
+        entryPrice: trade.entryPrice,
+        exitPrice: trade.exitPrice,
+        profitLoss: profitLoss.toFixed(2),
+        gainPercentage,
+        holdingPeriodDays: holdingPeriod.toFixed(2),
+        riskRewardRatio,
+        annualizedReturn,
+        fees: trade.fees,
+        notes: trade.notes,
+        comparisonToAverage: {
+          profitLossVsAverage: (
+            profitLoss - averageTradePerformance.profitLoss
+          ).toFixed(2),
+          gainPercentageVsAverage: (
+            parseFloat(gainPercentage) - averageTradePerformance.gainPercentage
+          ).toFixed(2),
+        },
+        additionalStatistics: {
+          sharpeRatio,
+          sortinoRatio,
+          maxDrawdown: maxDrawdown.toFixed(2),
+          maxDrawdownPercentage,
+        },
+      };
+    } catch (error) {
+      console.error("Error retrieving trade details:", error);
+      throw error;
+    }
+  }
 
   // Data Retrieval Methods
   async getUserTrades(userId: string) {

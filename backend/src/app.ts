@@ -18,12 +18,10 @@ import { ApiError } from "./error/apiError";
 
 export const app = express();
 
-app.use(urlencoded({ extended: true, limit: "50mb" }));
-app.use(json({ limit: "50mb" }));
-
-app.use(cookieParser());
-
+// Security middleware
+app.use(helmet());
 app.use(compression());
+app.use(morgan("dev"));
 
 // CORS
 app.use(
@@ -42,15 +40,10 @@ app.use(
   })
 );
 
-// Security middleware
-app.use(helmet());
-app.use(morgan("dev"));
+app.use(urlencoded({ extended: true, limit: "50mb" }));
+app.use(json({ limit: "50mb" }));
 
-app.use("/docs", swaggerUi.serve, async (_req: Request, res: Response) => {
-  return res.send(
-    swaggerUi.generateHTML(await import("../build/swagger.json"))
-  );
-});
+app.use(cookieParser());
 
 // Security-related HTTP headers
 app.set("trust proxy", 1);
@@ -67,6 +60,12 @@ app.use(helmet.xssFilter());
 
 // Prevent HTTP Parameter Pollution
 app.use(hpp());
+
+app.use("/docs", swaggerUi.serve, async (_req: Request, res: Response) => {
+  return res.send(
+    swaggerUi.generateHTML(await import("../build/swagger.json"))
+  );
+});
 
 // Register API routes
 RegisterRoutes(app);

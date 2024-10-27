@@ -118,3 +118,35 @@ jobs:
 # Final Steps
 # Test the Workflow: Push a change to your main branch to trigger the workflow and verify that the image is built and pushed to Docker Hub.
 # Monitor: Check the Actions tab in your GitHub repository to monitor the workflow execution and troubleshoot any issues.
+
+
+
+
+To trigger the maintenance mode and redirect users to an upgrading page, you need to use a flag file mechanism. This involves creating a specific file that Nginx checks for, and if it exists, users are redirected to a maintenance page. Here's how you can manage this process:
+Steps to Trigger Maintenance Mode
+Create the Flag File:
+On your host machine, navigate to the directory that is mounted to /var/www/html in your Nginx container. According to your Docker Compose setup, this is the ./maintenance directory.
+Create a file named upgrading.flag in this directory. You can do this using a command like:
+Bash
+2. Verify the Setup:
+Ensure that the upgrading.flag file is correctly mounted inside the Nginx container. You can check this by entering the Nginx container and listing the contents of /var/www/html:
+Bash
+- You should see the upgrading.flag file listed.
+Access the Site:
+When the upgrading.flag file is present, any request to the root location (/) or the /api endpoint will be redirected to /upgrading.html.
+Create the Upgrading Page:
+Ensure that you have an upgrading.html file in the /usr/share/nginx/html directory. This file should contain the content you want to display to users during maintenance.
+Steps to Revert to the Original Site
+1. Remove the Flag File:
+To stop redirecting users to the upgrading page, simply remove the upgrading.flag file from the ./maintenance directory:
+Bash
+Verify the Removal:
+Again, you can verify that the file has been removed by checking the contents of /var/www/html inside the Nginx container:
+Bash
+- The upgrading.flag file should no longer be present.
+Access the Site:
+With the upgrading.flag file removed, Nginx will no longer redirect requests to /upgrading.html, and users will be able to access the original site as usual.
+Summary
+Activate Maintenance Mode: Create the upgrading.flag file in the mounted directory.
+Deactivate Maintenance Mode: Remove the upgrading.flag file from the mounted directory.
+This approach allows you to easily toggle between maintenance mode and normal operation by simply adding or removing a file.

@@ -129,7 +129,8 @@ export class AuthService {
           },
           $pull: {
             authorizationToken: {
-              $in: [authHeader],
+              //$in: [authHeader],
+              $set: { authorizationToken: [] },
             },
           },
         }
