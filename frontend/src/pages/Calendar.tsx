@@ -25,6 +25,7 @@ interface TradeFrequency {
   end: string;
   totalProfit?: number;
   averageDuration?: number;
+  averageProfit?: string;
   trades?: Array<{
     tradeId: string;
     entryDate: string;
@@ -102,24 +103,35 @@ const tradeFrequencies: TradeFrequencies = {
           exitDate: "2024-10-21T00:00:00.000Z",
           profit: Math.floor(Math.random() * 1000),
         },
-        {
-          tradeId: "DOGE",
-          entryDate: "2024-05-24T00:00:00.000Z",
-          exitDate: "2024-10-22T00:00:00.000Z",
-          profit: Math.floor(Math.random() * 1000),
-        },
       ],
     },
   ],
 };
+// Function to calculate average profit from trades
+const calculateAverageProfit = (trades: { profit: number }[]) => {
+  const totalProfit = trades.reduce(
+    (acc: number, trade: { profit: number }) => acc + trade.profit,
+    0,
+  );
+  return trades.length > 0 ? (totalProfit / trades.length).toFixed(2) : "0";
+};
 
-// Transform trade frequencies into calendar events
+// Update the totalProfit and averageProfit in the tradeFrequencies object
+tradeFrequencies.weekly.forEach((week) => {
+  if (week.trades) {
+    week.totalProfit = week.trades.reduce(
+      (acc, trade) => acc + trade.profit,
+      0,
+    );
+    week.averageProfit = calculateAverageProfit(week.trades);
+  }
+});
 const transformToEvents = (frequencies: TradeFrequencies) => {
   return frequencies.weekly.map((item) => {
-    const { tradeCount, start, end, ...rest } = item;
+    const { tradeCount, end, ...rest } = item; // Removed 'start' from destructuring as it's not used
     return {
       title: `Trades: ${tradeCount}`,
-      start: new Date(start).toISOString(),
+      
       end: new Date(end).toISOString(),
       tradeCount,
       ...rest,
@@ -162,8 +174,9 @@ const TradeCalendar: React.FC = () => {
           >
             <div className="flex flex-col justify-center">
               <p className="text-lg font-medium text-gray-800">{`$${event.totalProfit}`}</p>
+              <p className="text-lg font-medium text-gray-800">{`Average Profit: $${event.averageProfit}`}</p>
               <p className="text-center text-sm font-extralight text-gray-700">
-                {event.tradeCount} trades
+                {event.trades?.length} trades
               </p>
             </div>
           </div>
@@ -192,7 +205,7 @@ const TradeCalendar: React.FC = () => {
               localizer={localizer}
               events={events.map((event) => ({
                 ...event,
-                start: new Date(event.start).toISOString(),
+                start: new Date(event.end).toISOString(),
                 end: new Date(event.end).toISOString(),
               }))}
               startAccessor="start"

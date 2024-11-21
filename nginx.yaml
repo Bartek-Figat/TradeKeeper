@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: your-dockerhub-username/nginx:latest
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: frontend-build
+              mountPath: /usr/share/nginx/html
+            - name: certs
+              mountPath: /etc/letsencrypt
+            - name: certs-data
+              mountPath: /data/letsencrypt
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+        - name: frontend-build
+          emptyDir: {}
+        - name: certs
+          emptyDir: {}
+        - name: certs-data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+    - port: 443
+      targetPort: 443
+  selector:
+    app: nginx

@@ -1,0 +1,23 @@
+# Use a Node.js base image
+FROM node:14-alpine
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+# Copying package.json and yarn.lock separately to leverage Docker cache
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Bundle app source
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Use a non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Start the application with hot-reloading
+CMD ["yarn", "dev"]

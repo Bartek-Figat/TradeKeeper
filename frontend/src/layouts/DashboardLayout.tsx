@@ -1,61 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
-import axios from "axios";
+//import axios from "axios";
 import { navItems } from "../common/NavigationItems";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "../slice/darkModeSlice";
 
 const DashboardLayout = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
   const darkMode = useSelector(
     (state: { darkMode: boolean }) => state.darkMode,
   );
   const dispatch = useDispatch();
 
-  const API_URL = "http://localhost:8080/auth";
+  //const API_URL = "http://localhost:8080/auth";
 
-  const validateToken = async (token: string) => {
-    try {
-      const { data } = await axios.post(`${API_URL}/validate-token`, { token });
-      return data;
-    } catch (error) {
-      console.error("Token validation error:");
-    }
-  };
+  // const validateToken = async (token: string) => {
+  //   try {
+  //     const { data } = await axios.post(`${API_URL}/validate-token`, { token });
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Token validation error:");
+  //   }
+  // };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const checkToken = async () => {
-      if (token) {
-        try {
-          setLoading(true);
-          const isValid = await validateToken(token);
-          if (!isValid) {
-            localStorage.removeItem("token");
-            navigate("/sign-in");
-          }
-        } catch (error) {
-          localStorage.removeItem("token");
-          navigate("/sign-in");
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        console.log("No token found");
-        navigate("/sign-in");
-      }
-    };
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const checkToken = async () => {
+  //     if (token) {
+  //       try {
+  //         setLoading(true);
+  //         const isValid = await validateToken(token);
+  //         if (!isValid) {
+  //           localStorage.removeItem("token");
+  //           navigate("/sign-in");
+  //         }
+  //       } catch (error) {
+  //         localStorage.removeItem("token");
+  //         navigate("/sign-in");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     } else {
+  //       console.log("No token found");
+  //       navigate("/sign-in");
+  //     }
+  //   };
 
-    checkToken();
-  }, [navigate]);
+  //   checkToken();
+  // }, [navigate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,13 +73,13 @@ const DashboardLayout = () => {
     };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-16 w-16 animate-spin rounded-full border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <div className="h-16 w-16 animate-spin rounded-full border-b-2 border-blue-500"></div>
+  //     </div>
+  //   );
+  // }
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

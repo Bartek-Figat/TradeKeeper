@@ -30,6 +30,8 @@
     "@schedule-x/events-service": "^2.4.1",
     "@schedule-x/react": "^2.4.1",
     "@schedule-x/theme-default": "^2.4.1",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
     "apexcharts": "^3.54.0",
     "axios": "^1.7.7",
     "chart.js": "^4.4.2",

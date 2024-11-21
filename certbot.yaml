@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certbot
+  template:
+    metadata:
+      labels:
+        app: certbot
+    spec:
+      containers:
+        - name: certbot
+          image: certbot/certbot
+          command: ["/bin/sh", "-c", "/usr/bin/certbot-entrypoint.sh"]
+          volumeMounts:
+            - name: certs
+              mountPath: /etc/letsencrypt
+            - name: certs-data
+              mountPath: /data/letsencrypt
+      volumes:
+        - name: certs
+          emptyDir: {}
+        - name: certs-data
+          emptyDir: {}

@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    http {
+        # Limit request size to prevent large payloads
+        client_max_body_size 10M;
+
+        # Rate limiting to prevent abuse
+        limit_req_zone $binary_remote_addr zone=one:10m rate=10r/s;
+
+        # Enable Brotli compression
+        brotli on;
+        brotli_comp_level 6;
+        brotli_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        # Optimize gzip settings
+        gzip on;
+        gzip_comp_level 5;
+        gzip_min_length 256;
+        gzip_proxied any;
+        gzip_vary on;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        # Security headers
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options DENY;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none';";
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always; # HSTS
+        add_header Referrer-Policy "no-referrer-when-downgrade";
+        # add_header Permissions-Policy "geolocation=(), microphone=(), camera=()";
+
+        # Performance optimizations
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+
+        # Caching
+        proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=my_cache:10m max_size=10g inactive=60m use_temp_path=off;
+
+        upstream backend {
+            server backend:8080; # Primary backend service
+            server backend_2:8081; # Additional backend instance
+            server backend_3:8082; # Additional backend instance
+            # Add more backend instances as needed
+        }
+
+        server {
+            listen 80;
+            server_name your_domain.com; # Replace with your domain
+
+            # Redirect HTTP to HTTPS
+            return 301 https://$host$request_uri;
+        }
+
+        server {
+            listen 443 ssl;
+            server_name your_domain.com; # Replace with your domain
+
+            ssl_certificate /etc/letsencrypt/live/your_domain.com/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/your_domain.com/privkey.pem;
+
+            # Improved SSL configuration
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+
+            # Error logging
+            error_log /var/log/nginx/error.log warn;
+
+            # Maintenance mode check
+            location / {
+                # Check for maintenance flag
+                if (-f /var/www/html/upgrading.flag) {
+                    return 302 /upgrading.html;
+                }
+                # Serve React app
+                root /usr/share/nginx/html; # Path to the React build directory
+                try_files $uri $uri/ /index.html;
+            }
+
+            # Custom upgrading page
+            location = /upgrading.html {
+                root /usr/share/nginx/html; # Path to the upgrading page
+                internal;
+            }
+
+            # Load balancing for Node.js backend
+            location /api {
+                limit_req zone=one burst=5 nodelay; # Apply rate limiting
+                proxy_pass http://backend; # Pass requests to the upstream block
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache my_cache;
+                proxy_cache_valid 200 1h;
+                proxy_cache_valid 404 1m;
+            }
+
+            # Error handling for React app
+            error_page 404 /index.html;
+            location = /index.html {
+                root /usr/share/nginx/html;
+                internal;
+            }
+        }
+    }
+
+# kubectl apply -f nginx-configmap.yaml

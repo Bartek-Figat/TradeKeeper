@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80" # Map to a different port if needed
+    environment:
+      NODE_ENV: development
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      DEBUG: "true" # Enable debugging
+
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+
+# Development: Use the base and development configuration files together. 
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up   

@@ -1,0 +1,23 @@
+# Use a Node.js base image
+FROM node:14-alpine
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Install app dependencies by copying package.json and yarn.lock first
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Copy the rest of your app's source code from your host to your image filesystem.
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Use a non-root user
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -D -S -G appgroup appuser
+USER appuser
+
+# Start the React application with hot-reloading
+CMD ["yarn", "start"]

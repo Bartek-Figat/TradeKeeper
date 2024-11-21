@@ -732,77 +732,63 @@
 										"generalNote": {
 											"type": "string"
 										},
-										"chartData": {
+										"maxDrawdown": {
+											"type": "string"
+										},
+										"riskRewardRatio": {
+											"type": "string"
+										},
+										"sortinoRatio": {
+											"type": "string"
+										},
+										"sharpeRatio": {
+											"type": "string"
+										},
+										"ES": {
+											"type": "string"
+										},
+										"VaR": {
+											"type": "string"
+										},
+										"losses": {
 											"items": {
 												"properties": {
-													"weeklyNote": {
-														"type": "string"
-													},
-													"notes": {},
-													"totalProfitLossPercentage": {},
-													"stdDevExitPrice": {},
-													"stdDevEntryPrice": {},
-													"medianExitPrice": {},
-													"medianEntryPrice": {},
-													"winLossRatio": {},
-													"totalLosses": {},
-													"totalWins": {},
-													"averageHoldingPeriodYears": {
-														"type": "string"
-													},
-													"averageHoldingPeriodMonths": {
-														"type": "string"
-													},
-													"averageHoldingPeriodWeeks": {
-														"type": "string"
-													},
-													"averageHoldingPeriodDays": {
-														"type": "string"
-													},
-													"riskRewardRatio": {},
-													"avgProfitLoss": {},
-													"winRate": {},
-													"minExitPrice": {},
-													"maxExitPrice": {},
-													"averageFees": {},
-													"totalFees": {},
-													"averageExitPrice": {},
-													"averageEntryPrice": {},
-													"totalTrades": {},
-													"totalProfitLoss": {},
-													"totalQuantity": {},
-													"label": {
-														"type": "string"
-													}
+													"profitLoss": {},
+													"exitPrice": {},
+													"entryPrice": {},
+													"exitDate": {},
+													"entryDate": {},
+													"symbol": {}
 												},
 												"required": [
-													"weeklyNote",
-													"notes",
-													"totalProfitLossPercentage",
-													"stdDevExitPrice",
-													"stdDevEntryPrice",
-													"medianExitPrice",
-													"medianEntryPrice",
-													"winLossRatio",
-													"totalLosses",
-													"totalWins",
-													"averageHoldingPeriodYears",
-													"averageHoldingPeriodMonths",
-													"averageHoldingPeriodWeeks",
-													"averageHoldingPeriodDays",
-													"riskRewardRatio",
-													"avgProfitLoss",
-													"winRate",
-													"minExitPrice",
-													"maxExitPrice",
-													"averageFees",
-													"totalFees",
-													"averageExitPrice",
-													"averageEntryPrice",
-													"totalTrades",
-													"totalProfitLoss",
-													"totalQuantity",
-													"label"
+													"profitLoss",
+													"exitPrice",
+													"entryPrice",
+													"exitDate",
+													"entryDate",
+													"symbol"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"wins": {
+											"items": {
+												"properties": {
+													"profitLoss": {},
+													"exitPrice": {},
+													"entryPrice": {},
+													"exitDate": {},
+													"entryDate": {},
+													"symbol": {}
+												},
+												"required": [
+													"profitLoss",
+													"exitPrice",
+													"entryPrice",
+													"exitDate",
+													"entryDate",
+													"symbol"
 												],
 												"type": "object"
 											},
@@ -811,7 +797,14 @@
 									},
 									"required": [
 										"generalNote",
-										"chartData"
+										"maxDrawdown",
+										"riskRewardRatio",
+										"sortinoRatio",
+										"sharpeRatio",
+										"ES",
+										"VaR",
+										"losses",
+										"wins"
 									],
 									"type": "object"
 								}

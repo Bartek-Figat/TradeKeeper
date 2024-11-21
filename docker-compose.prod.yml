@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: your-dockerhub-username/nginx:latest
+    environment:
+      NODE_ENV: production
+
+  backend:
+    image: your-dockerhub-username/backend:latest
+    environment:
+      NODE_ENV: production
+
+  react:
+    image: your-dockerhub-username/react:latest
+    environment:
+      NODE_ENV: production
+
+# Production: Use the base and production configuration files together.
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
